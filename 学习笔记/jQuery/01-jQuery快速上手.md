@@ -489,3 +489,119 @@ position()方法用于返回被选元素相对于**带有定位的父级**偏移
 2.  srcollLeft() 方法设置或返回被选元素被卷去的左侧。
 
 ## 4.事件
+
+### 4.1 单个事件注册
+
+```js
+element.事件(function(){})
+```
+
+```js
+$('div').click(function(){ 事件处理程序 })
+```
+
+其他事件和原生基本一致
+
+### 4.2 事件处理on()绑定事件
+
+`on()`方法在匹配元素上绑定一个或多个事件的事件处理函数。
+
+```js
+element.on(events,[selector],fn)
+```
+
+可以事件委派操作。事件委派的定义就是，把原来加给子元素身上的事件绑定在父元素身上，就是把事件委派给父元素。
+
+```js
+$('ul').on('click','li',function() {
+    alert('hello world!');
+})
+```
+
+在此之前有`bind(),live(),delegate()`等方法来处理事件绑定或者事件委派，最新版本的用`on()`替代。
+
+### 4.3 事件处理off()解绑事件
+
+`off()`方法可以移除通过`on()`方法添加的事件处理程序。
+
+```js
+$('p').off // 解绑p元素所有事件处理程序
+$('p').off('click') // 解绑p元素上面的点击事件
+$('ul').off('click',;li) // 解绑事件委托
+```
+
+如果有的事件只想触发一次，可以使用`one()`来绑定事件。
+
+### 4.4 自动触发事件trigger()
+
+有些事件希望自动触发，比如轮播图自动播放功能跟点击右侧按钮一致。可以利用定时器自动出发右侧按钮点击事件，不必鼠标点击触发。
+
+```js
+element.click() // 第一种简写形式
+```
+
+```js
+element.trigger('type') // 第二种自动触发模式
+```
+
+```js
+$('p').on('click',function() {
+    alert('hi~');
+})
+$('p').trigger('click'); // 此时自动触发点击事件，不需要鼠标点击
+```
+
+```js
+element.triggerHandler(type) // 第三种自动触发模式，不会触发元素的默认行为
+```
+
+### 4.5 事件对象
+
+事件被触发，就会有事件对象产生。
+
+```js
+element.on(events,[selector],function(event) {})
+```
+
+阻止默认行为：event.preventDefault() 或者 return false
+
+阻止冒泡：event.stopPropagation()
+
+## 5.其他方法
+
+### 5.1 对象拷贝
+
+如果想要把某个对象拷贝（合并）给另一个对象使用，此时可以使用`$.extend()`方法。
+
+```js
+$.extend([deep], target, object1, [objectN])
+```
+
+### 5.2 多库共存
+
+**问题概述**
+
+jQuery使用`$`作为标示符，随着jQuery的流行，其他js库也会用这`$`作为标识符，这样一起使用会引起冲突。
+
+**客观需求**
+
+需要一个解决方案，让jQuery和其他的js库不存在冲突，可以同时存在，这就叫多库共存。
+
+**解决方案**
+
+1. 把里面的`$`符号统一改为jQuery。比如jQuery('div')。
+
+2. jQuery变量规定新的名称：`$.noConflict() `
+
+   `var xx = $.noConflict()`
+
+### 5.3 插件
+
+jQuery功能比较有限，想要更复杂的特效效果，可以借助jQuery插件完成。
+
+**注意**：这些插件也是依赖jQuery来完成的，所以必须要先引入jQuery文件，因此也称为jQuery插件。
+
+**jQuery插件使用步骤**
+
+1. 引入相关文件。（jQuery文件和插件文件）
+2. 复制相关html、css、js（调用插件）
