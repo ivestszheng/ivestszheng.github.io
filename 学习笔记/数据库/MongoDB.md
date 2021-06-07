@@ -1,8 +1,8 @@
+# MongoDB快速上手
 
+## 1.MongoDB相关概念
 
-## 01-MongoDB相关概念
-
-### 业务应用场景
+### 1.1.业务应用场景
 
 传统关系型数据库（如MySQL)，在数据操作的“三高”需求以及应对Web2.0的网站需求页显得力不从心，而MongoDB可以应对“三高”需求。
 
@@ -18,11 +18,11 @@
 
 1. 数据量大
 2. 写入操作频繁（读写都很频繁）
-3. 价值较低的数据，对事务性要求不高
+3. 价值较低的数据，对*事务性*（原子性、一致性、隔离性、持久性）要求不高
 
 对于这样的数据，更适合使用MongoDB来存储。
 
-### MongoDB简介
+### 1.2.MongoDB简介
 
 MongoDB 是一个开源、高性能、无模式的文档型数据库，当初的设计就是用于简化开发和方便拓展，是NoSQL数据库产品的一种，是最像关系型数据库的非关系型数据库。
 
@@ -30,7 +30,7 @@ MongoDB 是一个开源、高性能、无模式的文档型数据库，当初的
 
 MongoDB中的记录是一个文档，它是一个由字段和值对组成的数据结构。MongoDB文档类似于JSON对象，即一个文档认为就是一个对象。字段的数据类型是字符型，它的值除了使用基本的一些类型外，还可以包括其他文档，普通数组和文档数组。
 
-### 体系结构 
+### 1.3.体系结构 
 
 MySQL和MongoDB对比
 
@@ -47,7 +47,7 @@ MySQL和MongoDB对比
 |              | 嵌入文档         | MongoDB通过嵌入式文档来替代多表连接    |
 | primary key  | primary key      | 主键，MongoDB自动将`_id`字段设置为主键 |
 
-### 数据模型
+### 1.4.数据模型
 
 Object ID ：Documents 自生成的 _id
 
@@ -69,9 +69,9 @@ Timestamp：时间戳
 
 Date：存储当前日期或时间unix时间格式 (我们一般不用这个Date类型,时间戳可以秒杀一切时间类型)
 
-## 02-单机部署
+## 2.单机部署
 
-### Windows系统中安装
+### 2.1.Windows系统中安装
 
 具体不多赘述，去看[菜鸟教程](https://www.runoob.com/mongodb/mongodb-window-install.html)
 
@@ -82,11 +82,24 @@ net start mongodb // 启动服务
 net stop mongodb  // 关闭服务
 ```
 
-## 03-基本常用命令
+### 2.2.MongoDB 后台管理 Shell
 
-#### 数据库操作
+如果你需要进入MongoDB后台管理，你需要先打开mongodb装目录的下的bin目录，然后执行mongo.exe文件，MongoDB Shell是MongoDB自带的交互式Javascript shell,用来对MongoDB进行操作和管理的交互式环境。
 
-##### 选择和创建数据库
+当你进入mongoDB后台后，它默认会链接到 test 文档（数据库）：
+
+```sql
+> mongo
+MongoDB shell version: 3.0.6
+connecting to: test
+……
+```
+
+## 3.基本常用命令
+
+#### 3.1.数据库操作
+
+##### 3.1.1.选择和创建数据库
 
 ```
 use 数据库名称
@@ -97,7 +110,7 @@ use 数据库名称
 查看有权限查看的所有数据库命令
 
 ```
-shwo dbs
+show dbs
 或
 show databases
 ```
@@ -112,7 +125,7 @@ db
 
 MongoDB中默认的数据库为test，如果没有选择数据库，集合将存放在test数据库中
 
-##### 数据库的删除
+##### 3.1.2.数据库的删除
 
 MongoDB删除数据库的语法格式如下：
 
@@ -122,9 +135,9 @@ db.dropDatabase()
 
 主要用来删除已经持久化的数据库
 
-#### 集合操作
+#### 3.2.集合操作
 
-##### 集合的显式创建
+##### 3.2.1.集合的显式创建
 
 基本语法格式如下
 
@@ -140,13 +153,13 @@ show collections
 show tables
 ```
 
-##### 集合的隐式创建
+##### 3.2.2.集合的隐式创建
 
 当向一个集合中插入一个文档的时候，如果集合不存在，则会自动创建集合
 
 通常使用隐式创建文档即可
 
-##### 集合的删除
+##### 3.2.3.集合的删除
 
 集合删除语法格式如下
 
@@ -160,13 +173,13 @@ db.集合.drop()
 
 如果成功删除选定集合，则drop()方法返回true，否则返回false
 
-#### 文档基本CRUD
+#### 3.3.文档基本CRUD
 
 > 文档的数据结构和JSON基本一样
 >
 > 所有存储在集合中的数据都是BSON格式
 
-##### 文档的插入
+##### 3.3.1文档的插入
 
 使用`insert()`或`save()`向集合中插入文档
 
@@ -200,9 +213,68 @@ db.comment.insert({
 WriteResult({ "nInserted" : 1 })
 ```
 
-##### 文档的基本查询
+##### 3.3.2.文档的基本查询
 
-##### 文档的更新
+MongoDB 查询数据的语法格式如下：
 
-##### 删除文档
+```nosql
+db.collection.find(<query>, [projection])
+```
 
+- **query**：可选，使用查询操作符指定查询条件。
+- **projection**：可选，使用投影操作符指定返回的键。查询时返回文档中所有键值， 只需省略该参数即可（默认省略）。
+
+如果你需要以易读的方式来读取数据，可以使用 pretty() 方法，语法格式如下：
+
+```nosql
+>db.col.find().pretty()
+```
+
+##### 3.3.3.文档的更新
+
+update() 方法用于更新已存在的文档。语法格式如下：
+
+```nosql
+db.collection.update(
+   <query>,
+   <update>,
+   {
+     upsert: <boolean>,
+     multi: <boolean>,
+     writeConcern: <document>
+   }
+)
+```
+
+- **query** : update的查询条件，类似sql update查询内where后面的。
+- **update** : update的对象和一些更新的操作符（如$,$inc...）等，也可以理解为sql update查询内set后面的
+- **upsert** : 可选，这个参数的意思是，如果不存在update的记录，是否插入objNew,true为插入，默认是false，不插入。
+- **multi** : 可选，mongodb 默认是false,只更新找到的第一条记录，如果这个参数为true,就把按条件查出来多条记录全部更新。
+- **writeConcern** :可选，抛出异常的级别。
+
+##### 3.3.4.删除文档
+
+MongoDB remove() 函数是用来移除集合中的数据。
+
+MongoDB 数据更新可以使用 update() 函数。在执行 remove() 函数前先执行 find() 命令来判断执行的条件是否正确，这是一个比较好的习惯。
+
+remove() 方法的基本语法格式如下所示：
+
+```nosql
+db.collection.remove(
+   <query>,
+   <justOne>
+)
+```
+
+如果你的 MongoDB 是 2.6 版本以后的，语法格式如下：
+
+```nosql
+db.collection.remove(
+   <query>,
+   {
+     justOne: <boolean>,
+     writeConcern: <document>
+   }
+)
+```
