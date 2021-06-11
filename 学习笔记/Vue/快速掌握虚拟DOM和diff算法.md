@@ -4,7 +4,7 @@
 
 ## 01-认识虚拟DOM
 
-虚拟DOM就是用JS模拟DOM结构，在Vue中JS执行时经历了`数据改变 -> 虚拟DOM(计算变更) -> 操作真实的DOM -> 试图更新`这样一个流程。
+虚拟DOM就是用JS模拟DOM结构，在Vue中JS执行时经历了`数据改变 -> 虚拟DOM(计算变更) -> 操作真实的DOM -> 视图更新`这样一个流程。
 
 ## 02-虚拟DOM的好处
 
@@ -268,11 +268,11 @@ export function vnode(
 >
 > A:vnode、h函数、patch函数、diff算法、key
 >
-> Q:为什么要用弹虚拟DOM？
+> Q:为什么要用虚拟DOM？
 >
 > A：数据驱动视图，控制DOM操作次数
 
-如果相同，直接返回，如果不同，一切以新的vnode为准
-新vnode有children，旧的需要删除原来的text，添加新的children，或者更新children
-新vnode有text，旧的需要删除原来的children，添加新的text，或者更新text
+如果相同，直接返回，如果不同，一切以新的 vnode为准。
+新 vnode 有 children，旧的需要删除原来的 text，添加新的 children，或者更新 children。
+新 vnode 有 text，旧的需要删除原来的 children，添加新的 text，或者更新 text。
 **PS：children 和 text 是互斥的，不会同时存在。**
