@@ -14,12 +14,23 @@ class Commitment {
             this.result = result
         }
     }
-    
+
     reject(result) {
         if (this.status === Commitment.PENDING) {
             this.status = Commitment.REJECTED
             this.result = result
         }
     }
-
+    then(onFULFILED,onREJECTED) {
+        if (this.status === Commitment.FULFILLED) {
+            onFULFILED(this.result)
+        }
+        if (this.status === Commitment.REJECTED) {
+            onREJECTED(this.result)
+        }
+     }
 }
+let commitment = new Commitment((resolve, reject) => {
+    resolve('这次一定')
+})
+commitment.then()
