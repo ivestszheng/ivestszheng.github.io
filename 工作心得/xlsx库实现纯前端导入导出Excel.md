@@ -334,7 +334,7 @@ exportExcelByTable(this.$refs.table2.$el);
 
 原因还是出在`dom`上，打印出 table 和 table2 的`dom`比较发现，table2 多了`css`类为`el-table__fixed`的这个节点。
 
-![1652494423(1)](<https://raw.githubusercontent.com/ivestszheng/images-store/master/img/1652494423(1).jpg>)
+![table和table2比较](<https://raw.githubusercontent.com/ivestszheng/images-store/master/img/1652494423(1).jpg>)
 
 我的处理方法是先克隆节点，确保后续操作不会影响页面中的 table2。通过遍历克隆出的新节点，找到`.el-table__fixed`这个节点并删除，最后返回新节点，发现可以输出正常的 Excel 文件。具体代码如下：
 
