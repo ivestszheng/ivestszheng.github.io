@@ -258,7 +258,7 @@ const exportExcelByTable = (el, fileName = 'example.xlsx') => {
 };
 ```
 
-页面中使用的话，通过`ref`拿到组件实例，将`$el`即`Vue 实例使用的根 DOM 元素`作为入参即可。
+页面中使用的话，通过`ref`拿到组件实例，将`$el`即`Vue 实例的根 DOM 元素`作为入参即可。
 
 ```js
 exportExcelByTable(this.$refs.table.$el);
