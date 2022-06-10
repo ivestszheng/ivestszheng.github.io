@@ -29,6 +29,7 @@ export default {
             { text: '记录我的第一个开源组件', link: '/frontend/my-first-open-source-component' }, 
             { text: '骨架屏优化——细粒度模式的实现', link: '/frontend/skeleton-fine-grit' }, 
             { text: '长列表无限下拉的实现（上）', link: '/frontend/vue-infi-scroll-upper' }, 
+            { text: '长列表无限下拉的实现（下）', link: '/frontend/vue-infi-scroll-bottom' }, 
           ]
         }
       ]
