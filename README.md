@@ -1,4 +1,4 @@
-# wusheng-blog
+# blog
 
 ## 快速上手
 
