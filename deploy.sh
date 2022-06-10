@@ -13,6 +13,7 @@ cd docs/.vitepress/dist
 # echo 'www.example.com' > CNAME
 
 git init
+git checkout origin/gh-pages
 git add -A
 git commit -m 'deploy'
 
@@ -20,7 +21,6 @@ git commit -m 'deploy'
 # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git main
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
-git checkout origin/gh-pages
 git push -f git@github.com:ivestszheng/blog.git gh-pages
 
 cd -
