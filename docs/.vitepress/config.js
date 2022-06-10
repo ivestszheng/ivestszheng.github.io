@@ -1,5 +1,6 @@
 export default {
   title: '无声的博客',
+  base: '/blog/',
   themeConfig: {
     nav: [
       { text: '指南', link: '/guide/' },
