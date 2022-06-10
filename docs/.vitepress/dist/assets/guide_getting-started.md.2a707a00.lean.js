@@ -1,1 +1,0 @@
-import{_ as t,c as e,o as a,b as r}from"./app.4bc3d11f.js";const u='{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"guide/getting-started.md"}',s={name:"guide/getting-started.md"},n=r("p",null,"gettting-started",-1),o=[n];function d(c,i,_,g,p,l){return a(),e("div",null,o)}var f=t(s,[["render",d]]);export{u as __pageData,f as default};
