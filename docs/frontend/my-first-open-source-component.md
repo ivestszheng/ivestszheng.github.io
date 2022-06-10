@@ -1,0 +1,577 @@
+# 记录我的第一个开源组件
+
+## 起因
+
+在 B 站上找 Vue3 的教学视频时候发现 [Young村长](https://space.bilibili.com/480140591/?spm_id_from=333.999.0.0) 和 Kagol 老师教学如何写一个开源组件库。于是便踊跃参加了，希望通过这个机会提升自己并为开源社区做贡献。本文将讲述我在这段时间中开发骨架屏（Skeleton）组件的思路以及学习 Vue3 的一些总结。
+
+## 项目地址
+
+[DevUI](https://gitee.com/devui/vue-devui)
+
+## 技术栈
+
+`Vite`+`Vue3`+`TypeScript`+`JSX`  
+
+## 骨架屏组件
+
+> 我认为在实现一个组件之前，首先要了解这个组件解决了哪些问题，其次参考其它成熟组件库是如何实现的并且提供了哪些 API。
+
+### 首屏加载的演进
+
+我们先来看一些权威机构所做的研究报告。
+
+一份是 [Akamai](http://www.akamai.com/html/about/press/releases/2009/press_091409.html) 的研究报告，当时总共采访了大约 1048 名网上购物者，得出了这样的结论：
+
+- 大约有 47% 的用户期望他们的页面在两秒之内加载完成。
+- 如果页面加载时间超过 3s，大约有 40% 的用户选择离开或关闭页面。
+
+![img](https://camo.githubusercontent.com/6904bcc009df8a47d09529c8793ab1c882668470d06b4d1e8d32f227685344a7/68747470733a2f2f692e6c6f6c692e6e65742f323031382f30352f30342f356165626462663265353534662e706e67)
+
+这是 TagMan 和眼镜零售商 Glasses Direct 合作进行的测试，研究页面加载速度和最终转化率的关系：
+
+![5aebc6d543104](https://camo.githubusercontent.com/68f0bfe5f78aaea021d879634f296a18078ccb9ac2df71c6471dac1eef71c41b/68747470733a2f2f6173736574732e65636f6e73756c74616e63792e636f6d2f696d616765732f303030322f343835332f7461676d6d615f696d6167652e706e67)
+
+在这份测试报告中，发现了网页加载速度和转化率呈现明显的负相关性，在页面加载时间为1~2 秒时的转化率是最高的，而当加载时间继续增长，转化率开始呈现一个下降的趋势，大约页面加载时间每增加 1s 转化率下降6.7个百分点。
+
+通常方案，我们会在首屏、或者获取数据时，在页面中展现一个进度条，或者转动的 Spinner。
+
+- 进度条：明确知道交互所需时间，或者知道一个大概值的时候我们选择使用进度条。
+- Spinner：无法预测获取数据、或者打开页面的时长。
+
+有了进度条或者 Spinner，至少告诉了用户两点内容：
+
+- 你所进行的操作需要等待一段时间。
+- 其次，安抚用户，让其耐心等待。
+
+除此之外，进度条和 Spinner 并不能带来其他任何作用，既无法让用户感知到页面加载得更快，也无法给用户一个焦点，让用户将关注集中到这个焦点上，并且知道这个焦点即将呈现用户感兴趣的内容。
+
+那么有没有比进度条和 Spinner 更好的方案呢？也许我们需要的是骨架屏。
+
+### **为什么需要骨架屏？**
+
+- 在最开始关于 MIT 2014 年的研究中已有提到，用户大概会在 200ms 内获取到界面的具体关注点，在数据获取或页面加载完成之前，给用户首先展现骨架屏，骨架屏的样式、布局和真实数据渲染的页面保持一致，这样用户在骨架屏中获取到关注点，并能够预知页面什么地方将要展示文字什么地方展示图片，这样也就能够将关注焦点移到感兴趣的位置。当真实数据获取后，用真实数据渲染的页面替换骨架屏，如果整个过程在 1s 以内，用户几乎感知不到数据的加载过程和最终渲染的页面替换骨架屏，而在用户的感知上，出现骨架屏那一刻数据已经获取到了，而后只是数据渐进式的渲染出来。这样用户感知页面加载更快了。
+- 再看看现在的前端框架， [React](https://link.zhihu.com/?target=https%3A//github.com/facebook/react)、[Vue](https://link.zhihu.com/?target=https%3A//github.com/vuejs/vue)、[Angular](https://link.zhihu.com/?target=https%3A//github.com/angular/angular) 已经占据了主导地位，市面上大多数前端应用也都是基于这三个框架或库完成，这三个框架有一个共同的特点，都是 JS 驱动，在 JS 代码解析完成之前，页面不会展示任何内容，也就是所谓的白屏。用户是极其不喜欢看到白屏的，什么都没有展示，用户很有可能怀疑网络或者应用出了什么问题。 拿 Vue 来说，在应用启动时，Vue 会对组件中的 data 和 computed 中状态值通过 `Object.defineProperty` 方法转化成 set、get 访问属性，以便对数据变化进行监听。而这一过程都是在启动应用时完成的，这也势必导致页面启动阶段比非 JS 驱动（比如 jQuery 应用）的页面要慢一些。
+
+### 实现骨架屏
+
+#### 实现基本样式
+
+最基础的骨架屏效果如下图所示：
+
+![基本效果](https://raw.githubusercontent.com/ivestszheng/images-store/master/img/20211020093333.gif)
+
+HTML 结构非常简单，分为标题（第一行）与段落（后三行）。
+
+```html
+<div class="devui-skeleton devui-skeleton-animated">
+    <div class="devui-skeleton__item__group">
+        <div class="devui-skeleton__title" style="width: 40%;">
+        </div>
+        <div class="devui-skeleton__paragraph">
+            <div class="devui-skeleton__item">
+            </div>
+            <div class="devui-skeleton__item"></div>
+            <div class="devui-skeleton__item">
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+动画效果用 CSS 来实现，我参考了[起码课的CSS实现骨架屏效果](https://www.bilibili.com/video/BV1Z5411J72V?spm_id_from=333.999.0.0)，这里只写出最关键的动画效果。
+
+```less
+.devui-skeleton__title,
+.devui-skeleton__item {
+  @keyframes skeletonLoading {
+    to {
+      background-position-x: -20%;
+    }
+  }
+
+  background:
+    linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 60%
+    )
+    #f2f2f2;
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 2s skeletonLoading ease-in-out infinite;
+}
+```
+
+*PS：由于写的是开源组件库，在涉及到修改公共样式的时候要把样式包裹在组件样式里。*
+
+#### 完整效果
+
+HTML 代码如下：
+
+```html
+<div class="devui-skeleton devui-skeleton-animated">
+        <div class="devui-skeleton__avatar">
+            <div class="avatar" style="width: 40px;"></div>
+        </div>
+        <div class="devui-skeleton__item__group">
+            <div class="devui-skeleton__title" style="width: 40%;"></div>
+            <div class="devui-skeleton__paragraph">
+                <div class="devui-skeleton__item" style="width: 100%;"></div>
+                <div class="devui-skeleton__item"></div>
+                <div class="devui-skeleton__item"></div>
+            </div>
+        </div>
+    </div>
+```
+
+CSS 如下所示：
+
+```less
+
+.devui-skeleton {
+  display: flex;
+  justify-content: space-between;
+
+  .devui-skeleton__avatar {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    padding-right: 16px;
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #f2f2f2;
+    }
+  }
+
+  .devui-skeleton__item__group {
+    flex: 11;
+
+    .devui-skeleton__item,
+    .devui-skeleton__title {
+      width: 100%;
+      height: 16px;
+      background-color: #f2f2f2;
+    }
+
+    .devui-skeleton__title {
+      margin-top: 24px;
+    }
+
+    .devui-skeleton__paragraph {
+      margin-top: 12px;
+    }
+
+    .devui-skeleton__item:last-child {
+      width: 60%;
+    }
+  }
+}
+
+.devui-skeleton-animated > .devui-skeleton__item__group > .devui-skeleton__title,
+.devui-skeleton-animated > .devui-skeleton__avatar > .avatar,
+.devui-skeleton-animated > .devui-skeleton__item__group > div > .devui-skeleton__item {
+  @keyframes skeletonLoading {
+    to {
+      background-position-x: -20%;
+    }
+  }
+
+  background:
+    linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 60%
+    )
+    #f2f2f2;
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 2s skeletonLoading ease-in-out infinite;
+}
+
+.devui-skeleton__avatar > .avatar,
+.devui-skeleton__item__group > div > .devui-skeleton__item {
+  margin-top: 12px;
+}
+
+.devui-skeleton-animated > .devui-skeleton__avatar > .avatar {
+  animation-delay: 0.1s;
+}
+
+```
+
+实际使用骨架屏只要用`skeleton`把要展示的内容包裹起来，代码如下：
+
+```vue
+<template>
+  <div class="skeleton-btn-groups">
+      <div class="skeleton-btn">
+          展示骨架屏：
+         <d-switch v-model:checked="loading" />
+      </div>
+      <div class="skeleton-btn">
+          动画：
+         <d-switch v-model:checked="animate" />
+      </div>
+      <div class="skeleton-btn">
+          显示头像：
+         <d-switch v-model:checked="avatar" />
+      </div>
+      <div class="skeleton-btn">
+          显示标题：
+         <d-switch v-model:checked="title" />
+      </div>
+      <div class="skeleton-btn">
+          显示段落：
+         <d-switch v-model:checked="paragraph" />
+      </div>
+      <div class="skeleton-btn">
+          头像圆角：
+         <d-switch v-model:checked="roundAvatar" />
+      </div>
+      <div class="skeleton-btn">
+          段落和标题圆角：
+         <d-switch v-model:checked="round" />
+      </div>
+  </div>
+  <d-skeleton :row="3" :animate="animate" :avatar="avatar" :avatar-shape="roundAvatar?'':'square'" :title="title" :paragraph="paragraph" :loading="loading" :round="round">
+      <div>
+        <div>row one</div>
+        <div>row two</div>
+        <div>row three</div>
+        <div>row four</div>
+      </div>
+  </d-skeleton>
+</template>
+<script>
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const loading = ref(true)
+    const animate = ref(true)
+    const avatar = ref(true)
+    const title = ref(true)
+    const paragraph = ref(true)
+    const roundAvatar = ref(true)
+    const round = ref(false)
+
+    return {
+      loading,
+     animate,
+      avatar,
+      title,
+      paragraph,
+      roundAvatar,
+      round
+    }
+  }
+})
+</script>
+<style>
+.skeleton-btn-groups{
+  display: flex;
+  margin-bottom: 1rem;
+}
+.skeleton-btn{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+</style>
+```
+
+最终效果如下图所示：
+
+![完整效果](https://raw.githubusercontent.com/ivestszheng/images-store/master/img/20211020100014.gif)
+
+#### API 实现
+
+要实现 API，首先要定义参数，参数代码如下：
+
+```tsx
+import type { ExtractPropTypes, PropType } from 'vue'
+
+export type ModelValue = number | string
+
+export const skeletonProps = {
+  row: {
+    type: Number,
+    default: 0
+  },
+  animate: {
+    type: Boolean,
+    default: true
+  },
+  round: {
+    type: Boolean,
+    default: false
+  },
+  loading: {
+    type: Boolean,
+    default: true
+  },
+  avatar: {
+    type: Boolean,
+    default: false
+  },
+  title: {
+    type: Boolean,
+    default: true
+  },
+  paragraph: {
+    type: Boolean,
+    default: true
+  },
+  avatarSize: {
+    type: [String, Number] as PropType<ModelValue>,
+    default: '40px'
+  },
+  avatarShape: {
+    value: String as PropType<'round' | 'square'>,
+    default: 'round'
+  },
+  titleWidth: {
+    type: [String, Number] as PropType<ModelValue>,
+    default: '40%'
+  },
+  rowWidth: {
+    type: [Number, String, Array] as PropType<number | string | Array<number | string>>,
+    default: ['100%']
+  }
+} as const
+
+export type SkeletonProps = ExtractPropTypes<typeof skeletonProps>
+
+```
+
+在模板代码里面我们通过`v-for`去遍历元素，通过`v-if`去判断是否渲染元素。而在`jsx`中，对于`v-for`，可以使用`for`循环,`array.map`来代替，对于`v-if`，可以使用`三元表达式`来代替。
+
+```tsx
+import './skeleton.scss'
+
+import { defineComponent } from 'vue'
+import { skeletonProps, SkeletonProps } from './skeleton-types'
+
+export default defineComponent({
+  name: 'DSkeleton',
+  props: skeletonProps,
+  setup(props: SkeletonProps, ctx) {
+    const { slots } = ctx;
+
+    function renderAnimate(isAnimated) {
+      return isAnimated ? 'devui-skeleton-animated' : ''
+    }
+    function renderBorderRadius(isRound) {
+      return isRound ? 'border-radius: 1em;' : ''
+    }
+    function renderParagraph(isShown, rowNum, rowWidth, round) {
+      const arr = []
+
+      function pushIntoArray(type) {
+        for (let index = 0; index < rowNum; index++) {
+          arr.push({ width: type })
+        }
+      }
+      (function handleRowWidth() {
+        if (rowWidth instanceof Array) {
+          for (let index = 0; index < rowNum; index++) {
+            if (rowWidth[index]) {
+              switch (typeof rowWidth[index]) {
+                case 'string':
+                  arr.push({ width: rowWidth[index] })
+                  break
+                case 'number':
+                  arr.push({ width: `${rowWidth[index]}px` })
+              }
+            } else {
+              arr.push({ width: 1 })
+            }
+          }
+        } else {
+          switch (typeof rowWidth) {
+            case 'string':
+              pushIntoArray(rowWidth)
+              break
+            case 'number':
+              pushIntoArray(`${rowWidth}px`)
+              break
+          }
+        }
+      })()
+
+      return <div class="devui-skeleton__paragraph" v-show={isShown}>{
+        arr.map(item => {
+          return <div class="devui-skeleton__item" style={round ? 'border-radius: 1em;' : '' + `width: ${item.width}`} />
+        })
+      }</div>
+    }
+    function renderAvatarStyle(avatarSize, avatarShape) {
+      function renderAvatarSize(avatarSize) {
+        switch (typeof avatarSize) {
+          case 'string':
+            return `width:${avatarSize};height:${avatarSize};`
+          case 'number':
+            return `width:${avatarSize}px;height:${avatarSize}px;`
+        }
+      }
+      function renderAvatarShape(avatarShape) {
+        return avatarShape === 'square' ? '' : 'border-radius:50%;'
+      }
+
+      return (renderAvatarSize(avatarSize) + renderAvatarShape(avatarShape))
+    }
+    function renderTitle(isVisible, titleWidth, isRound) {
+      function renderTitleWidth(titleWidth) {
+        switch (typeof titleWidth) {
+          case 'string':
+            return `width: ${titleWidth};`
+          case 'number':
+            return `width: ${titleWidth}px;`
+        }
+      }
+      function renderTitleVisibility(isVisible) {
+        return isVisible ? null : 'visibility: hidden;'
+      }
+
+      return (renderTitleWidth(titleWidth) + renderBorderRadius(isRound) + renderTitleVisibility(isVisible))
+    }
+    function renderSkeleton(isLoading) {
+      if (isLoading) {
+        return <>
+          <div class="devui-skeleton__avatar" v-show={props.avatar}>
+            <div class="avatar" style={renderAvatarStyle(props.avatarSize, props.avatarShape)} />
+          </div>
+          <div class="devui-skeleton__item__group">
+            <div class="devui-skeleton__title" style={renderTitle(props.title, props.titleWidth, props.round)} />
+            {renderParagraph(props.paragraph, props.row, props.rowWidth, props.round)}
+          </div>
+        </>
+      }
+
+      return <>{slots.default?.()}</>
+    }
+
+    return () => {
+      return <div class={`devui-skeleton ${renderAnimate(props.animate)}`}>
+        {renderSkeleton(props.loading)}
+      </div>
+    }
+  }
+})
+
+```
+
+在写这个组件的过程中，我学习了`函数式编程`以及《代码整洁之道》，我尽可能地去减少重复以及让代码语言化。如何写地更好，当然还希望小伙伴们能不吝赐教。
+
+## 单元测试
+
+在写组件的过程中我学习到的另一大技能便是单元测试，没有了解过的小伙伴我推荐去看[vue3的测试指南](https://www.bilibili.com/video/BV1po4y1U79s?spm_id_from=333.999.0.0)，能够快速上手。
+
+组件需要单元测试主要是为了以下三点：
+
+1. 执行单元测试，就是为了证明这段代码的行为和我们期望的一致
+2. 进行充分的单元测试，是提高软件质量，降低开发成本的必由之路
+3. 在开发人员做出修改后进行可重复的单元测试可以避免产生那些令人不快的负作用
+
+由于我经验尚浅，所以我的单测通常都是检验 DOM 结构是否与预期相符，是否包含预期的 class 名称。这里贴下我的单测代码：
+
+```tsx
+import { mount } from '@vue/test-utils';
+import { ref } from 'vue';
+import DSkeleton from '../src/skeleton';
+
+describe('skeleton 组件', () => {
+  it('render basic skeleton successfully', () => {
+    const row = ref(4);
+    const wrapper = mount({
+      components: { DSkeleton },
+      template: `<d-skeleton :row="row" />`,
+      setup() {
+        return {
+          row
+        };
+      },
+    });
+
+    expect(wrapper.classes()).toContain('devui-skeleton')
+    expect(wrapper.classes()).toContain('devui-skeleton-animated')
+    expect(wrapper.element.childElementCount).toBe(1)
+    // 渲染个数应当与传入的 row 的数量相同
+    expect(wrapper.element.children[0].childElementCount).toBe(4)
+  })
+
+  it('render skeleton without animate', () => {
+    const animate = ref(false);
+    const wrapper = mount({
+      components: { DSkeleton },
+      template: `<d-skeleton :animate="animate" />`,
+      setup() {
+        return {
+          animate
+        };
+      },
+    });
+
+    expect(wrapper.classes()).toContain('devui-skeleton-no-animated')
+  })
+
+  it('render skeleton with avatar', () => {
+    const avatar = ref(true);
+    const wrapper = mount({
+      components: { DSkeleton },
+      template: `<d-skeleton :avatar="avatar" />`,
+      setup() {
+        return {
+          avatar
+        };
+      },
+    });
+
+    expect(wrapper.element.childElementCount).toBe(2)
+    expect(wrapper.element.children[0].innerHTML).toBe('<div class="avatar"></div>')
+  })
+
+  it('hide skeleton and show real content', () => {
+    const row = ref(4);
+    const loading = ref(false);
+    const wrapper = mount({
+      components: { DSkeleton },
+      template: `
+      <d-skeleton :row="4" :loading="loading">
+        <div>
+          <div>content1</div>
+          <div>content2</div>
+          <div>content3</div>
+          <div>content4</div>
+        </div>
+      </d-skeleton>`,
+      setup() {
+        return {
+          row,
+          loading
+        };
+      },
+    });
+
+    expect(wrapper.classes()).toContain('devui-skeleton')
+    expect(wrapper.element.children[0].innerHTML).toBe('<div>content1</div><div>content2</div><div>content3</div><div>content4</div>')
+  })
+})
+```
+
+## 总结
+
+完成骨架屏（Skeleton）只是一小步，在 [DevUI](https://gitee.com/devui/vue-devui) 开发过程中，还可以学习到许多前端工程化知识。有兴趣的小伙伴赶快加入进来，大家共同进步。
+
+## 参考
+
+1. [DevUI 文档](https://devui.design/components/zh-cn/overview)
+2. [一种自动化生成骨架屏的方案](https://github.com/Jocs/jocs.github.io/issues/22)
+3. [【CSS】骨架屏效果](https://www.bilibili.com/video/BV1Z5411J72V?spm_id_from=333.999.0.0)
+4. [学会使用Vue JSX，一车老干妈都是你的](https://juejin.cn/post/6846687590704381959)
+5. [vue3的测试指南](https://www.bilibili.com/video/BV1po4y1U79s?spm_id_from=333.999.0.0)
+6. [如何做前端单元测试](https://juejin.cn/post/6990655486659919902)

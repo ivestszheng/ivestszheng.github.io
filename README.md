@@ -1,3 +1,7 @@
 # wusheng-blog
 
-工作与学习中的随笔
+## 快速上手
+
+```bash
+yarn install
+```
