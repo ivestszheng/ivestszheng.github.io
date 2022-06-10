@@ -1,3 +1,5 @@
+# 钉钉H5微应用开发
+
 ## 项目概述
 
 ### 1.  背景
@@ -6,7 +8,7 @@
 
 ### 2 .技术栈
 
-Vue 全家桶 + VantUI 
+Vue 全家桶 + VantUI
 
 ## 准备工作
 
@@ -45,8 +47,8 @@ Vue 全家桶 + VantUI
 
 | 微应用           | Android/Windows                                              | iOS/Mac |
 | ---------------- | ------------------------------------------------------------ | ------- |
-| 移动端微应用调试 | Android调试包: https://download.alicdn.com/wireless/dingtalk/latest/rimet_10006337.apk | 暂无    |
-| PC端微应用调试   | Windows调试包：https://download.alicdn.com/dingtalk-desktop/win_installer/RC/DingTalk_v5.5.5-RC.5605.exe | 暂无    |
+| 移动端微应用调试 | Android调试包: <https://download.alicdn.com/wireless/dingtalk/latest/rimet_10006337.apk> | 暂无    |
+| PC端微应用调试   | Windows调试包：<https://download.alicdn.com/dingtalk-desktop/win_installer/RC/DingTalk_v5.5.5-RC.5605.exe> | 暂无    |
 
 这里有个问题，我下载安卓的调试包无法安装，不知道是因为一加手机还是安卓11的缘故。Windows 的调试包可以用，功能类似Chrome devtools，但是移动端的 JSAPI 无法调试,Chrome devtools 同样地因为缺乏 Dingtalk 的环境而无法调试 API。
 
@@ -62,7 +64,7 @@ Vue 全家桶 + VantUI
 
 下面将讲述如何在 Vue 中配置并使用 JSAPI，并以设置导航栏右侧按钮为例。
 
-### 1.使用npm安装 
+### 1.使用npm安装
 
 ```bash
 npm install dingtalk-jsapi --save
@@ -117,4 +119,3 @@ setup(){
 ## 总结
 
 H5 微应用适合跨平台，开发周期短，开发者缺少小程序开发经验的情况下使用。另外关于 JSAPI 的使用方法，我会在之后进行更新。
-
