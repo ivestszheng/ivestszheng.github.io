@@ -1,5 +1,6 @@
 export default {
   title: '无声的博客',
+  base: 'https://ivestszheng.github.io/',
   themeConfig: {
     nav: [
       { text: '指南', link: '/guide/' },
