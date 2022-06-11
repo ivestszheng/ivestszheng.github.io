@@ -8,6 +8,8 @@ export default {
         text: '分类',
         items: [
           { text: '前端', link: '/frontend/' },
+          { text: '个人总结', link: '/summary/' },
+          { text: '闲谈', link: '/chat/' },
         ]
       }
     ],
