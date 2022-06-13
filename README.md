@@ -11,3 +11,15 @@
 ```bash
 yarn install
 ```
+
+运行
+
+```bash
+yarn dev
+```
+
+or
+
+```bash
+yarn serve
+```

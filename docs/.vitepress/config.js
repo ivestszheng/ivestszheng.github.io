@@ -4,14 +4,17 @@ export default {
   themeConfig: {
     nav: [
       { text: '指南', link: '/guide/' },
-      {
-        text: '分类',
-        items: [
-          { text: '前端', link: '/frontend/' },
-          { text: '个人总结', link: '/summary/' },
-          { text: '闲谈', link: '/chat/' },
-        ]
-      }
+      { text: '前端', link: '/frontend/' },
+      { text: '个人总结', link: '/summary/' },
+      { text: '闲谈', link: '/chat/' },
+      // {
+      //   text: '关于我',
+      //   items: [
+      //     { text: 'GitHub', },
+      //     { text: '掘金', },
+      //     { text: '公众号', },
+      //   ]
+      // }
     ],
     sidebar: {
       '/guide/': [
