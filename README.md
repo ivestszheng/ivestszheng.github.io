@@ -17,6 +17,3 @@ yarn install
 ```bash
 yarn serve 
 ```
-
-
-

@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /frontend/
+      link: /blog/frontend/
     - theme: alt
       text: View on GitHub
       link: https://github.com/ivestszheng/blog
