@@ -20,6 +20,7 @@ export default {
       '/frontend/': [
         {
           text: '前端心得总结',
+          collapsible: true,
           items: [
             { text: '钉钉H5微应用开发', link: '/frontend/dd-h5-development' },
             { text: 'Vue 2.x 组件通信方式，初学者也能看懂', link: '/frontend/vue2-communication' },
