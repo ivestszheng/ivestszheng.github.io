@@ -1,1 +1,0 @@
-gettting-started

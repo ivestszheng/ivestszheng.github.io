@@ -438,4 +438,4 @@ service.interceptors.request.use(
 
 1. [bilibili - 后台系统的权限控制与管理](https://www.bilibili.com/video/BV15Q4y1K79c?spm_id_from=333.337.search-card.all.click)
 2. [掘金 - vue实现用户登录验证 + 权限验证 + 动态路由（左侧菜单栏）](https://juejin.cn/post/7081517906026037284#heading-15)
-2. [掘金 - 浅析 vue-router 源码和动态路由权限分配](https://juejin.cn/post/6882539694170013710#heading-23)
+3. [掘金 - 浅析 vue-router 源码和动态路由权限分配](https://juejin.cn/post/6882539694170013710#heading-23)

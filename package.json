@@ -6,9 +6,8 @@
   "author": "无声 <ivestszheng@qq.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "serve": "vitepress serve docs --port 8080"
+    "serve": "vitepress dev docs",
+    "build": "vitepress build docs"
   },
   "devDependencies": {
     "vitepress": "^1.0.0-alpha.1",

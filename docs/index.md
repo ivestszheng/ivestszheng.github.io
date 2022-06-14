@@ -1,18 +1,18 @@
-home: true # 作为首页
+---
+layout: home
 
-actionText: 指南 # 主链接
-actionLink: /guide/ # 主链接地址
+title: VitePress
+titleTemplate: Vite & Vue Powered Static Site Generator
 
-altActionText: 快速上手 # 副链接
-altActionLink: /guide/getting-started # 副地址
-
-features: # 相关特性
-
-- title: feature1
-    details: feature1 description
-- title: feature2
-    details: feature2 description
-- title: feature3
-    details: feature3 description
-
-CI 测试 修改捏
+hero:
+  name: VitePress
+  text: Vite & Vue Powered Static Site Generator
+  tagline: Simple, powerful, and performant. Meet the modern SSG framework you've always wanted.
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /frontend/
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/ivestszheng/blog
+---
