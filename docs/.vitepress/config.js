@@ -1,3 +1,8 @@
+/*
+ * @Descripttion: 
+ * @Date: 2022-06-15 22:04:45
+ * @LastEditTime: 2022-07-10 15:31:29
+ */
 export default {
   lang: 'zh-CN',
   title: '无声的博客',
@@ -21,7 +26,7 @@ export default {
 function nav() {
   return [
     { text: '前端', link: '/frontend/' },
-    { text: '个人总结', link: '/summary/' },
+    { text: '代码人生', link: '/summary/' },
     { text: '闲谈', link: '/chat/' },
     {
       text: '关于我',
@@ -57,10 +62,11 @@ function sidebarFrontend(){
 function sidebarSummary(){
   return [
     {
-      text: '总结',
+      text: '代码人生',
       items: [
         { text: '二本应届生杭州小厂前端面试总结', link: '/summary/fresh-graduates-interview' },
         { text: '菜鸡的自我审视——我的2021', link: '/summary/my-2021' },
+        { text: ' 不断学习 | 2022年中总结',link:'/summary/2022-middle'}
       ]
     }
   ]
