@@ -1,0 +1,98 @@
+# 前端已经接好接口还要写假数据，如何优雅处理？
+## 前言
+
+去年年底给公司做了一个大屏项目，接好接口上线也已经半年多了。然而因为某些因素，导致时不时需要前端在接口获得的数据基础通过假数据“润色”，很是麻烦。本文是我在这过程中思考的一点总结。
+
+## 处理方案
+
+### 直接在视图逻辑中处理
+
+一开始我想的是也不会有太多工作量，便直接写在业务逻辑中，比如在一个接口中通过城市编码（Adcode）获得相应的数据：
+
+```js
+function async renderChart(adcode){
+    const data = await getAllData(adcode);
+    // 下面是业务代码
+    // ...
+}
+```
+那么对于某个特定城市的数据做处理只需加个判断条件：
+
+```js
+function async renderChart(adcode){
+    let data = await getAllData(adcode);
+    if(adcode === 330800){
+        // 进行假数据的处理
+        data.countAll += 300;
+        data.activitys += 5000;
+   		// ...
+    }
+    // 业务代码
+}
+```
+
+然而随着时间的推移，假数据处理方法被不断地加入业务代码，判断条件越加越多。加上原本数据在消费前就会调用一些处理数据格式的方法，代码变得难以读懂。
+
+### 将假数据抽离
+
+于是我把假数据抽离出来，按照模块划分，例如：
+
+```js
+// fakeData.js
+export const QZ_FAKE_DATA = [
+  {
+    adcode: 324000,
+    joinCount: 4999,
+  },
+  ...
+]
+...
+```
+
+再将处理假数据的方法也单独抽离成一个文件，业务代码中只需简单引入即可：
+
+```js
+function async renderChart(adcode){
+    let data = await getAllData(adcode);
+    handleFakeData(data,adcode)
+    // 业务代码
+}
+```
+
+但这样在每个调用接口的地方都要引入相关的处理假数据逻辑。我希望视图层的代码足够可靠，在视图逻辑不变的情况下，不应当对其修改。
+
+### 增加BFF层 / axios响应拦截器
+
+只需要加个“中间层”便可以不去动视图层的逻辑。我原本用`express`起了一个中间层，对数据进行假数据处理，但考虑到这是个非常简单的项目，接口也只有个位数，风险与收益不成正比。最后还是通过`axios`的响应拦截器来做：
+
+```js
+// service 是一个 axios 实例
+// HANDLE_FUNCTION_MAP 是保存的路由 url 与相关处理函数的映射关系的 Map
+service.interceptors.response.use(
+  (response) => {
+    const { status, data, config: { url } } = response;
+    const action = HANDLE_FUNCTION_MAP.get(url);
+
+    // 只在接口成功响应并匹配到路由后才会进行假数据操作
+    if (status === 200 && action) return action(data, response);
+    return data;
+  },
+  (error) => {
+    console.log(`err${error}`); // for debug
+
+    return Promise.reject(error);
+  },
+);
+```
+
+```js
+export const HANDLE_FUNCTION_MAP = new Map([
+  ['/group/activity/sourceCount', handleSourceCount],
+  ['/group/activity/otherData', handleOtherData],
+]);
+```
+
+
+## 总结
+
+一般情况，具体接口的处理我都是放在业务逻辑中而不会选择响应拦截器。但是这个项目比较特殊，在接好接口后，又需要进行假数据处理，才会这样做。未来只需要维护好`HANDLE_FUNCTION_MAP`这个`Map`与对应的方法；不再需要假数据时，删除拦截器中的代码即可，视图逻辑与业务逻辑代码的无需变动。
