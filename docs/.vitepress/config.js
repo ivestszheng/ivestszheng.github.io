@@ -1,7 +1,7 @@
 /*
  * @Descripttion: 
  * @Date: 2022-06-15 22:04:45
- * @LastEditTime: 2022-08-14 13:55:15
+ * @LastEditTime: 2022-07-10 15:31:29
  */
 export default {
   lang: 'zh-CN',
@@ -54,6 +54,7 @@ function sidebarFrontend(){
         { text: 'Vue2.x项目工程环境搭建思路', link: '/frontend/Vue2.x项目工程环境搭建思路' },
         { text: '后台系统的权限控制与管理', link: '/frontend/后台系统的权限控制与管理' },
         { text: 'vue-cli5关于yarn的一个小坑', link: '/frontend/vue-cli5关于yarn的一个小坑' },
+        { text: '前端已经接好接口还要写假数据，如何优雅处理？', link: '/frontend/前端已经接好接口还要写假数据，如何优雅处理？' },
         { text: 'doker零基础学习记录',link:'/frontend/docker零基础学习记录'}
       ]
     }
