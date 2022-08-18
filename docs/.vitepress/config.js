@@ -1,11 +1,12 @@
 /*
  * @Descripttion: 
  * @Date: 2022-06-15 22:04:45
- * @LastEditTime: 2022-07-10 15:31:29
+ * @LastEditTime: 2022-08-18 22:29:43
  */
 export default {
   lang: 'zh-CN',
   title: '无声的博客',
+  titleTemplate: '无声的博客',
   description: '菜鸡前端的日常分享',
   base: '/blog/',
   themeConfig: {
@@ -55,7 +56,6 @@ function sidebarFrontend(){
         { text: '后台系统的权限控制与管理', link: '/frontend/后台系统的权限控制与管理' },
         { text: 'vue-cli5关于yarn的一个小坑', link: '/frontend/vue-cli5关于yarn的一个小坑' },
         { text: '前端已经接好接口还要写假数据，如何优雅处理？', link: '/frontend/前端已经接好接口还要写假数据，如何优雅处理？' },
-        { text: 'doker零基础学习记录',link:'/frontend/docker零基础学习记录'}
       ]
     }
   ]
