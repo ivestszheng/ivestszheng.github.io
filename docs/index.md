@@ -1,18 +1,18 @@
 ---
 layout: home
 
-title: VitePress
-titleTemplate: Vite & Vue Powered Static Site Generator
+title: 无声的博客
+titleTemplate: 菜鸡前端的日常分享
 
 hero:
-  name: VitePress
-  text: Vite & Vue Powered Static Site Generator
-  tagline: Simple, powerful, and performant. Meet the modern SSG framework you've always wanted.
+  name: 无声的博客
+  text: 菜鸡前端的日常分享
+  tagline: Daily technology sharing of a rookie frontend. 
   actions:
     - theme: brand
-      text: Get Started
-      link: https://ivestszheng.github.io/blog/
+      text: 开始
+      link: https://ivestszheng.github.io/blog/frontend
     - theme: alt
-      text: View on GitHub
+      text: 项目地址
       link: https://github.com/ivestszheng/blog
 ---
