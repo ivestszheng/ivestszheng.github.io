@@ -6,7 +6,7 @@
   "author": "无声 <ivestszheng@qq.com>",
   "license": "MIT",
   "scripts": {
-    "serve": "vitepress dev docs",
+    "serve": "vitepress dev docs --host",
     "build": "vitepress build docs"
   },
   "devDependencies": {
