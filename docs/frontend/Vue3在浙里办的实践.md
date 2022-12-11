@@ -12,9 +12,8 @@
 2. 项目构建与技术选型
 3. 浙里办对接过程中遇到的问题及解决方案
 4. 项目一些需求的实现思路
-5. 我个人的Vue3最佳实践
 
-## 浙里办H5开发前需知
+### 浙里办H5开发前需知
 
 ### 章节概要
 
@@ -57,4 +56,41 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 ## 项目构建与技术选型
 
 ### 章节概要
+
+本章节主要介绍构建项目中对技术选型的一些思考。
+
+### 本项目使用的技术栈
+
+- [Vue@3.2](https://link.juejin.cn/?target=mailto%3AVue%403.2)
+- [TypeScript@5.4](https://link.juejin.cn/?target=mailto%3ATypeScript%405.4)
+- VueCli@5
+- [VantUi@3.5](https://link.juejin.cn/?target=mailto%3AVantUi%403.5)
+- Pinia@2
+- [Axios@0.27](https://link.juejin.cn/?target=mailto%3AAxios%400.27)
+- [zwjsbridge@1.1.0](https://link.juejin.cn/?target=mailto%3Azwjsbridge%401.1.0)
+- [zwlog@1.0](https://link.juejin.cn/?target=mailto%3Azwlog%401.0)
+
+### Vue2还是Vue3
+
+由于这个项目一开始的定位是一个小项目，团队配置就是一个前端加一个前端，所以项目前端架构由我自己把控。团队的技术栈以Vue2为主，不过我个人会倾向使用Vue3，一来在Vue3中通过composabler的形式可以更好地进行代码复用，二来这对我个人的成长也更有帮助。不过最后能否使用Vue3还是要根据运行环境来决定，好在经过多方调查，最后确认可以上Vue3。
+
+### Vite还是Webpack
+
+没有选用Vite的主要原因在于项目是通过VueCli构建的，我对这一套生态更加熟悉。加上当时了解到工期很紧，害怕使用Vite会遇到一些坑拖慢项目进度。不过现在VueCli已经进入了维护模式，加上VueConf2022上看到许多大公司已经将Vite用于生产环境，下一次构建项目时我会选择Vite。
+
+### Pinia还是Vuex
+
+毫无疑问是Pinia，它非常轻量，使用起来相当简洁。而且尤大在一次掘金的直播中明确表示了Pinia就是下一代Vuex，出于对作者的尊重所以没有改名。
+
+### Aplus还是Zwlog
+
+二者都是浙里办提供的埋点工具，浙里办官方更推荐使用新版的Zwlog。
+
+### Vant
+
+老牌组件库，成熟的使用方案与优秀的文档，我个人开发移动端时最常用的组件库。
+
+## 浙里办对接过程中遇到的问题及解决方案
+
+## 一些需求的实现思路
 
