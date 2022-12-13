@@ -17,27 +17,29 @@
 
 ### 章节概要
 
-本章节主要阐述一些浙里办开发涉及到的基础概念。应用开发前的申请流程，本人并不清楚，不做介绍。
+本章节主要阐述一些浙里办开发涉及到的基础概念。应用开发前的申请流程，本人并不清楚，不做介绍。、
 
-### 浙里办
+### 基础概念介绍
+
+#### 浙里办
 
 浙里办是一款基于浙江政务服务网一体化平台能力的APP。我们开发的应用可以通过浙里办App、支护宝小程序及微信小程序访问。
 
-### IRS
+#### IRS
 
 [IRS](https://op-irs.zj.gov.cn/mobile/login?goto=/mobile)指浙江省一体化数字资源系统平台。应用申请流程走完后会拿到IRS账号，我们在IRS上进行应用（指前端包）的部署与发布以及RPC接口的管理与更新。
 
-### RPC
+#### RPC
 
 RPC服务器是指Remote Procedure Call Protocol，中文释义为远程过程调用协议：一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的协议。
 
 由于审核要求，浙里办客户端不直接请求服务器，通过Mgop(相关描述请见下文)将请求发送至RPC服务器，再转发给真实的服务器。
 
-### Mgop
+#### Mgop
 
 Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/jssdk-mgop)，提供请求RPC上API的能力，有外网[语雀文档](https://www.yuque.com/xiaoniaoge/run4dl/dge18k?)。
 
-### 单点登录组件
+#### 单点登录组件
 
 由于应用存在APP、微信、支付宝这三种环境，需要通过不同的单点登录组件获取登录态。目前提供三种组件：
 
@@ -49,7 +51,7 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 
    **注：据群内”技术支持“描述，小程序拿到的票据始终为ticketId。但我实际开发过程中发现，九月时对接单点支付宝小程序获得的票据为ticketId，而自11月底起只能获取到ticket，且官方提供ssoTicket方法返回的ticketId始终为空。**
 
-### 票据
+#### 票据
 
 指ticket与ticketId，使用不同的单点登录时需要使用不同票据，不能混用。
 
@@ -70,23 +72,25 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 - [zwjsbridge@1.1.0](https://link.juejin.cn/?target=mailto%3Azwjsbridge%401.1.0)
 - [zwlog@1.0](https://link.juejin.cn/?target=mailto%3Azwlog%401.0)
 
-### Vue2还是Vue3
+### 技术选型
+
+#### Vue2还是Vue3
 
 由于这个项目一开始的定位是一个小项目，团队配置就是一个前端加一个前端，所以项目前端架构由我自己把控。团队的技术栈以Vue2为主，不过我个人会倾向使用Vue3，一来在Vue3中通过composabler的形式可以更好地进行代码复用，二来这对我个人的成长也更有帮助。不过最后能否使用Vue3还是要根据运行环境来决定，好在经过多方调查，最后确认可以上Vue3。
 
-### Vite还是Webpack
+#### Vite还是Webpack
 
 没有选用Vite的主要原因在于项目是通过VueCli构建的，我对这一套生态更加熟悉。加上当时了解到工期很紧，害怕使用Vite会遇到一些坑拖慢项目进度。不过现在VueCli已经进入了维护模式，加上VueConf2022上看到许多大公司已经将Vite用于生产环境，下一次构建项目时我会选择Vite。
 
-### Pinia还是Vuex
+#### Pinia还是Vuex
 
 毫无疑问是Pinia，它非常轻量，使用起来相当简洁。而且尤大在一次掘金的直播中明确表示了Pinia就是下一代Vuex，出于对作者的尊重所以没有改名。
 
-### Aplus还是Zwlog
+#### Aplus还是Zwlog
 
 二者都是浙里办提供的埋点工具，浙里办官方更推荐使用新版的Zwlog。
 
-### Vant
+#### Vant
 
 老牌组件库，成熟的使用方案与优秀的文档，我个人开发移动端时最常用的组件库。
 
