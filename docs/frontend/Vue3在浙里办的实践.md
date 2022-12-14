@@ -61,7 +61,46 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 
 本章节主要介绍构建项目中对技术选型的一些思考。
 
-### 本项目使用的技术栈
+### 项目整体结构
+
+这里只展示我认为的重点部分，src 目录树如下图所示：
+
+```
+│  App.vue
+│  main.ts
+│  shims-vue.d.ts
+│  
+├─apis	// api 接口存放目录，按模块划分
+│      
+├─assets	// 图片等静态资源
+│              
+├─components	// 公共组件
+│      
+├─composables	//  组合式函数，利用 Vue 的组合式 API 来封装和复用有状态逻辑的函数。
+│  │  useBuryingPoint.ts	// 对浙里办埋点的封装
+│  │  useOss.ts	// 对阿里云OSS的封装
+│  │  useSingleSignOn.ts	//  对浙里办单点登录的封装
+│  │  useZwjsBridge.ts	//  对浙ZwjsBridge API的封装
+│      
+├─http	// 请求层
+│      request.ts	// 对 axios 与 mgop 的集成
+│      axiosInstance.ts	// axios 的实例
+│      useMgop.ts	// 对 mgop 的二次封装
+│      useCostomApis.ts	// 自定义的对 mgop 的拓展 api
+│      
+├─router	// 路由
+│      
+├─stores	// pinia 仓库，按模块划分
+│  └─user	// 用户模块
+│          
+├─styles	// 样式存放目录
+|
+└─views		// 页面存放目录
+```
+
+
+
+### 技术栈
 
 - [Vue@3.2](https://link.juejin.cn/?target=mailto%3AVue%403.2)
 - [TypeScript@5.4](https://link.juejin.cn/?target=mailto%3ATypeScript%405.4)
@@ -96,5 +135,273 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 
 ## 浙里办对接过程中遇到的问题及解决方案
 
-## 一些需求的实现思路
+### 请求层相关问题
 
+#### 问题：请求层生产环境与开发环境不一致
+
+在`基础概念介绍`章节中提到了，前端项目部署后需要通过 mgop 访问 RPC 再访问真实的服务端，而 mgop 在开发环境是无法使用的。
+
+**解决方案**
+
+封装一个request请求工具，当`NODE_ENV`这个环境变量是`production`时调用mgop，否则调用axios，具体代码参考`完整代码展示`中的`request.ts`。
+
+#### 问题：调用接口报“网络错误”的异常
+
+直接请求服务器上的接口正常，但是mgop调用rpc上api显示“网络错误”异常，大概率是RPC和服务器没有走通。
+
+**解决方案**
+
+1. 使用`工作台 > RPC 接入 > API管理`调试先测试能否正常返回结果。
+2. 确保接口入参出参都为JSON格式。
+
+#### 完整代码展示
+
+```typescript
+// api目录下，request 使用展示
+import request from '@/http/request';
+
+/**
+* 请确保入参出参都是JSON格式，如果接口不需要传参，request对象则不需要传第三个参数
+*/
+const getRegion = (param) => {	// api的入参
+  return request(
+    {
+      dev: "此处填写axios调用的api地址",
+      prod: "此处填写mgop调用的api名称"
+    },
+    "get",
+    {
+      data: {
+        param	//
+      },
+    }
+  );
+};
+
+export {
+  getRegion
+};
+```
+
+```typescript
+// request.ts
+import useMgop from './useMgop';
+import axiosInstance from './axiosInstance';
+
+export function request(apis: { dev?: string, prod?: string }, type = "GET", config?: { data?: any }) {
+  if (process.env.NODE_ENV === "production") {
+    return useMgop(apis.prod, type, config);
+  } else {
+    if (!apis?.dev) {
+      console.error('axios 请求路径不合法');
+    } else if (type.toLowerCase() === 'get') {
+      return axiosInstance.get(apis.dev, { params: config && (config.data !== undefined) ? config.data : null, ...config });
+    } else if (type.toLowerCase() === 'post') {
+      return axiosInstance.post(apis.dev, config && (config.data !== undefined) ? config.data : null, { ...config });
+    }
+  }
+}
+
+export default request;
+```
+
+```typescript
+// axiosInstance.ts
+import axios from 'axios';
+import { Toast } from "vant";
+import { useUserStore } from '@/stores/user';
+
+const service = axios.create({
+  baseURL: process.env.VUE_APP_BASE_URL,
+  timeout: 5000,
+});
+
+service.interceptors.request.use(
+  (config:any) => {
+    const userStore = useUserStore();
+    if(userStore.token) config.headers.Authorization = `Bearer ${userStore.token}`;
+    return config;
+  },
+  (error) => {
+    console.log(error);
+    return Promise.reject(error);
+  },
+);
+
+service.interceptors.response.use(
+  (response) => {
+    const { data } = response;
+    const code = parseInt(data?.code);
+    const message = data?.message || '无详情';
+
+    if(!isNaN(code) && (code < 200 || code > 200)){
+      return Promise.reject(`服务器内部错误,状态码：${code},${message}`);
+    }
+    return data;
+  },
+  (error) => {
+    Toast.fail(error.message);
+    console.log(`err${error}`);
+
+    return Promise.reject(error);
+  },
+);
+
+export default service;
+```
+
+```typescript
+// useMgop.ts
+import { mgop } from "@aligov/jssdk-mgop";
+import { Toast } from "vant";
+import useHandleData from '@/composables/useHandleData';
+import useCostomApis from './useCostomApis';
+import { useUserStore } from '@/stores/user/index';
+
+const { getUuid } = useHandleData();
+const { add, remove, getIndex } = useCostomApis();
+
+function useMgop(api, type = "GET", config) {
+  const userStore = useUserStore();
+  // api是在开发者平台中注册的rpc的api名称，一个接口一个
+  return new Promise((resolve, reject) => {
+    // 生成 uuid 并将其加入队列
+    const uuid = getUuid();
+    add(uuid);
+
+    mgop({
+      api,
+      host: "https://mapi.zjzwfw.gov.cn/",
+      dataType: "JSON",
+      type,
+      appKey: process.env.VUE_APP_ZLB_APP_KEY,
+      header: {
+        Authorization: userStore.token ? `Bearer ${userStore.token}` : null,
+      },
+      onSuccess: async (res) => {
+        try {
+          const result = await Promise.race([checkIsInQueue(uuid), handleOnSuccess(res, { api })]);
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      },
+      onFail: async (error) => {
+        console.log('mgop onFail', error);
+        try {
+          // 因为是错误函数的回调，所以不应存在对 resolve 的处理
+          await Promise.race([checkIsInQueue(uuid), handleOnFailed(error, { api })]);
+        } catch (error) {
+          reject(error);
+        }
+      },
+      ...config,
+    });
+  });
+}
+
+// 判断是否在需要执行的集合中
+function checkIsInQueue(uuid) {
+  return new Promise((resolve, reject) => {
+    const index = getIndex(uuid);
+    // 有副作用，并不理想
+    if (index > -1) {
+      remove(index);
+    } else {
+      return reject(new Error('请求已被取消'));
+    }
+  });
+}
+
+function handleOnSuccess(res, { api }) {
+  return new Promise((resolve, reject) => {
+    // 请求是否到达 RPC 判断
+    let errMsg = '';
+    const code = parseInt(res.data?.code);
+    const message = res.data?.message || "无详情";
+
+    if (res.ret[0] === "1000::调用成功") {  
+      // 请求是否成功判断，字段和后端约定好
+      if (!isNaN(code) && (code < 200 || code > 200)) {
+        errMsg = JSON.stringify(`${api}服务器内部错误,状态码：${code},${message}`);
+        Toast.fail(errMsg);
+        return reject(new Error(errMsg));
+      } else {
+        resolve(res.data);
+      }
+    } else {
+      errMsg = JSON.stringify(`${api}请求RPC失败，状态码：${res.ret[0]}`);
+      Toast.fail(errMsg);
+      reject(new Error(errMsg));
+    }
+  });
+}
+
+function handleOnFailed(error, { api }) {
+  return new Promise((resolve, reject) => {
+    if (error.errorMessage && error.errorCode) {
+      const errMsg = JSON.stringify(`errorCode: ${error.errorCode},${error.errorMessage}`);
+      Toast.fail(errMsg);
+      return reject(new Error(`errorApi:${api},${errMsg}`));
+    } else if (error.ret[0]) {
+      const errMsg = JSON.stringify(error.ret[0]);
+      Toast.fail(errMsg);
+      return reject(new Error(errMsg));
+    } else {
+      reject(error);
+      Toast.fail('系统异常，请稍后再试.');
+      return reject(new Error(error));
+    }
+  });
+}
+
+export default useMgop;
+```
+
+```typescript
+// useCostomApis.ts
+const pendingRequests: Array<string> = [];
+
+export default function useCostomApis() {
+  function add(uuid: string) {
+    if (uuid) pendingRequests.push(uuid);
+  };
+
+  function cancel() {
+    if (pendingRequests.length) pendingRequests.length = 0;
+  };
+
+  function getIndex(val: string)  {
+    return pendingRequests.findIndex((element) => element === val);
+  };
+
+  function remove(index: number) {
+    pendingRequests.splice(index, 1);
+  };
+
+  return {
+    add,
+    remove,
+    cancel,
+    getIndex
+  };
+}
+```
+
+### 部署相关问题
+
+#### 问题：部署报错“构建产物存放路径build不存在”
+
+浙里办强制要求打包产物名称为“build”。
+
+**解决方案**
+
+修改打包名称后重新部署。
+
+#### 问题：同样的包之前部署成功，现在却编译失败。
+
+就是浙里办的BUG，但反馈也没用。
+
+**解决方案**
+
+重新部署，还不行只能提工单。
