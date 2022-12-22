@@ -154,7 +154,7 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 1. 使用`工作台 > RPC 接入 > API管理`调试先测试能否正常返回结果。
 2. 确保接口入参出参都为JSON格式。
 
-#### 完整代码展示
+#### 具体代码展示
 
 ```typescript
 // api目录下，request 使用展示
@@ -172,7 +172,7 @@ const getRegion = (param) => {	// api的入参
     "get",
     {
       data: {
-        param	//
+        param
       },
     }
   );
@@ -268,15 +268,15 @@ function useMgop(api, type = "GET", config) {
     // 生成 uuid 并将其加入队列
     const uuid = getUuid();
     add(uuid);
-
-    mgop({
+    const mgopReceiceObj = {
       api,
       host: "https://mapi.zjzwfw.gov.cn/",
       dataType: "JSON",
       type,
       appKey: process.env.VUE_APP_ZLB_APP_KEY,
+      /** 同事说的，请求头用引号，否则可能会遇上浙里办转换策略的问题 */
       header: {
-        Authorization: userStore.token ? `Bearer ${userStore.token}` : null,
+        "Authorization": userStore.token ? `Bearer ${userStore.token}` : '',
       },
       onSuccess: async (res) => {
         try {
@@ -296,7 +296,11 @@ function useMgop(api, type = "GET", config) {
         }
       },
       ...config,
-    });
+    };
+
+    /** 当请求头 isTestUrl 为 "1" 时，使用联调环境，传其他值例如""，"0" 仍然会使用联调环境" */ 
+    if(process.env.VUE_APP_ZLB_IS_ONLINE_ENV === 'false') mgopReceiceObj.header['isTestUrl'] = '1';
+    mgop(mgopReceiceObj);
   });
 }
 
@@ -320,7 +324,7 @@ function handleOnSuccess(res, { api }) {
     const code = parseInt(res.data?.code);
     const message = res.data?.message || "无详情";
 
-    if (res.ret[0] === "1000::调用成功") {  
+    if (res.ret[0] === "1000::调用成功") {
       // 请求是否成功判断，字段和后端约定好
       if (!isNaN(code) && (code < 200 || code > 200)) {
         errMsg = JSON.stringify(`${api}服务器内部错误,状态码：${code},${message}`);
@@ -405,3 +409,168 @@ export default function useCostomApis() {
 **解决方案**
 
 重新部署，还不行只能提工单。
+
+## 碰到的业务需求及解决方案
+
+### 如何实现文件上传
+
+#### JSON入参转文件流
+
+平时的文件上传都是通过流来实现。由于浙里办的规范——接口入参出参只接受JSON，只能曲线救国，JSON入参，再由后端转换成需要的格式。此种方案优缺点如下：
+
+**优点：**实现起来简单。
+
+**缺点：**是接口响应速度会变慢。
+
+#### 使用OSS
+
+阿里云对象存储OSS（Object Storage Service），是由阿里提供的一种云存储服务。
+
+此种方案优缺点如下：
+
+**优点：**提交材料审核时，这部分无需额外的说明。
+
+**缺点：**需要付费。
+
+具体使用前后端需集成相应的SDK，我司项目中后端使用[Java](https://help.aliyun.com/document_detail/32007.html)，前端使用[Browser.js](https://help.aliyun.com/document_detail/64041.html)。
+
+大致流程是需要后端提供一个接口用于[使用STS临时访问凭证访问OSS](https://help.aliyun.com/document_detail/100624.html)，获取凭证后前端初始化OSS，然后就可以进行上传下载等权限内操作。
+
+需要注意的是，OSS有有效时间，快到期前需要刷新凭证。一开始我是使用`refreshSTSToken`这个官方提供的参数进行刷新，但是后来我发现每次调用`signatureUrl`这个方法都会触发`refreshSTSToken`。在社区提了个ISSUE：[v6.17.1 browserjs 调用signatureUrl方法会触发refreshSTSToken](https://github.com/ali-sdk/ali-oss/issues/1178)，但是快一个月过去了也无人回应，后面索性就直接写个定时任务来刷新了。
+
+此处不对OSS进行过多的展开，更多请见[《什么是对象存储OSS》](https://help.aliyun.com/document_detail/31817.html#:~:text=OSS%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5.%20%E5%AD%98%E5%82%A8%E7%B1%BB%E5%9E%8B%EF%BC%88Storage%20Class%EF%BC%89.%20OSS%E6%8F%90%E4%BE%9B%E6%A0%87%E5%87%86%E3%80%81%E4%BD%8E%E9%A2%91%E8%AE%BF%E9%97%AE%E3%80%81%E5%BD%92%E6%A1%A3%E3%80%81%E5%86%B7%E5%BD%92%E6%A1%A3%E5%9B%9B%E7%A7%8D%E5%AD%98%E5%82%A8%E7%B1%BB%E5%9E%8B%EF%BC%8C%E5%85%A8%E9%9D%A2%E8%A6%86%E7%9B%96%E4%BB%8E%E7%83%AD%E5%88%B0%E5%86%B7%E7%9A%84%E5%90%84%E7%A7%8D%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%9C%BA%E6%99%AF%E3%80%82.,%E5%85%B6%E4%B8%AD%E6%A0%87%E5%87%86%E5%AD%98%E5%82%A8%E7%B1%BB%E5%9E%8B%E6%8F%90%E4%BE%9B%E9%AB%98%E6%8C%81%E4%B9%85%E3%80%81%E9%AB%98%E5%8F%AF%E7%94%A8%E3%80%81%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1%EF%BC%8C%E8%83%BD%E5%A4%9F%E6%94%AF%E6%8C%81%E9%A2%91%E7%B9%81%E7%9A%84%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE%EF%BC%9B%E4%BD%8E%E9%A2%91%E8%AE%BF%E9%97%AE%E5%AD%98%E5%82%A8%E7%B1%BB%E5%9E%8B%E9%80%82%E5%90%88%E9%95%BF%E6%9C%9F%E4%BF%9D%E5%AD%98%E4%B8%8D%E7%BB%8F%E5%B8%B8%E8%AE%BF%E9%97%AE%E7%9A%84%E6%95%B0%E6%8D%AE%EF%BC%88%E5%B9%B3%E5%9D%87%E6%AF%8F%E6%9C%88%E8%AE%BF%E9%97%AE%E9%A2%91%E7%8E%871%E5%88%B02%E6%AC%A1%EF%BC%89%EF%BC%8C%E5%AD%98%E5%82%A8%E5%8D%95%E4%BB%B7%E4%BD%8E%E4%BA%8E%E6%A0%87%E5%87%86%E7%B1%BB%E5%9E%8B%EF%BC%9B%E5%BD%92%E6%A1%A3%E5%AD%98%E5%82%A8%E7%B1%BB%E5%9E%8B%E9%80%82%E5%90%88%E9%9C%80%E8%A6%81%E9%95%BF%E6%9C%9F%E4%BF%9D%E5%AD%98%EF%BC%88%E5%BB%BA%E8%AE%AE%E5%8D%8A%E5%B9%B4%E4%BB%A5%E4%B8%8A%EF%BC%89%E7%9A%84%E5%BD%92%E6%A1%A3%E6%95%B0%E6%8D%AE%EF%BC%9B%E5%86%B7%E5%BD%92%E6%A1%A3%E5%AD%98%E5%82%A8%E9%80%82%E5%90%88%E9%9C%80%E8%A6%81%E8%B6%85%E9%95%BF%E6%97%B6%E9%97%B4%E5%AD%98%E6%94%BE%E7%9A%84%E6%9E%81%E5%86%B7%E6%95%B0%E6%8D%AE%E3%80%82.%20%E6%9B%B4%E5%A4%9A%E4%BF%A1%E6%81%AF%EF%BC%8C%E8%AF%B7%E5%8F%82%E8%A7%81%20%E5%AD%98%E5%82%A8%E7%B1%BB%E5%9E%8B%E4%BB%8B%E7%BB%8D%20%E3%80%82.)。
+
+具体代码如下：
+
+```js
+// 具体使用
+import useOss from '@/composables/useOss';
+
+// 初始化
+const { init: initOss } = useOss();
+
+// 文件上传
+const { putObject } = useOss();
+putObject(自定义文件对象, 文件名);
+
+// 由加密后的数据，获 取文件地址
+const { getPreviewUrl } = useOss();
+const filePath = getPreviewUrl(加密后的数据)
+```
+
+```typescript
+// @/composables/useOss.ts
+import OSS from 'ali-oss';
+import { getOssSts } from '@/apis/file';
+
+/**
+ * @param region 填写Bucket所在地域。以华东1（杭州）为例，填写为oss-cn-hangzhou
+ * @param accessKeyId  从STS服务获取的临时访问密钥 AccessKey ID
+ * @param accessKeySecret 从STS服务获取的临时访问密钥 AccessKey Secret
+ * @param stsToken 从STS服务获取的安全令牌（SecurityToken）
+ * @param bucket Bucket名称
+ */
+const headers = {
+    // 指定该Object被下载时网页的缓存行为。
+    // 'Cache-Control': 'no-cache',
+    // 指定该Object被下载时的名称。
+    // 'Content-Disposition': 'oss_download.txt',
+    // 指定该Object被下载时的内容编码格式。
+    // 'Content-Encoding': 'UTF-8',
+    // 指定过期时间。
+    // 'Expires': 'Wed, 08 Jul 2022 16:57:01 GMT',
+    // 指定Object的存储类型。
+    // 'x-oss-storage-class': 'Standard',
+    // 指定Object的访问权限。
+    // 'x-oss-object-acl': 'private',
+    // 设置Object的标签，可同时设置多个标签。
+    // 指定CopyObject操作时是否覆盖同名目标Object。此处设置为true，表示禁止覆盖同名Object。
+    'x-oss-forbid-overwrite': 'true',
+};
+
+let client: any = null;
+
+export default function useOss() {
+    /**
+     * oss 初始化方法
+     */
+    async function init() {
+        try {
+            const { data: refreshToken }: any = await getOssSts();
+
+            client = new OSS({
+                region: process.env.VUE_APP_OSS_REGION,
+                accessKeyId: refreshToken.AccessKeyId,
+                accessKeySecret: refreshToken.AccessKeySecret,
+                stsToken: refreshToken.SecurityToken,
+                // refreshSTSToken 有BUG放弃使用
+                // refreshSTSToken: async () => {
+                //     // 向您搭建的STS服务获取临时访问凭证。
+                //     const { data: refreshToken }: any = await getOssSts();
+
+                //     return {
+                //         accessKeyId: refreshToken.AccessKeyId,
+                //         accessKeySecret: refreshToken.AccessKeySecret,
+                //         stsToken: refreshToken.SecurityToken,
+                //     };
+                // },
+                // // 刷新临时访问凭证的时间间隔，单位为毫秒。
+                // refreshSTSTokenInterval: 60000 * 30,
+                bucket: process.env.VUE_APP_OSS_BUCKET,
+            });
+            console.log('OSS 访问凭证初始化成功');
+        } catch (e: any) {
+            throw new Error(`OSS 访问凭证初始化失败：${e.message}`);
+        }
+    };
+
+    /**
+     * OSS 上传文件,填写Object完整路径。Object完整路径中不能包含Bucket名称。您可以通过自定义文件名（例如exampleobject.txt）或文件完整路径（例如exampledir/exampleobject.txt）的形式实现将数据上传到当前Bucket或Bucket中的指定目录。
+     * @param data - data对象可以自定义为file对象、Blob数据或者OSS Buffer
+     * @param filename - 文件名，需要带上文件后缀
+     */
+    async function putObject(data, filename) {
+        if (client === null) return console.error('oss client 未初始化');
+        try {
+            const result = await client.put(
+                filename, data, headers);
+            return result;
+        } catch (e) {
+            throw new Error(`文件流上传 OSS 失败，${e}`);
+        }
+    };
+
+    /**
+     * @description 获取文件预览地址
+     * @param filePath bucket上的文件名
+     */
+    function getPreviewUrl(filePath: string) {
+        try {
+            if (client === null) {
+                console.error('oss client 未初始化');
+            } else if (!filePath) {
+                console.warn('oss 获取地址为空');
+            } else {
+                const url = client.signatureUrl(filePath);
+                return url;
+            }
+            return '';
+        } catch (e) {
+            console.error(`获取文件预览地址失败，${e}`);
+            return '';
+        }
+    };
+
+    return {
+        putObject,
+        getPreviewUrl,
+        init
+    };
+}
+```
+
+
+
+****
+
+【后续待更...】
