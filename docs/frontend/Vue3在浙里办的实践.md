@@ -1,5 +1,3 @@
-# Vue3在浙里办的实践
-
 ## 观前提醒
 
 本人并非浙里办工作人员，不保证内容完全准确，若开发中有疑问，请先阅读完钉钉群内所有开发文档，再咨询钉钉群相关“技术支持”人员。若还是无法解决，请在掘金文章下留言，勿直接私信本人。
@@ -135,7 +133,308 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 
 ## 浙里办对接过程中遇到的问题及解决方案
 
-### 请求层相关问题
+### 单点登录
+
+#### 整体思路
+
+简单来说单点登录分为三个步骤：
+
+1. 获取票据(`ticket`或`ticketId`)
+2. 根据票据换`token`
+3. 根据`token`换用户信息
+
+根据实际拿到的票据，我们要调用不同的单点登录组件（不了解的请回头看章节**基础概念介绍**），根据我实际开发的情况来看，最后真实可用的是浙里办App、支付宝小程序使用**政府服务网个人用户单点登录组件**（我司项目面向的是个人用户）；微信小程序使用的是**“浙里办”统一单点登录**。
+
+#### 判断容器环境
+
+由于不同容器环境下，获取票据的方式不同。实际单点登录前需要先判断环境，每个容器的`window.navigator.userAgent`携带的参数不同，具体见方法getContainerEnv`。
+
+#### 问题：获取票据时产生的二次回退
+
+**政府服务网个人用户单点登录组件**通过重定向的方式将票据参数添加到url中，假设第一次打开应用访问的是首页A，往History栈中添加首页A。首页A执行获取票据逻辑，页面重定向至携带票据参数的首页B，此时History栈中现在有两个记录：首页B、首页A。当用户从首页按后退时本应回到上层应用，由于栈中有两条记录，实际回到了首页A，这个现象称其为**二次回退**。
+
+解决这个问题我尝试了多种思路：
+
+1. 不往History栈中push，使用replace
+
+   *结果*：支付宝小程序不支持，仍出现两个窗口。
+
+2. 执行打开新的页面窗口后，执行浙里办Api：`ZWJSBridge.close`将上一个窗口关闭。
+
+   *结果*：App支持，但体验不好；支付宝小程序不支持，仍出现两个窗口。
+
+3. 通过监听`popstate`事件，当首页进行后退操作时（还要判断条件为History或state判断再次后退是首页A），关闭窗口。
+
+   *结果*：失败，没能触发`popstate`事件动作。猜测后退事件优先级较高，页面已经被销毁，不会再执行相关操作。
+
+如果是单一容器解决二次回退相当简单，痛点在于容器环境复杂，表现结果不一致；运行机制处于黑箱。
+
+最后的方案是在访问首页前增加一个过渡页，具体流程如下：
+
+1. 打开应用，访问路径为`'/'`的过渡页，开始单点登录，页面重定向。
+2. 重定向至新的过渡页。
+3. 添加`popstate`监听器：当后退回到过渡页时，关闭页面。
+4. 判断页面携带票据信息，访问首页。
+
+现在从首页B后退并不会回到首页A，而是先回到过渡页，这样能保证`popstate`监听器可以正常执行。这个方案在好处在于不用再关注容器环境与History栈的情况，即便未来增加的新的容器环境，这套方案同样适用。缺点在于增加了一个额外的页面，代码看上去不那么直观。
+
+#### 具体代码
+
+```typescript
+// @/composables/useSingleSignOn.ts
+import { reactive, onUnmounted } from 'vue';
+import { ZLB_URL, ZFB_URL } from "@/config/index";
+import { useUserStore } from "@/stores/user";
+import {
+  getAppToken,
+  getMiniProgramToken,
+  getAppUserInfo,
+  getMiniProgramUserInfo
+} from '@/apis/user';
+import router from '@/router';
+
+type EnvironmentName = '浙里办' | '支付宝' | '微信' | '未定义' | string | undefined;
+interface ISso {
+  status: LogStatus,
+  env: EnvironmentName,
+  ticketId: string,
+  zlbToken: string
+}
+
+enum LogStatus {
+  Unlogged = '01',
+  Logged = '02'
+}
+/**
+ * @param status - 单点登录状态 0：未登录 1：登录成功
+ * @param env - 环境名
+ * @parma
+ */
+const sso: ISso = reactive({
+  status: LogStatus.Unlogged,
+  env: '',
+  ticketId: '',
+  zlbToken: '',
+});
+
+// 这里写的有点多余了，直接用枚举类会更好
+const CONTAINER_ENV_MAP = new Map([
+  [0, "未定义"],
+  [1, "浙里办"],
+  [2, "支付宝"],
+  [3, "微信"],
+]);
+
+export default function useSingleSignOn() {
+  /**
+ * 获取当前环境
+ * @returns 
+ */
+  function getContainerEnv(): EnvironmentName {
+    const sUserAgent = window.navigator.userAgent.toLowerCase();
+    let keyOfContainerEnv;
+
+    if (sUserAgent.indexOf("dtdreamweb") > -1) {
+      keyOfContainerEnv = 1;
+    } else if (
+      sUserAgent.indexOf("miniprogram") > -1 &&
+      sUserAgent.indexOf("alipay") > -1
+    ) {
+      keyOfContainerEnv = 2;
+    } else if (
+      sUserAgent.indexOf("miniprogram") > -1 &&
+      (sUserAgent.indexOf("wx") > -1 || sUserAgent.indexOf("wechat") > -1)
+    ) {
+      keyOfContainerEnv = 3;
+    } else {
+      keyOfContainerEnv = 0;
+    }
+
+    sso.env = CONTAINER_ENV_MAP.get(keyOfContainerEnv);
+    console.log('当前环境',sso.env);
+    
+    return CONTAINER_ENV_MAP.get(keyOfContainerEnv) as EnvironmentName;
+  }
+  /**
+   * 获取票据 ticketId
+   * @param environmentName - 当前使用环境名
+   * @returns ticketId || null
+   */
+  async function getZlbTicket(environmentName: EnvironmentName) {
+    switch (environmentName) {
+      case "浙里办": {
+        const regex = /(ticket=)(.+-ticket)/;
+        if (window.location.search.match(regex)) {
+          console.log('浙里办获取ticket', window.location.search.match(regex)![2]);
+          return window.location.search.match(regex)![2];
+        } else {
+          window.location.replace(ZLB_URL);
+        }
+        break;
+      }
+      case "支付宝": {
+        const regex = /(ticket=)(.+-ticket)/;
+        if (window.location.search.match(regex)) {
+          console.log('支付宝获取ticket', window.location.search.match(regex)![2]);
+          return window.location.search.match(regex)![2];
+        } else {
+          window.location.replace(ZFB_URL);
+        }
+        break;
+      }
+      case "微信": {
+        if (ZWJSBridge.ssoTicket) {
+          const ssoFlag = await ZWJSBridge.ssoTicket({});
+          console.log('ssoFlag', ssoFlag);
+
+          if (ssoFlag && ssoFlag.result === true) {
+            if (ssoFlag.ticketId) {
+              console.log("小程序获取ticketId:", ssoFlag.ticketId);
+              return ssoFlag.ticketId;
+            } else {
+              // 当“浙里办”单点登录失败或登录态失效时调用 ZWJSBridge.openLink 方法重新获取 ticketId
+              return ZWJSBridge.openLink({ type: "reload" }).then(res => res.ticketId);
+            }
+          } else {
+            throw new Error("小程序获取 ticketId 失败,ssoTicket 方法没有返回 ticketId");
+          }
+        } else {
+          throw new Error("ssoTicket 方法不存在，确保在浙里办小程序中访问应用");
+        }
+        break;
+      }
+      default:
+        throw new Error('获取ticketId失败，预期外的输入条件');
+    }
+    return null;
+  }
+
+  /**
+   * 通过票据获取 token
+   * @param ticket - 票据
+   * @param env - 环境名 
+   * @returns 
+   */
+  async function getZlbToken(ticket: string, { env: environmentName }) {
+    if (ticket) {
+      try {
+        switch (environmentName) {
+          case "支付宝":
+          case "浙里办": {
+            const res: any = await getAppToken(ticket);
+            return res.data.token;
+            break;
+          }
+          case "微信":
+            {
+              const res: any = await getMiniProgramToken(ticket);
+              console.log(`小程序拿到的浙里办token:${JSON.stringify(res)}`);
+              return res.data;
+              break;
+            }
+          default:
+            throw new Error("当前环境未识别，无法获取token");
+        }
+        return null;
+      } catch (e: any) {
+        throw new Error(`${environmentName}票据换浙里办token失败：${e.message}`);
+      }
+    } else {
+      throw new Error('票据不存在');
+    }
+  }
+
+  /**
+   * 通过 token 获取当前登录用户的用户信息
+   */
+  async function getUserInfo(zlbToken: string, { env: environmentName }) {
+    try {
+      switch (environmentName) {
+        case "支付宝":
+        case "浙里办": {
+          const res: any = await getAppUserInfo(zlbToken);
+          return {
+            username: res?.data?.username,
+            mobile: res?.data?.mobile,
+            idnum: res?.data?.idnum,
+            userid: res?.data?.userid,
+          };
+          break;
+        }
+        case "微信": {
+          const res: any = await getMiniProgramUserInfo(zlbToken);
+          return {
+            username: res?.data?.userNameEnc,
+            mobile: res?.data?.phoneEnc,
+            idnum: res?.data?.idNoEnc,
+            userid: res?.data?.userid,
+          };
+          break;
+        }
+        default:
+          break;
+      }
+      return null;
+    } catch (e: any) {
+      throw new Error(`${environmentName}通过 token 获取当前登录用户的用户信息失败：${e.message}`);
+    }
+  }
+
+  async function singleSignOn() {
+    try {
+      const userStore = useUserStore();
+      userStore.env = getContainerEnv();
+      // 监听后退事件，当后退回到过渡页时,直接关闭页面.
+      const watchPopstate = () => {
+        if (window.history.state?.current === '/') {
+          if (sso.env === '支付宝') {
+            /** 支付宝环境Api，不需要额外引入文件可以直接使用。实际上我觉得这里可以不判断环境，直接使用ZWJSBridge.close */
+            my.navigateBack();
+          } else {
+            ZWJSBridge.close();
+          }
+        }
+      };
+      window.addEventListener("popstate", watchPopstate, false);
+      onUnmounted(() => window.removeEventListener("popstate", watchPopstate));
+      sso.ticketId = await getZlbTicket(sso.env);
+      // 从过渡页跳转至首页
+      router.push({ name: 'home' });
+      // 获取用户信息
+      if (sso.ticketId) {
+        sso.zlbToken = await getZlbToken(sso.ticketId, { env: sso.env });
+        const userInfo: any = await getUserInfo(sso.zlbToken, { env: sso.env });
+        sso.status = LogStatus.Logged;
+        
+        if (userInfo !== null && userInfo !== undefined) {
+          userStore.username = userInfo.username;
+          userStore.mobile = userInfo.mobile;
+          userStore.idnum = userInfo.idnum;
+          userStore.userid = userInfo.userid;
+        }
+        return { ...sso, ...userInfo };
+      }
+      return { ...sso };
+    } catch (e: any) {
+      throw new Error(`单点登录失败：${e?.message ?? JSON.stringify(e)}`);
+    }
+  }
+
+  return {
+    sso,
+    getContainerEnv,
+    getZlbTicket,
+    getZlbToken,
+    getUserInfo,
+    singleSignOn
+  };
+}
+
+```
+
+
+
+### 请求层
 
 #### 问题：请求层生产环境与开发环境不一致
 
@@ -392,7 +691,7 @@ export default function useCostomApis() {
 }
 ```
 
-### 部署相关问题
+### 部署
 
 #### 问题：部署报错“构建产物存放路径build不存在”
 
@@ -412,7 +711,7 @@ export default function useCostomApis() {
 
 ## 碰到的业务需求及解决方案
 
-### 如何实现文件上传
+### 文件上传
 
 #### JSON入参转文件流
 
@@ -568,8 +867,6 @@ export default function useOss() {
     };
 }
 ```
-
-
 
 ****
 
