@@ -15,7 +15,7 @@
 
 ### 章节概要
 
-本章节主要阐述一些浙里办开发涉及到的基础概念。应用开发前的申请流程，本人并不清楚，不做介绍。、
+本章节主要阐述一些浙里办开发涉及到的基础概念。应用开发前的申请流程，本人并不清楚，不做介绍。
 
 ### 基础概念介绍
 
@@ -947,6 +947,88 @@ VUE_APP_ZLB_IS_ONLINE_ENV = false
   },
 ```
 
+### 适老化
+
+#### 整体思路
+
+本质是做一套换肤方案，通过`ZWJSBridge.getUiStyle`这个api可以获取用户当前风格(`normal`、`elder`)，并在每次初始化应用时获取当前风格，保存至pinia中的`uiStyle`。当风格为`elder`时展示界面为长辈版。
+
+我的方案比较质朴，准备两套样式方案，通过控制`App.vue`最外层的class来切换一般组件样式。粗粒度的组件直接通过改变CSS变量即可。对于一些有细粒度要求的组件即可以通过`uiStyle`这个变量控制，也可以增加`elder-oriented-theme`这个类下的组件样式。
+
+此外，我看到有人通过REM适配的适老化方案是直接增加根元素字体大小，这种方案局限性过大，无法做到细粒度的样式切换。
+
+#### 具体代码
+
+```vue
+// App.vue
+<div class="elder-container" :class="{ 'elder-oriented-theme': userStore.isElderlyOrientedMode }">
+    // ...
+</div>
+```
+
+```typescript
+// pinia
+export const useUserStore = defineStore("user", {
+  persist: false,
+  state: () => {
+    return {
+      uiStyle: "normal", // elder normal
+    };
+  },
+  getters: {
+    isElderlyOrientedMode: (state) =>
+      state.uiStyle === "elder" ? true : false
+  },
+});
+```
+
+```less
+// css变量
+/** 普通版变量 */
+:root {
+    /** 颜色变量 */
+    /** 主题色 */
+    --qkh-theme-color: #469afd;
+    /** 文本颜色 */
+    --qkh-text-color: #333;
+    /** 弱化文本颜色 */
+    --qkh-weak-text-color: #848689;
+    /** 文本辅助色 */
+    --qkh-adjuvant-text-color: #6377f5;
+    /** 界面色 */
+    --qkh-ui-color: #fff;
+    /** 页面背景色 */
+    --qkh-background-color: #f9f9ff;
+
+    /** 字体变量 */
+    /** 首页标题 */
+    --qkh-home-title-font: bold 20px -apple-system, Helvetica, sans-serif;
+    /** 一级标题 */
+    --qkh-primary-title-font: 18px -apple-system, Helvetica, sans-serif;
+    /** 二级标题 */
+    --qkh-secondary-title-font: 16px -apple-system, Helvetica, sans-serif;
+    /** 正文 */
+    --qkh-text-font: 14px Alibaba-PuHuiTi-R, Alibaba-PuHuiTi, Droid Sans Fallback;
+    /** 补充说明 */
+    --qkh-additional-instruction-font: 12px -apple-system, Helvetica, sans-serif;
+    /** 辅助文字 */
+    --qkh-auxiliary-text-font: 10px -apple-system, Helvetica, sans-serif;
+}
+
+/** 适老化变量 */
+.elder-oriented-theme {
+    --qkh-home-title-font: 20px -apple-system, Helvetica, sans-serif;
+    --qkh-primary-title-font: 20px -apple-system, Helvetica, sans-serif;
+    --qkh-secondary-title-font: 20px -apple-system, Helvetica, sans-serif;
+    --qkh-text-font: 20px -apple-system, Helvetica, sans-serif;
+    --qkh-additional-instruction-font: 18px -apple-system, Helvetica, sans-serif;
+    --qkh-auxiliary-text-font: 16px -apple-system, Helvetica, sans-serif;
+}
+
+```
+
+
+
 ## 业务需求及解决方案
 
 ### 文件上传
@@ -1105,7 +1187,5 @@ export default function useOss() {
     };
 }
 ```
-
-
 
 【后续待更...】
