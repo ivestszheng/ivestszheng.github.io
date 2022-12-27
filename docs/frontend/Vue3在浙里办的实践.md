@@ -113,7 +113,7 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 
 #### Vue2还是Vue3
 
-由于这个项目一开始的定位是一个小项目，团队配置就是一个前端加一个前端，所以项目前端架构由我自己把控。团队的技术栈以Vue2为主，不过我个人会倾向使用Vue3，一来在Vue3中通过composabler的形式可以更好地进行代码复用，二来这对我个人的成长也更有帮助。不过最后能否使用Vue3还是要根据运行环境来决定，好在经过多方调查，最后确认可以上Vue3。
+由于这个项目一开始的定位是一个小项目，团队配置就是一个前端加一个后端，所以项目前端架构由我自己把控。团队的技术栈以Vue2为主，不过我个人会倾向使用Vue3，一来在Vue3中通过composabler的形式可以更好地进行代码复用，二来这对我个人的成长也更有帮助。不过最后能否使用Vue3还是要根据运行环境来决定，好在经过多方调查，最后确认可以上Vue3。
 
 #### Vite还是Webpack
 
@@ -131,7 +131,7 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 
 老牌组件库，成熟的使用方案与优秀的文档，我个人开发移动端时最常用的组件库。
 
-## 浙里办对接过程中遇到的问题及解决方案
+## 浙里办对接难点
 
 ### 单点登录
 
@@ -183,7 +183,6 @@ Mgop指Npm上的包[@aligov/jssdk-mgop](https://www.npmjs.com/package/@aligov/js
 ```typescript
 // @/composables/useSingleSignOn.ts
 import { reactive, onUnmounted } from 'vue';
-import { ZLB_URL, ZFB_URL } from "@/config/index";
 import { useUserStore } from "@/stores/user";
 import {
   getAppToken,
@@ -192,6 +191,13 @@ import {
   getMiniProgramUserInfo
 } from '@/apis/user';
 import router from '@/router';
+
+const APP_UTL =
+  `https://mapi.zjzwfw.gov.cn/web/mgop/gov-open/zj/${process.env.VUE_APP_ZLB_APP_ID}/lastTest/index.html`;
+const APP_TEST_URL = `${APP_UTL}?debug=true`;
+/** VUE_APP_ZLB_IS_ONLINE_ENV === 'false' 时是测试环境，否则都是生产环境 */ 
+const ZLB_URL = `https://puser.zjzwfw.gov.cn/sso/mobile.do?action=oauth&scope=1&servicecode=${process.env.VUE_APP_ZLB_ACCESS_KEY}&${process.env.VUE_APP_ZLB_IS_ONLINE_ENV === 'false' ? `redirectUrl=${APP_TEST_URL}` : `goto=${APP_UTL}`}`;
+const ZFB_URL = `https://puser.zjzwfw.gov.cn/sso/alipay.do?action=ssoLogin&scope=1&servicecode=${process.env.VUE_APP_ZLB_ACCESS_KEY}&${process.env.VUE_APP_ZLB_IS_ONLINE_ENV === 'false' ? `redirectUrl=${APP_TEST_URL}` : `goto=${APP_UTL}`}`;
 
 type EnvironmentName = '浙里办' | '支付宝' | '微信' | '未定义' | string | undefined;
 interface ISso {
@@ -434,9 +440,9 @@ export default function useSingleSignOn() {
 
 
 
-### 请求层
+### 请求层封装
 
-#### 问题：请求层生产环境与开发环境不一致
+#### 请求层生产环境与开发环境不一致
 
 在`基础概念介绍`章节中提到了，前端项目部署后需要通过 mgop 访问 RPC 再访问真实的服务端，而 mgop 在开发环境是无法使用的。
 
@@ -444,7 +450,7 @@ export default function useSingleSignOn() {
 
 封装一个request请求工具，当`NODE_ENV`这个环境变量是`production`时调用mgop，否则调用axios，具体代码参考`完整代码展示`中的`request.ts`。
 
-#### 问题：调用接口报“网络错误”的异常
+#### 调用接口报“网络错误”的异常
 
 直接请求服务器上的接口正常，但是mgop调用rpc上api显示“网络错误”异常，大概率是RPC和服务器没有走通。
 
@@ -452,6 +458,17 @@ export default function useSingleSignOn() {
 
 1. 使用`工作台 > RPC 接入 > API管理`调试先测试能否正常返回结果。
 2. 确保接口入参出参都为JSON格式。
+
+#### 访问联调地址的接口
+
+使用`mgop`默认访问生产环境，如果需要访问联调地址的要在加上请求头，对应下面的代码：
+
+```typescript
+ /** 当请求头 isTestUrl 为 "1" 时，使用联调环境，实测传其他值例如""，"0" 仍然会使用联调环境"，传参为null时ios端无法访问接口 */ 
+ if(process.env.VUE_APP_ZLB_IS_ONLINE_ENV === 'false') mgopReceiceObj.header['isTestUrl'] = '1';
+```
+
+说实话这种写法有些呆，但是缺乏相应的文档，也只能做到这种程度。
 
 #### 具体代码展示
 
@@ -691,25 +708,246 @@ export default function useCostomApis() {
 }
 ```
 
+### 埋点封装
+
+#### 整体思路
+
+我司项目以toG为主，我也没有埋点的相关经验。如果只是为了通过浙里办的审核要求，还是挺简单的，只要把埋点必填参数都加上就好了，详情可见后续具体代码，这里主要再聊下我对浙里办这套埋点方案的思考。
+
+先谈谈埋点代码的管理，在我看来好的埋点方案应当提供两种方案——既提供手动埋点，也提供自动埋点。我最初的设想是通过将信息放在路由的meta中判断是否进行要上报埋点，很遗憾由于必填参数`t2`、`t0`的存在，导致我最后没使用这套方案。现在的方案是在每个页面手动进行上报，这样的问题是写出了侵入式的代码，造成了埋点与业务代码之间的耦合。
+
+再谈谈PV埋点参数获取，目前我的方案中这`t2`这个参数是不准确的。单页应用中，什么时候才是有效数据渲染完毕，这个点是比较复杂的。目前的改进方向通过`window.performance.getEntries()`来实现：
+
+> - 通过window.performance.timing所获的的页面渲染所相关的数据，在单页应用中改变了url但不刷新页面的情况下是不会更新的。因此如果仅仅通过该api是无法获得每一个子路由所对应的页面渲染的时间。如果需要上报切换路由情况下每一个子页面重新render的时间，需要自定义上报。
+>
+> - 通过window.performance.getEntries()所获取的资源加载和异步请求所相关的数据，在页面切换路由的时候会重新的计算，可以实现自动的上报。
+>
+>   ——内容出自[《在单页应用中，如何优雅的上报前端性能数据》](https://github.com/forthealllight/blog/issues/38)
+
+不过话说回来，一个H5应用真的有必要做到这种程序吗，我觉得用户单位不会关心也不会使用这种数据。
+
+#### PV埋点必填数据
+
+| 参数名      | 说明                                  | 示例       | **备注**                                                     |
+| ----------- | ------------------------------------- | ---------- | ------------------------------------------------------------ |
+| t2          | 页面加载时间                          | 1.43（秒） | 页面启动到加载完成                                           |
+| t0          | 页面响应时间                          | 0.25（秒） | 页面启动到页面响应                                           |
+| log_status  | 用户登录状态（01:未登录/02:单点登录） | 02         |                                                              |
+| miniAppId   | 应用开发管理                          |            | 通过 IRS 应用发布界面获取服务唯一标识                        |
+| miniAppName | 应用开发管理平台应用名称              |            | 通过 IRS 应用发布界面获取服务名称                            |
+| pageId      | 应用页面 ID                           |            | 服务提供方统一规范各页面编号生成方式，服务内页面编号唯一即可，与服务埋点方案内页面编号可一一对应即可 |
+| pageName    | 应用页面名称                          |            | 默认取页面 title，服务提供方自己定义，与服务埋点方案内名称一致即可 |
+
+#### zwlog初始化必填参数
+
+文档上没有说明必传，但是应用上架审核时会要求。
+
+| 参数名     | 说明               | **备注**             |
+| ---------- | ------------------ | -------------------- |
+| _user_id   | 实际用户唯一识别id | 通过单点登录功能获取 |
+| _user_nick | 实际用户名称       | 通过单点登录功能获取 |
+
+#### 具体代码
+
+```typescript
+// 在需要埋点的页面引入，必须在 setup 中使用
+import useBuryingPoint from "@/composables/useBuryingPoint";
+
+const { sendPageView } = useBuryingPoint();
+sendPageView();
+```
+
+```typescript
+// @/composables/useBuryingPoint.ts
+import { computed, ComputedRef, ref, Ref, nextTick, watchEffect, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import useSingleSignOn from './useSingleSignOn';
+
+interface ZwlogReceiveObj {
+  _user_id?: string,
+  _user_nick?: string
+}
+
+enum LogStatus {
+  Unlogged = '01',
+  Logged = '02'
+}
+
+interface PvReceiveObj {
+  /** IRS 服务侧应用 appid */
+  miniAppId: string,
+  /** 页面启动到加载完成的时间 */
+  t2: string | number,
+  /** 页面启动到页面响应完成的时间 */
+  t0: string | number,
+  /** 各页面唯一标识 */
+  pageId: string,
+  /** 用户登录状态（01:未登录/ 02:单点登录） */
+  log_status: LogStatus,
+  /** 默认取页面 title，服务提供方自己定义，与服务埋点方案内名称一致即可 */
+  pageName?: string,
+  /** 用户从进入到离开当前页面的时长 */
+  Page_duration?: string
+}
+
+interface IZwlog {
+  onReady: any,
+  sendPV: (PvReceiveObj) => never
+}
+const zwlog: Ref<null | IZwlog> = ref(null);
+const currentRoutePath: Ref<null | string> = ref(null);
+const isFirstComing = ref(true);
+
+export default function useBuryingPoint() {
+  /**
+   * 初始化 zwlog 方法
+   * @param ZwlogReceiveObj - 接受用户唯一标识与用户昵称 
+   */
+  function init(ZwlogReceiveObj: ZwlogReceiveObj = {}) {
+    try {
+      // 在 d.ts 中声明ZwLog属于window，否则ts报错
+      zwlog.value = new window.ZwLog(ZwlogReceiveObj);
+      console.log('zwlog 初始化成功');
+    } catch {
+      throw new Error('zwlog 初始化失败');
+    }
+  }
+
+  /**
+   * 发送 PV 日志
+   * @param miniAppId - IRS 服务侧应用 appid
+   * @param t2 - 页面启动到加载完成的时间
+   * @param t0 - 页面启动到页面响应完成的时间
+   * @param pageId - 各页面唯一标识
+   * @param pageName - 默认取页面 title，服务提供方自己定义，与服务埋点方案内名称一致即可
+   * @param log_status - 用户登录状态（01:未登录/ 02:单点登录）
+ */
+  function useSendPV(data: PvReceiveObj) {
+    try {
+      if (zwlog.value === null) throw new Error('zwlog 未初始化');
+      zwlog.value.onReady(function () {
+        zwlog.value?.sendPV(data);
+      });
+    } catch (e: any) {
+      throw new Error(`useSendPV 方法错误:${e?.message || e}`);
+    }
+  }
+
+  /**
+   * 获取页面加载时间
+   */
+  function sendPageView() {
+    const login = new Date().getTime();  //进入时间
+    const upTime: any = ref(0);  //更新时间
+    const beforeTime = ref(0);  //beforeUpdate
+    //获取router-->meta中设置的页面Id、Name
+    const route = useRoute();
+    const pageId = computed(() => route?.meta?.pageId ?? '未定义的pageId') as ComputedRef<string>;
+    const pageName = computed(() => route?.meta?.appTitle ?? process.env.VUE_APP_ZLB_TITLE) as ComputedRef<string>;
+    const isAbleToSend = computed(() => currentRoutePath.value !== route?.fullPath);
+
+    nextTick(() => {
+      upTime.value = new Date().getTime();
+    });
+    onMounted(() => {
+      beforeTime.value = new Date().getTime();
+      currentRoutePath.value = route.fullPath;
+    });
+    //监听时间，时间拿到之后调用pv发送日志
+    watchEffect(() => {
+      if (zwlog.value && (isAbleToSend.value || isFirstComing.value) && (beforeTime.value - login) > 0 && (upTime.value - login) > 0) {
+        try {
+          currentRoutePath.value = route.fullPath;
+          isFirstComing.value = false;
+          const { sso } = useSingleSignOn();
+          const t0 = (beforeTime.value - login) / 1000;
+          const t2 = (upTime.value - login) / 1000;
+          const log_status = sso.status;
+
+          useSendPV({
+            t2,
+            t0,
+            miniAppId: process.env.VUE_APP_ZLB_APP_ID,
+            pageId: pageId.value,
+            pageName: pageName.value,
+            log_status
+          });
+          console.log(`发送PV,t2:${t2},t0:${t0},pageId:${pageId.value},pageName:${pageName.value},log_status:${log_status}`);
+        } catch (e: any) {
+          console.error(`发送PV失败：${e.message}`);
+        }
+      }
+    });
+  }
+
+  return {
+    zwlog,
+    init,
+    useSendPV,
+    sendPageView
+  };
+}
+
+```
+
 ### 部署
 
-#### 问题：部署报错“构建产物存放路径build不存在”
+#### 如何部署
 
-浙里办强制要求打包产物名称为“build”。
+将`git`与`node_modules`之外的代码添加到压缩文件，通过IRS上传，平台会自动进行解压、编译、部署。
 
-**解决方案**
+#### 部署报错“构建产物存放路径build不存在”
 
-修改打包名称后重新部署。
+浙里办强制要求打包产物名称为“build”，修改打包名称后重新部署。
 
-#### 问题：同样的包之前部署成功，现在却编译失败。
+#### 同样的包之前部署成功，现在却编译失败。
 
-就是浙里办的BUG，但反馈也没用。
+就是浙里办的BUG，但反馈也没用。重新部署，还不行只能提工单。
 
-**解决方案**
+### 环境变量管理
 
-重新部署，还不行只能提工单。
+#### 整体思路
 
-## 碰到的业务需求及解决方案
+本项目使用`dotenv`实现环境变量，相较于一般项目，本项目复杂的点在于：不仅有本地开发环境与线上环境的差异，线上环境还有生产环境与测试环境之分。生产环境与测试环境的单点登录回调地址参数不同；测试、生产环境即可以访问生产地址的接口，也可以访问联调接口。
+
+由于每次只能通过上传压缩包的方式部署，每次切换mgop的生产环境与联调环境必须手动修改。本项目中当`VUE_APP_ZLB_IS_ONLINE_ENV`为`'false'`时代表要发布测试环境，否则代表访问线上环境。
+
+#### 具体代码
+
+```
+// .env
+NODE_ENV = development
+
+# axios 相关
+VUE_APP_BASE_URL = 开发环境联调地址
+
+# 浙里办相关
+VUE_APP_ZLB_TITLE = 自定义应用名称
+VUE_APP_ZLB_APP_ID = 应用唯一标识（单点登录、埋点相关）
+VUE_APP_ZLB_APP_KEY = 标示请求应用（可以通过应用开放平台获取，mgop相关）
+VUE_APP_ZLB_ACCESS_KEY = 单点登录组件AK（SK不要存在前端项目中，会造成泄露）
+
+# 是否发布正式版，false 时为测试版，其他值时为正式版
+# 请勿直接修改当前文件，修改 .env.production 文件
+VUE_APP_ZLB_IS_ONLINE_ENV = false
+```
+
+```
+// .env.production
+NODE_ENV = production
+
+VUE_APP_ZLB_IS_ONLINE_ENV = false
+```
+
+```
+ // package.json
+ 
+ "scripts": {
+    "build": "vue-cli-service build --mode production",
+  },
+```
+
+## 业务需求及解决方案
 
 ### 文件上传
 
@@ -868,6 +1106,6 @@ export default function useOss() {
 }
 ```
 
-****
+
 
 【后续待更...】
