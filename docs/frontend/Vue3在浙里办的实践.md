@@ -470,6 +470,18 @@ export default function useSingleSignOn() {
 
 说实话这种写法有些呆，但是缺乏相应的文档，也只能做到这种程度。
 
+#### 取消请求
+
+Mgop没有提供类似Axios中`cancelToken`或`AbortController`这种取消请求的能力，我的思路是给每个请求增加一个`uuid`，每次发送时将其`push`到一个数组中，当请求响应时判断是否在数组中。若在则正常响应，否则不接收响应的数据。
+
+```typescript
+// 通过自定义的api，取消所有未完成请求
+import useCostomApis from '@/http/useCostomApis';
+
+const { cancel } = useCostomApis();
+cancel()
+```
+
 #### 具体代码展示
 
 ```typescript
@@ -1027,9 +1039,66 @@ export const useUserStore = defineStore("user", {
 
 ```
 
+### 调试
 
+#### 整体思路
 
-## 业务需求及解决方案
+浙里办调试主要通过两种方式：
+
+- Debug中台工具
+- 控制台按钮
+
+浙里办本身也提供了显示控制台按钮的能力，但是我嫌麻烦直接自己在项目中引入了`vConsole`。
+
+```typescript
+// main.ts
+import VConsole from "vconsole";
+const vConsole = new VConsole();
+```
+
+#### 按需显示vConsole
+
+如果直接在`main.ts`中引入的话，每次部署到线上环境还要手动把vConsole代码给注掉，容易出错。前面提过了当`ZLB_IS_ONLINE_ENV`这个变量值为`false`时代表要部署到测试环境，那么可以根据这个值判断是否要显示vConsole，具体代码如下：
+
+```javascript
+// vue.config.js
+const { defineConfig } = require("@vue/cli-service");
+const vConsolePlugin = require('vconsole-webpack-plugin');
+
+module.exports = defineConfig({
+  configureWebpack: {
+    plugins: [
+      /** 配置是否需要 vConsole */
+      new vConsolePlugin({
+        enable: process.env.VUE_APP_ZLB_IS_ONLINE_ENV === 'false'
+      })
+    ],
+  },
+});
+```
+
+## H5相关
+
+### babel配置支持ES2020
+
+浙里办技术支持的说法是浙里办的node版本是14，但我实测例如`可选链`、`空值合并运算符`等ES2020并不能使用，我的babel配置如下：
+
+```javascript
+// babel.config.js
+module.exports = {
+  presets: [
+    ["@vue/cli-plugin-babel/preset", {
+      targets: {
+        chrome: 59,
+        edge: 13,
+        firefox: 50,
+      },
+    }]
+  ],
+};
+```
+
+## 业务需求
 
 ### 文件上传
 
@@ -1188,4 +1257,35 @@ export default function useOss() {
 }
 ```
 
-【后续待更...】
+### 扫码签到
+
+最终实现的效果是同一个二维码（自己生成）通过浙里办扫码会进入应用，通过微应用再次扫码执行签到的业务逻辑。
+
+二维码的内容是**应用的地址拼接上额外的参数**，由于进入应用后要进行单点登录流程，应用地址会被重定向（由浙里办配置的回调地址决定），因此不能通过应用的`url`获取自定义的信息，必须再次扫码。具体的使用浙里办扫一扫api并签到的代码如下：
+
+```typescript
+  function scanQrcodeToSignIn(): Promise<IScanResponse> {
+    return new Promise((resolve, reject) => {
+      ZWJSBridge.scan({
+        type: "qrCode"
+      })
+        .then((result) => {
+          const { text } = result;
+          // ... 具体的业务逻辑省略
+          if (拿到想要的信息) {
+            resolve(需要的信息);
+          } else {
+            reject(new Error('请扫描签到的二维码'));
+          }
+        })
+        .catch((e: any) => {
+          /** IOS 用户取消时会抛出异常；handleException是我自定义的异常类 */
+          if (e?.errorMessage !== '用户取消') reject(new Error(`唤起扫一扫失败:${e?.message ?? handleException(e)}`));
+        });
+    });
+  };
+```
+
+## 写在最后，一些负能量的话
+
+整体而言，浙里办对接的内容写的差不多了，后续可能还会更新一点内容，但不一定。整个开发流程下来只觉得心累，技术上的困难不会打击到我，恶心的是文档的缺失以及技术支持傲慢的态度，尤其**罗豪**。我自认为提问前因后果非常详尽，他却从来只会回套话带着我绕圈子，还动不动质疑我们开发的水平。说实话，大家都是搞技术的，什么水平几句话就清楚了，从他身上只能感觉到傲慢，感受不到其他技术人应有的特质，就这样吧。
