@@ -1,10 +1,3 @@
-/*
- * @Descripttion: 
- * @Author: 无声<ivestszheng@qq.com>
- * @Date: 2022-08-19 10:49:21
- * @LastEditors: 无声 ivestszheng@qq.com
- * @LastEditTime: 2022-12-11 15:04:08
- */
 export function nav() {
     return [
         { text: '前端', link: '/frontend/' },
@@ -38,6 +31,7 @@ export function sidebarFrontend() {
                 { text: '前端已经接好接口还要写假数据，如何优雅处理？', link: '/frontend/前端已经接好接口还要写假数据，如何优雅处理？' },
                 { text: '跨域通信之postmessage', link: '/frontend/跨域通信之postmessage' },
                 { text: 'Vue3在浙里办的实践', link: '/frontend/Vue3在浙里办的实践' },
+                { text: 'node.js 实现压缩', link: '/frontend/node.js 实现压缩' },
             ]
         }
     ]
