@@ -32,6 +32,7 @@ export function sidebarFrontend() {
                 { text: '跨域通信之postmessage', link: '/frontend/跨域通信之postmessage' },
                 { text: 'Vue3在浙里办的实践', link: '/frontend/Vue3在浙里办的实践' },
                 { text: 'node.js 实现压缩', link: '/frontend/node.js 实现压缩' },
+                { text: 'Vue3 hooks 实践后的个人偏见', link: '/frontend/Vue3 hooks 实践后的个人偏见' },
             ]
         }
     ]
