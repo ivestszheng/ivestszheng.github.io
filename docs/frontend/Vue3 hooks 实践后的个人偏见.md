@@ -1,4 +1,6 @@
-> 本文假设你已经对组合式 API 有了基本的了解。如果你只学习过选项式 API，请前往官方文档，使用左侧边栏上方的切换按钮将 API 风格切换为组合式 API 后，重新阅读[响应性基础](https://cn.vuejs.org/guide/essentials/reactivity-fundamentals.html)和[生命周期钩子](https://cn.vuejs.org/guide/essentials/lifecycle.html)两个章节。
+## 前言
+
+许多关于 hooks 的文章都着重介绍了 hooks 的理念，而举得案例过于简单，刚接触 hooks 的新手难以将其运用至业务代码中。本文将着重介绍 hooks 在一个难度适中的示例中是如何使用的。对于理念部分，我认为官方文档已经足够详细，本人仅穿插一点个人偏见。强烈建议阅读本文前，先学习官方文档[组合式函数](https://cn.vuejs.org/guide/reusability/composables.html)这一章节。
 
 ## 什么是 hooks
 
@@ -15,6 +17,8 @@ Hooks 是 React 中的一种特殊函数，用于在函数组件中添加状态�
 ![下拉列表 Demo](https://raw.githubusercontent.com/ivestszheng/images-store/master/img/VanListDelmo.gif)
 
 在这个示例中，包含了搜索栏、下拉列表、下拉刷新这三个组件，直接使用组合式 API，写出的代码会是这样的：
+
+### 直接使用组合式 API
 
 ```vue
 <template>
@@ -119,6 +123,8 @@ function onRefresh() {
 }
 </script>
 ```
+
+### Hooks 初步提取
 
 但是，如果我们想在多个组件中复用这个相同的逻辑呢？我们可以把这个逻辑以一个组合式函数的形式提取到外部文件中：
 
@@ -232,7 +238,11 @@ const {
 </script>
 ```
 
-核心逻辑完全一致，我们做的只是把它移到一个外部函数中去，并返回需要暴露的状态。和在组件中一样，你也可以在组合式函数中使用所有的[组合式 API](https://cn.vuejs.org/api/#composition-api)。现在，`useVanList()` 的功能已经存在一定的复用性了。目前在我日常维护的项目中，这样的 hook 使用的是比较多的。但目前该 hook 与分页的查询条件、分页查询的方法仍然存在耦合，如果查询接口不一致，还要增加新的 hook 。因此可以考虑进一步抽象，修改后的代码如下：
+核心逻辑完全一致，我们做的只是把它移到一个外部函数中去，并返回需要暴露的状态。和在组件中一样，你也可以在组合式函数中使用所有的[组合式 API](https://cn.vuejs.org/api/#composition-api)。现在，`useVanList()` 的功能已经存在一定的复用性了。目前在我日常维护的项目中，这样的 hook 使用的是比较多的。
+
+### 进一步抽象
+
+但该 hook 与分页的查询条件、分页查询的方法仍然存在耦合，如果查询接口不一致，还要增加新的 hook 。因此可以考虑进一步抽象，修改后的代码如下：
 
 ```typescript
 // vanList.ts
@@ -394,8 +404,6 @@ function beforeSearch() {
 
 ## 与其它模式的比较
 
-[《与其他模式的比较 | Vue.js (vuejs.org》)](https://cn.vuejs.org/guide/reusability/composables.html#using-composables-in-options-api)该文档描述已十分详细，此处仅提及重点以及穿插一点个人思考。
-
 ### 和 Mixin 的对比
 
 不清晰的数据来源、命名空间冲突、隐式的跨 mixin 交流导致极大地增加了后期的维护成本，基于上述理由，不再推荐在 Vue 3 中继续使用 mixin。保留该功能只是为了项目迁移的需求和照顾熟悉它的用户。
@@ -409,6 +417,26 @@ function beforeSearch() {
 重点在于有无涉及状态管理。使用 hooks 后，项目中仍可保留 uitls ，在开发中可以更好的聚焦重点。
 
 ## 约定与最佳实践
+
+### 命名
+
+组合式函数约定用驼峰命名法命名，并以“use”作为开头。
+
+### 输入参数
+
+在使用 hooks 时可能会允许一些输入参数，最好使用`isRef`、`unRef`这样的工具函数进行处理，降低调用者的心智负担。
+
+### 返回值
+
+约定组合式函数始终返回一个包含多个 ref 的普通的非响应式对象，这样该对象在组件中被解构为 ref 之后仍可以保持响应性。
+
+### 副作用
+
+在组合式函数中的确可以执行副作用 (例如：添加 DOM 事件监听器或者请求数据)，确保及时(例如 `onMounted()`时)清理副作用。3
+
+### 使用限制
+
+组合式函数在 `<script setup>` 或 `setup()` 钩子中，应始终被**同步地**调用。在某些场景下，你也可以在像 `onMounted()` 这样的生命周期钩子中使用他们
 
 ## 写在最后
 
