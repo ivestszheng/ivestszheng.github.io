@@ -33,6 +33,7 @@ export function sidebarFrontend() {
                 { text: 'Vue3在浙里办的实践', link: '/frontend/Vue3在浙里办的实践' },
                 { text: 'node.js 实现压缩', link: '/frontend/node.js 实现压缩' },
                 { text: 'Vue3 hooks 实践后的个人偏见', link: '/frontend/Vue3 hooks 实践后的个人偏见' },
+                { text: 'Tailwind CSS 很好，但不适合我', link: '/frontend/Tailwind CSS 很好，但不适合我' },
             ]
         }
     ]
