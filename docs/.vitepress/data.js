@@ -47,7 +47,8 @@ export function sidebarLife() {
             items: [
                 { text: '二本应届生杭州小厂前端面试总结', link: '/life/summary/二本应届生杭州小厂前端面试总结' },
                 { text: '菜鸡的自我审视——我的2021', link: '/life/summary/菜鸡的自我审视——我的2021' },
-                { text: ' 不断学习 | 2022年中总结', link: '/life/summary/不断学习2022年中总结' }
+                { text: ' 不断学习 | 2022年中总结', link: '/life/summary/不断学习2022年中总结' },
+                { text: '2023 的一些思考', link: '/life/summary/2023 的一些思考'}
             ]
         },
         {
