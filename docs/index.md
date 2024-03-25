@@ -1,17 +1,17 @@
 ---
 layout: home
 
-title: 无声的博客
+title: 无声2017的博客
 titleTemplate: 菜鸡前端的日常分享
 
 hero:
-  name: 无声的博客
+  name: 无声2017的博客
   text: 菜鸡前端的日常分享
-  tagline: Daily technology sharing of a rookie frontend. 
+  tagline: Daily technology sharing of a rookie frontend.
   actions:
     - theme: brand
       text: 开始
-      link: https://ivestszheng.github.io/blog/frontend
+      link: /programming/前端/node.js 实现压缩
     - theme: alt
       text: 项目地址
       link: https://github.com/ivestszheng/blog

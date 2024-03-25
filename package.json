@@ -10,6 +10,7 @@
     "build": "vitepress build docs"
   },
   "devDependencies": {
+    "vite-plugin-vitepress-auto-sidebar": "^1.6.3",
     "vitepress": "^1.0.0-alpha.8",
     "vitepress-theme-demoblock": "^1.4.2"
   }
