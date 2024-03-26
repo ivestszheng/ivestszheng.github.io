@@ -59,12 +59,5 @@ function nav(){
   return [
     { text: "编程", link: "/programming/前端/node.js 实现压缩" },
     { text: "其他", link: "/others/年终总结/2023 的一些思考" },
-    // {
-    //   text: "社交链接",
-    //   items: [
-    //     { text: "GitHub", link: "https://github.com/ivestszheng" },
-    //     { text: "掘金", link: "https://juejin.cn/user/1618116899507735" },
-    //   ],
-    // },
   ]
 }

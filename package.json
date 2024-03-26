@@ -10,6 +10,7 @@
     "build": "vitepress build docs"
   },
   "devDependencies": {
+    "gitalk": "^1.8.0",
     "vite-plugin-vitepress-auto-sidebar": "^1.6.3",
     "vitepress": "1.0.1",
     "vitepress-theme-demoblock": "^1.4.2"
