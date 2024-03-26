@@ -53,6 +53,11 @@ export default {
       })
     ],
   },
+  markdown: {
+    image: {
+      lazyLoading: true
+    }
+  }
 };
 
 function nav(){
