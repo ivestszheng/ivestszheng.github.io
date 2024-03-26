@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { inBrowser } from 'vitepress'
 import Gitalk from 'gitalk'
+import md5 from 'blueimp-md5'
 
 const commentRef = ref<HTMLElement | null>(null)
 
@@ -11,7 +12,7 @@ const init = () => {
         wrap.setAttribute('id', 'gitalk-page-container')
         commentRef.value?.appendChild(wrap) // 把组件加入到想加载的地方 // querySelector的节点可自己根据自己想加载的地方设置
         const gitTalk = new Gitalk({
-            id: location.pathname, // 可选。默认为 location.href
+            id: md5(location.pathname), // 可选。默认为 location.href
             owner: 'ivestszheng', // GitHub repository 所有者
             repo: 'blog', // GitHub repo
             clientID: '5e2f51071c7c5437e7a5', // clientID
