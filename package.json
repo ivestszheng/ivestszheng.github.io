@@ -6,8 +6,8 @@
   "author": "无声 <ivestszheng@qq.com>",
   "license": "MIT",
   "scripts": {
-    "serve": "vitepress dev docs --host",
-    "build": "vitepress build docs"
+    "docs:serve": "vitepress dev docs --host",
+    "docs:build": "vitepress build docs"
   },
   "devDependencies": {
     "gitalk": "^1.8.0",

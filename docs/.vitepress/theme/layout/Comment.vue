@@ -17,9 +17,9 @@ const init = () => {
             const gitalk = new Gitalk({
                 id: md5(lastSegment),
                 owner: 'ivestszheng',
-                repo: 'blog',
-                clientID: 'Iv1.799d1ff0333ee329',
-                clientSecret: '744caf00837915fd6e25f3737a1e0843445b98ca',
+                repo: 'blog-gitalk',
+                clientID: '5648434025f55ba9b014',
+                clientSecret: '02a3ec2db26acd478a4540a3e53925c92204dfb0',
                 admin: ['ivestszheng'],
                 labels: ['Gitalk'],
                 proxy: 'https://mellifluous-bombolone-049a57.netlify.app/github_access_token',
