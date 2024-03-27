@@ -19,7 +19,7 @@ const init = () => {
                 owner: 'ivestszheng',
                 repo: 'blog-gitalk',
                 clientID: '5648434025f55ba9b014',
-                clientSecret: '02a3ec2db26acd478a4540a3e53925c92204dfb0',
+                clientSecret: '13eeebf325b06474a57b15e8b60ff8844efaec9f',
                 admin: ['ivestszheng'],
                 labels: ['Gitalk'],
                 proxy: 'https://cors-server-ecru.vercel.app/github_access_token',
