@@ -7,8 +7,8 @@ const { Layout } = Theme
   <Layout>
     <!-- #doc-after 表示在每篇文章的最后位置添加 Comment组件 -->
     <template #doc-after>
-      <script src="https://utteranc.es/client.js" repo="ivestszheng/blog" issue-term="pathname" theme="github-light"
-        crossorigin="anonymous" async>
+      <script src="https://utteranc.es/client.js" repo="ivestszheng/ivestszheng.github.io" issue-term="pathname"
+        theme="github-light" crossorigin="anonymous" async>
 </script>
     </template>
   </Layout>
