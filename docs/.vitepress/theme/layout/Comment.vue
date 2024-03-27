@@ -22,7 +22,6 @@ const init = () => {
                 clientSecret: '13eeebf325b06474a57b15e8b60ff8844efaec9f',
                 admin: ['ivestszheng'],
                 labels: ['Gitalk'],
-                proxy: 'https://cors-server-ecru.vercel.app/github_access_token',
                 createIssueManually: false //如果当前页面没有相应的 issue 且登录的用户属于 admin，则会自动创建 issue。如果设置为 true，则显示一个初始化页面，创建 issue 需要点击 init 按钮。
             })
             gitalk.render('gitalk-page-container')
