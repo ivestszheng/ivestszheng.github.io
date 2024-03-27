@@ -5,7 +5,7 @@ export default {
   title: "无声2017的博客",
   titleTemplate: "无声2017的博客",
   description: "菜鸡的日常分享",
-  base: "/blog/",
+  base: "/",
   head: [["link", { rel: "icon", href: "favicon.ico" }]],
   themeConfig: {
     nav: nav(),
