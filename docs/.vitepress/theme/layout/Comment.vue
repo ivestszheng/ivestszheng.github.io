@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { inBrowser } from 'vitepress'
+// @doc:https://github.com/gitalk/gitalk/blob/master/readme-cn.md
 import Gitalk from 'gitalk'
 import md5 from 'blueimp-md5'
 
 const commentRef = ref<HTMLElement | null>(null)
 
-// @doc:https://github.com/gitalk/gitalk/blob/master/readme-cn.md
 const init = () => {
     try {
         if (inBrowser) {

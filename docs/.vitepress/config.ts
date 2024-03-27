@@ -12,6 +12,7 @@ export default {
     footer: {
       copyright: "Copyright © 2022-present 无声2017",
     },
+    logo: 'logo.svg',
     socialLinks: [
       { icon: "github", link: "https://github.com/ivestszheng" },
       {
@@ -55,13 +56,14 @@ export default {
     image: {
       lazyLoading: true,
     },
+    lineNumbers: true,
   },
   cleanUrls: true,
 };
 
 function nav() {
   return [
-    { text: "编程", link: "/programming/前端/node.js 实现压缩" },
+    { text: "编程", link: "/programming/前端/Tailwind CSS 很好，但不适合我" },
     { text: "其他", link: "/others/年终总结/2023 的一些思考" },
   ];
 }
