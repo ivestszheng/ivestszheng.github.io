@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: 开始
-      link: /programming/前端/node.js 实现压缩
+      link: /programming/前端/Tailwind CSS 很好，但不适合我
     - theme: alt
       text: 项目地址
       link: https://github.com/ivestszheng/blog

@@ -4,4 +4,4 @@
 
 ## 在线访问
 
-[GitHub](https://ivestszheng.github.io/blog/)
+[ivestszheng.github.io](https://ivestszheng.github.io/)
