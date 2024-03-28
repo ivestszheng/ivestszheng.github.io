@@ -15,10 +15,10 @@ onMounted(() => {
             script.setAttribute('theme', 'preferred-color-scheme');
             commentRef.value.appendChild(script);
         } else {
-            console.log();
+            console.warn('Comments won\'t load because the commentRef element is null.');
         }
     } catch (error) {
-        console.error('comment loading failed',error);
+        console.error('Comments loading failed.', error);
     }
 })
 </script>
