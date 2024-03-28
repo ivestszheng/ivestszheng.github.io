@@ -1,15 +1,16 @@
-<script setup>
-import Theme from 'vitepress/theme'
+<script setup lang="ts">
+import { useData } from 'vitepress'
+import DefaultTheme from 'vitepress/theme'
+import Comment from '../components/Comment.vue';
 
-const { Layout } = Theme
+const { page } = useData()
+const { Layout } = DefaultTheme
 </script>
+
 <template>
   <Layout>
-    <!-- #doc-after 表示在每篇文章的最后位置添加 Comment组件 -->
-    <template #doc-after>
-      <script src="https://utteranc.es/client.js" repo="ivestszheng/ivestszheng.github.io" issue-term="pathname"
-        theme="github-light" crossorigin="anonymous" async>
-</script>
+    <template #doc-footer-before>
+      <Comment :key="page.relativePath"></Comment>
     </template>
   </Layout>
 </template>
