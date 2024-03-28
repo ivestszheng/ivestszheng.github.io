@@ -9,7 +9,7 @@ const { Layout } = DefaultTheme
 
 <template>
   <Layout>
-    <template #doc-footer-before>
+    <template #doc-after>
       <Comment :key="page.relativePath"></Comment>
     </template>
   </Layout>
