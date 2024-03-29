@@ -63,7 +63,6 @@ export default {
 
 function nav() {
   return [
-    { text: "编程", link: "/programming/前端/Tailwind CSS 很好，但不适合我" },
-    { text: "其他", link: "/others/年终总结/2023 的一些思考" },
+    { text: "文章", link: "/posts/前端/Tailwind CSS 很好，但不适合我" },
   ];
 }

@@ -1,10 +1,10 @@
-import type { Theme } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
-import MyLayout from './layout/Index.vue'
+import type { Theme } from "vitepress";
+import DefaultTheme from "vitepress/theme";
+import Layout from "./Layout.vue";
 
 const theme: Theme = {
   ...DefaultTheme,
-  Layout: MyLayout
-}
+  Layout: Layout,
+};
 
-export default theme
+export default theme;

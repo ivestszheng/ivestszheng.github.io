@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import Comment from '../components/Comment.vue';
+import Comment from './components/Comment.vue';
 
 const { page } = useData()
 const { Layout } = DefaultTheme
@@ -10,7 +10,7 @@ const { Layout } = DefaultTheme
 <template>
   <Layout>
     <template #doc-after>
-      <Comment :key="page.relativePath"></Comment>
+      <Comment :key="page.filePath"></Comment>
     </template>
   </Layout>
 </template>
