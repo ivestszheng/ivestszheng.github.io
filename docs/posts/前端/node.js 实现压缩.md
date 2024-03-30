@@ -1,6 +1,10 @@
-# node.js 实现压缩文件
+---
+title: node.js 实现压缩文件
+date: 2023-04-16
+description: 开发钉钉 H5 微应用中，不同于平常的 build，前端需要把文件打成压缩包上传至平台。同样的机制在另外一些阿里系产品也类似，例如浙里办、浙政钉。相较于一键执行脚本，手动压缩文件容易出错。我通过 node-archiver 这个包简单地实现了压缩，并在此向大家介绍。
+---
 
-## 前言
+# node.js 实现压缩文件
 
 开发钉钉 H5 微应用中，不同于平常的`build`，前端需要把文件打成压缩包上传至平台。同样的机制在另外一些阿里系产品也类似，例如浙里办、浙政钉。相较于一键执行脚本，手动压缩文件容易出错。我通过`node-archiver`这个包简单地实现了压缩，并在此向大家介绍。
 
@@ -14,36 +18,38 @@ npm install archiver -D
 
 由于不会在生产环境使用，安装在`devDependencies`即可。
 
-###  阅读官方示例，快速上手
+### 阅读官方示例，快速上手
 
 ```js
 // require modules
-const fs = require('fs');
-const archiver = require('archiver');
+const fs = require("fs");
+const archiver = require("archiver");
 
 // create a file to stream archive data to.
-const output = fs.createWriteStream(__dirname + '/example.zip');
-const archive = archiver('zip', {
-  zlib: { level: 9 } // Sets the compression level.
+const output = fs.createWriteStream(__dirname + "/example.zip");
+const archive = archiver("zip", {
+  zlib: { level: 9 }, // Sets the compression level.
 });
 
 // listen for all archive data to be written
 // 'close' event is fired only when a file descriptor is involved
-output.on('close', function() {
-  console.log(archive.pointer() + ' total bytes');
-  console.log('archiver has been finalized and the output file descriptor has closed.');
+output.on("close", function () {
+  console.log(archive.pointer() + " total bytes");
+  console.log(
+    "archiver has been finalized and the output file descriptor has closed."
+  );
 });
 
 // This event is fired when the data source is drained no matter what was the data source.
 // It is not part of this library but rather from the NodeJS Stream API.
 // @see: https://nodejs.org/api/stream.html#stream_event_end
-output.on('end', function() {
-  console.log('Data has been drained');
+output.on("end", function () {
+  console.log("Data has been drained");
 });
 
 // good practice to catch warnings (ie stat failures and other non-blocking errors)
-archive.on('warning', function(err) {
-  if (err.code === 'ENOENT') {
+archive.on("warning", function (err) {
+  if (err.code === "ENOENT") {
     // log warning
   } else {
     // throw error
@@ -52,7 +58,7 @@ archive.on('warning', function(err) {
 });
 
 // good practice to catch this error explicitly
-archive.on('error', function(err) {
+archive.on("error", function (err) {
   throw err;
 });
 
@@ -60,27 +66,27 @@ archive.on('error', function(err) {
 archive.pipe(output);
 
 // append a file from stream
-const file1 = __dirname + '/file1.txt';
-archive.append(fs.createReadStream(file1), { name: 'file1.txt' });
+const file1 = __dirname + "/file1.txt";
+archive.append(fs.createReadStream(file1), { name: "file1.txt" });
 
 // append a file from string
-archive.append('string cheese!', { name: 'file2.txt' });
+archive.append("string cheese!", { name: "file2.txt" });
 
 // append a file from buffer
-const buffer3 = Buffer.from('buff it!');
-archive.append(buffer3, { name: 'file3.txt' });
+const buffer3 = Buffer.from("buff it!");
+archive.append(buffer3, { name: "file3.txt" });
 
 // append a file
-archive.file('file1.txt', { name: 'file4.txt' });
+archive.file("file1.txt", { name: "file4.txt" });
 
 // append files from a sub-directory and naming it `new-subdir` within the archive
-archive.directory('subdir/', 'new-subdir');
+archive.directory("subdir/", "new-subdir");
 
 // append files from a sub-directory, putting its contents at the root of archive
-archive.directory('subdir/', false);
+archive.directory("subdir/", false);
 
 // append files from a glob pattern
-archive.glob('file*.txt', {cwd:__dirname});
+archive.glob("file*.txt", { cwd: __dirname });
 
 // finalize the archive (ie we are done appending files but streams have to finish yet)
 // 'close', 'end' or 'finish' may be fired right after calling this method so register to them beforehand
@@ -154,7 +160,6 @@ for (let file of files) {
   archive.file(file, { name: file });
 }
 archive.finalize();
-
 ```
 
 ### 添加指令
@@ -164,7 +169,7 @@ archive.finalize();
 {
   "scripts": {
     "zip": "node export-zip.js"
-  },
+  }
 }
 ```
 
@@ -175,4 +180,4 @@ archive.finalize();
 ## 参考
 
 1. [node-archiver 文档](https://github.com/archiverjs/node-archiver)
-2. [前端build打包dist并压缩成zip最佳实践](https://mdnice.com/writing/09c4ede333bb48b2a3971f512456375f)
+2. [前端 build 打包 dist 并压缩成 zip 最佳实践](https://mdnice.com/writing/09c4ede333bb48b2a3971f512456375f)

@@ -7,6 +7,7 @@ interface Post {
     time: number;
     string: string;
   };
+  description: string;
 }
 
 declare const data: Post[];
@@ -15,12 +16,15 @@ export { data };
 export default createContentLoader("posts/*/*.md", {
   transform(raw): Post[] {
     return raw
-      .map(({ url, frontmatter }) => ({
+      .filter(({ url }) => !/posts\/(力扣|生活经验)\//.test(url))
+      .map(({ url, frontmatter, excerpt }) => ({
         title: frontmatter.title,
         url,
         date: formatDate(frontmatter.date),
+        description: frontmatter.description,
       }))
-      .sort((a, b) => b.date.time - a.date.time);
+      .sort((a, b) => b.date.time - a.date.time)
+      .slice(0, 10);
   },
 });
 

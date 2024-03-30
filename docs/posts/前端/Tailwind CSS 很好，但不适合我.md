@@ -1,14 +1,10 @@
 ---
 title: Tailwind CSS 很好，但不适合我
-date: 2021-01-11
-author: Evan You
-gravatar: eca93da2c67aadafe35d477aa8f454b8
-twitter: "@youyuxi"
+date: 2023-10-02
+description: 在一个月前，我选择了 Tailwind CSS 用于一个企业官网的开发。一个月后，项目经过了几次小版本迭代，我对 Tailwind CSS 的使用小有心得。本文将阐述我在企业开发中使用 Tailwind CSS 后对它的看法。
 ---
 
 # Tailwind CSS 很好，但不适合我
-
-## 前言
 
 在一个月前，我选择了 Tailwind CSS 用于一个企业官网的开发。一个月后，项目经过了几次小版本迭代，我对 Tailwind CSS 的使用小有心得。本文将阐述我在企业开发中使用 Tailwind CSS 后对它的看法。
 
@@ -80,7 +76,7 @@ Tailwind CSS 还提供了一套强大的工具和插件，用于辅助开发过�
 
 很简单地创建了一个网格布局，如果使用媒体查询，代码量会多很多。
 
-## Tailwind CSS 很好，但不适合我。
+## 它很好，但不适合我。
 
 引用知乎上`《为什么国内类似 Tailwind CSS 这样的方案没有流行起来？》`回答下的一一段话。
 

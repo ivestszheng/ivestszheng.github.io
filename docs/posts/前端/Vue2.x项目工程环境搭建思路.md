@@ -1,6 +1,9 @@
-# Vue2.x项目工程环境搭建思路
+---
+title: Vue2.x项目工程环境搭建思路
+date: 2022-04-10
+---
 
-## 前言
+# Vue2.x 项目工程环境搭建思路
 
 去年年底，公司的前端团队确立了代码规范。然而离开了实际项目环境加上普遍紧张的开发周期，规范终究是纸上谈兵。鉴于此，一位同事去开发脚手架。我也花了几天时间搭建了一套 Vue2.x 的工程环境尝试给予一些支持，~~虽然后面看来对他的实际帮助不大。~~
 
@@ -32,16 +35,16 @@
 ### 修改 vue.config.js 文件
 
 ```javascript
-const path = require('path');
-const { defineConfig } = require('@vue/cli-service');
+const path = require("path");
+const { defineConfig } = require("@vue/cli-service");
 
 module.exports = defineConfig({
   transpileDependencies: true,
   chainWebpack: (config) => {
     // 配置别名后需要重启项目
-    config.resolve.alias.set('@', path.resolve('src'));
+    config.resolve.alias.set("@", path.resolve("src"));
   },
-  publicPath: './',
+  publicPath: "./",
 });
 ```
 
@@ -75,7 +78,7 @@ module.exports = defineConfig({
 
 ### 状态管理工具 Pinia
 
-简单介绍，Pinia 是新一代 Vuex ,3月份尤大直播时说过不会有 Vuex5 了。相较于 vuex4，使用更加简单。但是我碰到了个坑，在我有一个同事的电脑上项目中的 Pinia 会报错，但是其他人的则没有问题，初步猜测跟版本号有关系。
+简单介绍，Pinia 是新一代 Vuex ,3 月份尤大直播时说过不会有 Vuex5 了。相较于 vuex4，使用更加简单。但是我碰到了个坑，在我有一个同事的电脑上项目中的 Pinia 会报错，但是其他人的则没有问题，初步猜测跟版本号有关系。
 
 ### HTTP 工具 Axios
 
@@ -83,7 +86,7 @@ module.exports = defineConfig({
 
 ```js
 // utils/request
-import axios from 'axios';
+import axios from "axios";
 
 // create an axios instance
 const service = axios.create({
@@ -100,7 +103,7 @@ service.interceptors.request.use(
     // do something with request error
     console.log(error); // for debug
     return Promise.reject(error);
-  },
+  }
 );
 
 // response interceptor
@@ -124,7 +127,7 @@ service.interceptors.response.use(
     console.log(`err${error}`); // for debug
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default service;
@@ -136,14 +139,14 @@ export default service;
 
 ```typescript
 // api/example
-import request from '@/utils/request';
+import request from "@/utils/request";
 
 export function useAxiosGet(param1: unknown, param2: unknown) {
-  return request.get('/banner', { params: { param1, param2 } });
+  return request.get("/banner", { params: { param1, param2 } });
 }
 
 export function useAxiosPost(data: unknown) {
-  return request.post('/banner', data);
+  return request.post("/banner", data);
 }
 ```
 
@@ -173,49 +176,49 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'airbnb-base',
-    'eslint:recommended',
-    'plugin:vue/recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:jest/recommended',
-    'plugin:prettier/recommended', // 添加 prettier 插件
+    "airbnb-base",
+    "eslint:recommended",
+    "plugin:vue/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended",
+    "plugin:prettier/recommended", // 添加 prettier 插件
   ],
-  parser: 'vue-eslint-parser',
+  parser: "vue-eslint-parser",
   parserOptions: {
-    ecmaVersion: 'latest',
-    parser: '@typescript-eslint/parser',
-    sourceType: 'module',
+    ecmaVersion: "latest",
+    parser: "@typescript-eslint/parser",
+    sourceType: "module",
   },
-  plugins: ['vue', '@typescript-eslint'],
+  plugins: ["vue", "@typescript-eslint"],
   settings: {
-    'import/resolver': {
+    "import/resolver": {
       webpack: {
         // 此处config对应webpack.config.js的路径，我这个路径是vue-cli3默认的路径
-        config: 'node_modules/@vue/cli-service/webpack.config.js',
+        config: "node_modules/@vue/cli-service/webpack.config.js",
       },
     },
   },
   rules: {
-    'import/extensions': [
-      'error',
-      'ignorePackages',
+    "import/extensions": [
+      "error",
+      "ignorePackages",
       {
-        js: 'never',
-        jsx: 'never',
-        ts: 'never',
-        tsx: 'never',
+        js: "never",
+        jsx: "never",
+        ts: "never",
+        tsx: "never",
       },
     ],
-    'no-param-reassign': [
-      'error',
+    "no-param-reassign": [
+      "error",
       {
         props: true,
         ignorePropertyModificationsFor: [
-          'res', // for Express responses
-          'item', // for Express responses
-          'state', // for vuex state 解决assignment to property of function parameter 'state'
-          'config',
-          'args', // for vue.config.js change options.title
+          "res", // for Express responses
+          "item", // for Express responses
+          "state", // for vuex state 解决assignment to property of function parameter 'state'
+          "config",
+          "args", // for vue.config.js change options.title
         ],
       },
     ],
@@ -227,17 +230,17 @@ module.exports = {
       },
     ],
     complexity: [
-      'error',
+      "error",
       {
         max: 40,
       },
     ],
-    'linebreak-style': 0,
+    "linebreak-style": 0,
   },
 };
 ```
 
-可以看到我的配置是采用airbnb风格的规则以及一些官方推荐的风格，尽管我如此配置，但不代表我完全喜欢这些规则。例如在我看来`++`与`&&`运算符非常简洁却不被推荐；`no-param-reassign`这条规则影响了我处理接口拿到数据。具体在配置规则时，还是要从团队的角度出发，考虑如何减少维护成本。
+可以看到我的配置是采用 airbnb 风格的规则以及一些官方推荐的风格，尽管我如此配置，但不代表我完全喜欢这些规则。例如在我看来`++`与`&&`运算符非常简洁却不被推荐；`no-param-reassign`这条规则影响了我处理接口拿到数据。具体在配置规则时，还是要从团队的角度出发，考虑如何减少维护成本。
 
 ### Husky + LintStaged
 
@@ -260,51 +263,62 @@ module.exports = {
 
 ```js
 module.exports = {
-    // type 类型（定义之后，可通过上下键选择）
-    types: [
-        { value: 'feat', name: 'feat:     新增功能' },
-        { value: 'fix', name: 'fix:      修复 bug' },
-        { value: 'docs', name: 'docs:     文档变更' },
-        { value: 'style', name: 'style:    代码格式（不影响功能，例如空格、分号等格式修正）' },
-        { value: 'refactor', name: 'refactor: 代码重构（不包括 bug 修复、功能新增）' },
-        { value: 'perf', name: 'perf:     性能优化' },
-        { value: 'test', name: 'test:     添加、修改测试用例' },
-        { value: 'build', name: 'build:    构建流程、外部依赖变更（如升级 npm 包、修改 webpack 配置等）' },
-        { value: 'ci', name: 'ci:       修改 CI 配置、脚本' },
-        { value: 'chore', name: 'chore:    对构建过程或辅助工具和库的更改（不影响源文件、测试用例）' },
-        { value: 'revert', name: 'revert:   回滚 commit' }
-    ],
+  // type 类型（定义之后，可通过上下键选择）
+  types: [
+    { value: "feat", name: "feat:     新增功能" },
+    { value: "fix", name: "fix:      修复 bug" },
+    { value: "docs", name: "docs:     文档变更" },
+    {
+      value: "style",
+      name: "style:    代码格式（不影响功能，例如空格、分号等格式修正）",
+    },
+    {
+      value: "refactor",
+      name: "refactor: 代码重构（不包括 bug 修复、功能新增）",
+    },
+    { value: "perf", name: "perf:     性能优化" },
+    { value: "test", name: "test:     添加、修改测试用例" },
+    {
+      value: "build",
+      name: "build:    构建流程、外部依赖变更（如升级 npm 包、修改 webpack 配置等）",
+    },
+    { value: "ci", name: "ci:       修改 CI 配置、脚本" },
+    {
+      value: "chore",
+      name: "chore:    对构建过程或辅助工具和库的更改（不影响源文件、测试用例）",
+    },
+    { value: "revert", name: "revert:   回滚 commit" },
+  ],
 
-    // scope 类型（定义之后，可通过上下键选择）
-    scopes: [
-        ['components', '组件相关'],
-        ['hooks', 'hook 相关'],
-        ['utils', 'utils 相关'],
-        ['element-ui', '对 element-ui 的调整'],
-        ['styles', '样式相关'],
-        ['deps', '项目依赖'],
-        ['auth', '对 auth 修改'],
-        ['other', '其他修改'],
-        // 如果选择 custom，后面会让你再输入一个自定义的 scope。也可以不设置此项，把后面的 allowCustomScopes 设置为 true
-        ['custom', '以上都不是？我要自定义']
-    ].map(([value, description]) => {
-        return {
-            value,
-            name: `${value.padEnd(30)} (${description})`
-        }
-    }),
+  // scope 类型（定义之后，可通过上下键选择）
+  scopes: [
+    ["components", "组件相关"],
+    ["hooks", "hook 相关"],
+    ["utils", "utils 相关"],
+    ["element-ui", "对 element-ui 的调整"],
+    ["styles", "样式相关"],
+    ["deps", "项目依赖"],
+    ["auth", "对 auth 修改"],
+    ["other", "其他修改"],
+    // 如果选择 custom，后面会让你再输入一个自定义的 scope。也可以不设置此项，把后面的 allowCustomScopes 设置为 true
+    ["custom", "以上都不是？我要自定义"],
+  ].map(([value, description]) => {
+    return {
+      value,
+      name: `${value.padEnd(30)} (${description})`,
+    };
+  }),
 
-    // 是否允许自定义填写 scope，在 scope 选择的时候，会有 empty 和 custom 可以选择。
-    // allowCustomScopes: true,
+  // 是否允许自定义填写 scope，在 scope 选择的时候，会有 empty 和 custom 可以选择。
+  // allowCustomScopes: true,
 
-    // allowTicketNumber: false,
-    // isTicketNumberRequired: false,
-    // ticketNumberPrefix: 'TICKET-',
-    // ticketNumberRegExp: '\\d{1,5}',
+  // allowTicketNumber: false,
+  // isTicketNumberRequired: false,
+  // ticketNumberPrefix: 'TICKET-',
+  // ticketNumberRegExp: '\\d{1,5}',
 
-
-    // 针对每一个 type 去定义对应的 scopes，例如 fix
-    /*
+  // 针对每一个 type 去定义对应的 scopes，例如 fix
+  /*
     scopeOverrides: {
       fix: [
         { name: 'merge' },
@@ -315,32 +329,31 @@ module.exports = {
     },
     */
 
-    // 交互提示信息
-    messages: {
-        type: '确保本次提交遵循 Angular 规范！\n选择你要提交的类型：',
-        scope: '\n选择一个 scope（可选）：',
-        // 选择 scope: custom 时会出下面的提示
-        customScope: '请输入自定义的 scope：',
-        subject: '填写简短精炼的变更描述：\n',
-        body:
-            '填写更加详细的变更描述（可选）。使用 "|" 换行：\n',
-        breaking: '列举非兼容性重大的变更（可选）：\n',
-        footer: '列举出所有变更的 ISSUES CLOSED（可选）。 例如: #31, #34：\n',
-        confirmCommit: '确认提交？'
-    },
+  // 交互提示信息
+  messages: {
+    type: "确保本次提交遵循 Angular 规范！\n选择你要提交的类型：",
+    scope: "\n选择一个 scope（可选）：",
+    // 选择 scope: custom 时会出下面的提示
+    customScope: "请输入自定义的 scope：",
+    subject: "填写简短精炼的变更描述：\n",
+    body: '填写更加详细的变更描述（可选）。使用 "|" 换行：\n',
+    breaking: "列举非兼容性重大的变更（可选）：\n",
+    footer: "列举出所有变更的 ISSUES CLOSED（可选）。 例如: #31, #34：\n",
+    confirmCommit: "确认提交？",
+  },
 
-    // 设置只有 type 选择了 feat 或 fix，才询问 breaking message
-    allowBreakingChanges: ['feat', 'fix'],
+  // 设置只有 type 选择了 feat 或 fix，才询问 breaking message
+  allowBreakingChanges: ["feat", "fix"],
 
-    // 跳过要询问的步骤
-    skipQuestions: ['body', 'footer'],
+  // 跳过要询问的步骤
+  skipQuestions: ["body", "footer"],
 
-    // subject 限制长度
-    subjectLimit: 100,
-    breaklineChar: '|', // 支持 body 和 footer
-    // footerPrefix : 'ISSUES CLOSED:'
-    // askForBreakingChangeFirst : true,
-}
+  // subject 限制长度
+  subjectLimit: 100,
+  breaklineChar: "|", // 支持 body 和 footer
+  // footerPrefix : 'ISSUES CLOSED:'
+  // askForBreakingChangeFirst : true,
+};
 ```
 
 ### CommitLint
@@ -354,7 +367,7 @@ module.exports = {
 ## 遇到的问题
 
 1. Pinia 在某位同事电脑上报错
-2. 同样在某位同事电脑上热部署相当慢，要10s左右的时间，而我自己基本上是秒更新。
+2. 同样在某位同事电脑上热部署相当慢，要 10s 左右的时间，而我自己基本上是秒更新。
 
 目前猜测这两个问题都是由版本号问题导致的，准备忙完手上的项目就去好好找找原因。
 

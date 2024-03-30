@@ -1,6 +1,9 @@
-# xlsx库实现纯前端导入导出Excel
+---
+title: xlsx库实现纯前端导入导出Excel
+date: 2022-05-14
+---
 
-## 前言
+# xlsx 库实现纯前端导入导出 Excel
 
 最近做了前端导入、导出 Excel 的需求，用到了`js-xlsx`这个库，该库文档提供的用例很少，并不是很友好。本文总结一下我是如何实现需求的。
 
@@ -89,7 +92,7 @@ const analyseExcelToJson = (file) => {
       reader.onloadend = (progressEvent) => {
         const arrayBuffer = reader.result;
 
-        const options = { type: 'array' };
+        const options = { type: "array" };
         const workbook = XLSX.read(arrayBuffer, options);
 
         const sheetName = workbook.SheetNames;
@@ -99,7 +102,7 @@ const analyseExcelToJson = (file) => {
       };
       reader.readAsArrayBuffer(file);
     } else {
-      reject(new Error('入参不是 File 类型'));
+      reject(new Error("入参不是 File 类型"));
     }
   });
 };
@@ -134,16 +137,18 @@ const analyseExcelToJson = (file) => {
       reader.onloadend = (progressEvent) => {
         const arrayBuffer = reader.result;
 
-        const options = { type: 'array' };
+        const options = { type: "array" };
         const workbook = XLSX.read(arrayBuffer, options);
 
         const sheetNames = workbook.SheetNames;
-        const result = sheetNames.map((sheetName) => workbook.Sheets[sheetName]);
+        const result = sheetNames.map(
+          (sheetName) => workbook.Sheets[sheetName]
+        );
         resolve(result);
       };
       reader.readAsArrayBuffer(file);
     } else {
-      reject(new Error('入参不是 File 类型'));
+      reject(new Error("入参不是 File 类型"));
     }
   });
 };
@@ -193,7 +198,7 @@ const analyseExcelToJson = (file) => {
  * @param {Array} sheets sheet的集合
  * @param {String} fileName 下载时文件名称
  */
-const exportExcelBySheets = (sheets, fileName = 'example.xlsx') => {
+const exportExcelBySheets = (sheets, fileName = "example.xlsx") => {
   const SheetNames = [];
   const Sheets = {};
   const workbook = { SheetNames, Sheets };
@@ -204,7 +209,7 @@ const exportExcelBySheets = (sheets, fileName = 'example.xlsx') => {
     Sheets[name] = sheet;
   });
 
-  return XLSX.writeFile(workbook, fileName, { type: 'binary' });
+  return XLSX.writeFile(workbook, fileName, { type: "binary" });
 };
 ```
 
@@ -212,7 +217,7 @@ const exportExcelBySheets = (sheets, fileName = 'example.xlsx') => {
 
 ```js
 const ddArray = [
-  ['S', 'h', 'e', 'e', 't', 'J', 'S'],
+  ["S", "h", "e", "e", "t", "J", "S"],
   [1, 2, 3, 4, 5],
 ];
 ```
@@ -225,13 +230,16 @@ const ddArray = [
  * @param {Array} workSheetData 二维数组
  * @param {String} fileName 下载时文件名称
  */
-const exportExcelByDoubleDimensArray = (workSheetData, fileName = 'example.xlsx') => {
+const exportExcelByDoubleDimensArray = (
+  workSheetData,
+  fileName = "example.xlsx"
+) => {
   const ws = XLSX.utils.aoa_to_sheet(workSheetData);
-  const workSheetName = 'MySheet';
+  const workSheetName = "MySheet";
   const workbook = XLSX.utils.book_new();
 
   XLSX.utils.book_append_sheet(workbook, ws, workSheetName);
-  return XLSX.writeFile(workbook, fileName, { type: 'binary' });
+  return XLSX.writeFile(workbook, fileName, { type: "binary" });
 };
 ```
 
@@ -249,14 +257,14 @@ const exportExcelByDoubleDimensArray = (workSheetData, fileName = 'example.xlsx'
  * @param {*} el table 的根 dom 元素
  * @param {*} fileName 下载时文件名称
  */
-const exportExcelByTable = (el, fileName = 'example.xlsx') => {
+const exportExcelByTable = (el, fileName = "example.xlsx") => {
   if (!el) {
-    throw new Error('没有获取到表格的根 dom 元素');
+    throw new Error("没有获取到表格的根 dom 元素");
   }
   const options = { raw: true };
   const workbook = XLSX.utils.table_to_book(el, options);
 
-  return XLSX.writeFile(workbook, fileName, { type: 'binary' });
+  return XLSX.writeFile(workbook, fileName, { type: "binary" });
 };
 ```
 
@@ -295,7 +303,7 @@ exportExcelByTable(this.$refs.table.$el);
 然后在下载报表前，将合并的表头`dom`删除。
 
 ```js
-document.querySelectorAll('.cell-hide').forEach((item) => {
+document.querySelectorAll(".cell-hide").forEach((item) => {
   item.parentNode.removeChild(item);
 });
 

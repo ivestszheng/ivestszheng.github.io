@@ -1,3 +1,11 @@
+---
+title: Vue3 hooks 实践后的个人偏见
+date: 2023-04-16
+description: 许多关于 hooks 的文章都着重介绍了 hooks 的理念，而举得案例过于简单，刚接触 hooks 的新手难以将其运用至业务代码中。本文将着重介绍 hooks 在一个难度适中的示例中是如何使用的。对于理念部分，我认为官方文档已经足够详细，本人仅穿插一点个人偏见。强烈建议阅读本文前，先学习官方文档组合式函数这一章节。
+---
+
+# Vue3 hooks 实践后的个人偏见
+
 ## 前言
 
 许多关于 hooks 的文章都着重介绍了 hooks 的理念，而举得案例过于简单，刚接触 hooks 的新手难以将其运用至业务代码中。本文将着重介绍 hooks 在一个难度适中的示例中是如何使用的。对于理念部分，我认为官方文档已经足够详细，本人仅穿插一点个人偏见。强烈建议阅读本文前，先学习官方文档[组合式函数](https://cn.vuejs.org/guide/reusability/composables.html)这一章节。
@@ -23,10 +31,7 @@ Hooks 是 React 中的一种特殊函数，用于在函数组件中添加状态�
 ```vue
 <template>
   <div class="van-list-demo-view">
-    <van-pull-refresh
-      v-model="isRefreshing"
-      @refresh="onRefresh"
-    >
+    <van-pull-refresh v-model="isRefreshing" @refresh="onRefresh">
       <van-sticky :offset-top="0">
         <van-search
           v-model="searchContent"
@@ -84,7 +89,7 @@ function onLoad() {
    **/
   setTimeout(() => {
     if (queryCondition.searchContent) {
-        // 这个条件只是模拟出查询的效果，没有什么现实意义
+      // 这个条件只是模拟出查询的效果，没有什么现实意义
       if (
         Number(queryCondition.searchContent) > 0 &&
         Number(queryCondition.searchContent) <= totalNum
@@ -209,8 +214,8 @@ function useVanList() {
     finished,
     onLoad,
     isRefreshing,
-    onRefresh
-  }
+    onRefresh,
+  };
 }
 
 export { useVanList };
@@ -220,7 +225,7 @@ export { useVanList };
 
 ```vue
 <template>
-    <!-- 此处省略，与上面保持一致 -->
+  <!-- 此处省略，与上面保持一致 -->
 </template>
 <script setup lang="ts">
 import { useVanList } from "./composables/vanList";
@@ -326,7 +331,6 @@ function useVanList({
 }
 
 export { useVanList };
-
 ```
 
 ```vue
