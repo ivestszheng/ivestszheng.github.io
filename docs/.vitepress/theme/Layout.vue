@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { unref } from 'vue'
+import { unref, computed } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import Comment from './components/Comment.vue';
 
 const { page } = useData()
 const { Layout } = DefaultTheme
-const isHome = unref(page)?.filePath === 'index.md'
+const isHome = computed(() => unref(page)?.filePath === 'index.md')
 </script>
 
 <template>
