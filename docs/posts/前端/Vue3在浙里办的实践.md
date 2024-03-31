@@ -1,7 +1,7 @@
 ---
 title: Vue3在浙里办的实践
 date: 2022-12-11
-description: 本文将从以下几方面展开：浙里办 H5 开发前需知、项目构建与技术选型、浙里办对接过程中遇到的问题及解决方案、项目一些需求的实现思路。
+abstract: 本文将从以下几方面展开：浙里办 H5 开发前需知、项目构建与技术选型、浙里办对接过程中遇到的问题及解决方案、项目一些需求的实现思路。
 ---
 
 # Vue3 在浙里办的实践
@@ -994,7 +994,7 @@ export default function useOss() {
     };
 ​
     /**
-     * @description 获取文件预览地址
+     * @abstract 获取文件预览地址
      * @param filePath bucket上的文件名
      */
     function getPreviewUrl(filePath: string) {

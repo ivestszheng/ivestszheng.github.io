@@ -302,10 +302,10 @@ module.exports = {
     ["other", "其他修改"],
     // 如果选择 custom，后面会让你再输入一个自定义的 scope。也可以不设置此项，把后面的 allowCustomScopes 设置为 true
     ["custom", "以上都不是？我要自定义"],
-  ].map(([value, description]) => {
+  ].map(([value, abstract]) => {
     return {
       value,
-      name: `${value.padEnd(30)} (${description})`,
+      name: `${value.padEnd(30)} (${abstract})`,
     };
   }),
 

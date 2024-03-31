@@ -7,7 +7,7 @@ interface Post {
     time: number;
     string: string;
   };
-  description: string;
+  abstract: string;
 }
 
 declare const data: Post[];
@@ -21,7 +21,7 @@ export default createContentLoader("posts/*/*.md", {
         title: frontmatter.title,
         url,
         date: formatDate(frontmatter.date),
-        description: frontmatter.description,
+        abstract: frontmatter.abstract,
       }))
       .sort((a, b) => b.date.time - a.date.time)
       .slice(0, 10);

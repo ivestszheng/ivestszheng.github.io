@@ -5,7 +5,7 @@
                 <a :href="withBase(article.url)"> {{ article.title }}</a>
             </div>
         </div>
-        <p class="description" v-html="article.description"></p>
+        <p class="abstract" v-html="article.abstract"></p>
         <div class='post-info'>
             {{ article.date }}
         </div>
@@ -18,7 +18,7 @@ import { withBase } from 'vitepress'
 interface Article {
     url: string
     title: string
-    description: string
+    abstract: string
     date: string
 }
 defineProps({
@@ -45,7 +45,7 @@ defineProps({
     margin: 0.1rem 0;
 }
 
-.description {
+.abstract {
     font-size: 0.9375rem;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -74,7 +74,7 @@ defineProps({
         overflow: hidden;
         width: 17rem;
     }
-    .description {
+    .abstract {
         font-size: 0.9375rem;
         display: -webkit-box;
         -webkit-box-orient: vertical;
