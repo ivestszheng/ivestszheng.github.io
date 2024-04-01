@@ -9,7 +9,7 @@ onMounted(() => {
             script.src = 'https://utteranc.es/client.js';
             script.async = true;
             script.crossOrigin = 'anonymous';
-            script.setAttribute('repo', 'ivestszheng/blog-comment');
+            script.setAttribute('repo', 'ivestszheng/blog-comments');
             script.setAttribute('issue-term', 'pathname');
             script.setAttribute('label', 'Comment');
             script.setAttribute('theme', 'preferred-color-scheme');
