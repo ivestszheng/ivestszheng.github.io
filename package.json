@@ -5,9 +5,9 @@
   "repository": "git@github.com:ivestszheng/ivestszheng.github.io.git",
   "author": "无声 <ivestszheng@qq.com>",
   "scripts": {
-    "dev": "vitepress dev docs --host",
-    "build": "vitepress build docs",
-    "preview": "vitepress preview docs"
+    "docs:dev": "vitepress dev docs --host",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "vite-plugin-vitepress-auto-sidebar": "^1.6.3",
