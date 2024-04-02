@@ -7,6 +7,12 @@ interface Post {
     time: number;
     string: string;
   };
+  abstract?: string;
+}
+
+interface data {
+  posts: Post[];
+  recentPosts: Post[];
 }
 
 declare const data: Post[];
@@ -14,13 +20,23 @@ export { data };
 
 export default createContentLoader("posts/*/*.md", {
   transform(raw): Post[] {
-    return raw
+    const posts = raw
       .map(({ url, frontmatter }) => ({
         title: frontmatter.title,
         url,
         date: formatDate(frontmatter.date),
+        abstract: frontmatter.abstract,
       }))
       .sort((a, b) => b.date.time - a.date.time);
+
+    const recentPosts = posts
+      .filter(({ url }) => !/posts\/(力扣|生活经验)\//.test(url))
+      .slice(0, 10);
+
+    return {
+      posts,
+      recentPosts,
+    };
   },
 });
 

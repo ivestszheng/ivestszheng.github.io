@@ -1,5 +1,9 @@
 import AutoSidebar from "vite-plugin-vitepress-auto-sidebar";
 
+const nav = [
+  { text: "文章", link: "/posts/前端/Tailwind CSS 很好，但不适合我" },
+];
+
 export default {
   lang: "zh-CN",
   title: "无声2017的博客",
@@ -8,7 +12,7 @@ export default {
   base: "/",
   head: [["link", { rel: "icon", href: "favicon.ico" }]],
   themeConfig: {
-    nav: nav(),
+    nav,
     footer: {
       copyright: "Copyright © 2022-present 无声2017",
     },
@@ -45,8 +49,6 @@ export default {
   cleanUrls: true,
 };
 
-function nav() {
-  return [
-    { text: "文章", link: "/posts/前端/Tailwind CSS 很好，但不适合我" },
-  ];
+export {
+  nav
 }

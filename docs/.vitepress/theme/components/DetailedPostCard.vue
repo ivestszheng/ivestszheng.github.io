@@ -1,13 +1,13 @@
 <template>
-    <div v-for="(article, index) in posts" :key="index" class="post-list">
+    <div class="post-card">
         <div class="post-header">
             <div class="post-title">
-                <a :href="withBase(article.url)"> {{ article.title }}</a>
+                <a class="post-title-text" :href="withBase(url)"> {{ title }}</a>
             </div>
         </div>
-        <p class="abstract" v-html="article.abstract"></p>
+        <p class="abstract" v-html="abstract"></p>
         <div class='post-info'>
-            {{ article.date }}
+            {{ date }}
         </div>
     </div>
 </template>
@@ -15,34 +15,50 @@
 <script setup lang="ts">
 import { withBase } from 'vitepress'
 
-interface Article {
-    url: string
-    title: string
-    abstract: string
-    date: string
-}
 defineProps({
-    posts: {
-        type: Array as () => Article[],
-        required: true
+    url: {
+        type: String
+    },
+    title: {
+        type: String
+    },
+    abstract:{
+        type: String
+    },
+    date: {
+        type: String
     }
 })
 </script>
 
 <style scoped>
-.post-list {
-    border-bottom: 1px dashed var(--vp-c-divider-light);
-    padding: 14px 0 14px 0;
+.post-card {
+    padding: 14px 0 14px;
 }
+
 .post-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
+
 .post-title {
+    color: var(--vp-c-text-1);
     font-size: 1.125rem;
     font-weight: 500;
     margin: 0.1rem 0;
+}
+
+.post-title-text {
+    color: var(--vp-c-text-1);
+}
+
+.post-title-text:hover {
+    color: var(--vp-c-brand-1);
+}
+
+.post-info {
+    font-size: 12px;
 }
 
 .abstract {
@@ -57,14 +73,12 @@ defineProps({
 }
 
 @media screen and (max-width: 768px) {
-    .post-list {
-        padding: 14px 0 14px 0;
-    }
     .post-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
+
     .post-title {
         font-size: 1.0625rem;
         font-weight: 400;
@@ -74,6 +88,7 @@ defineProps({
         overflow: hidden;
         width: 17rem;
     }
+
     .abstract {
         font-size: 0.9375rem;
         display: -webkit-box;
