@@ -1,8 +1,5 @@
 import AutoSidebar from "vite-plugin-vitepress-auto-sidebar";
-
-const nav = [
-  { text: "文章", link: "/posts/前端/Tailwind CSS 很好，但不适合我" },
-];
+import nav from './nav'
 
 export default {
   lang: "zh-CN",
@@ -48,7 +45,3 @@ export default {
   },
   cleanUrls: true,
 };
-
-export {
-  nav
-}

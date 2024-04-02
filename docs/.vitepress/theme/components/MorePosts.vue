@@ -1,7 +1,7 @@
 <template>
     <div class="more-posts">
         <a :href="url" class="more-posts-text">
-            到底啦 ，点我查看更多文章~~
+            到底了~点我阅读更多文章~
         </a>
     </div>
 </template>

@@ -10,7 +10,7 @@ pageClass: home-page
 import { computed } from 'vue'
 import  { data }  from './.vitepress/theme/posts.data'
 import DetailedPostCard from './.vitepress/theme/components/DetailedPostCard.vue'
-import { nav } from './.vitepress/config'
+import nav from './.vitepress/nav'
 import MorePosts from './.vitepress/theme/components/MorePosts.vue'
 
 const computedRecentPosts = computed(() => data.recentPosts.map(item => 
