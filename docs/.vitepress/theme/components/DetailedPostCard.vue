@@ -2,12 +2,13 @@
     <div class="post-card">
         <div class="post-header">
             <div class="post-title">
-                <a class="post-title-text" :href="withBase(url)"> {{ title }}</a>
+                <a class="post-title-text" :href="withBase(url)" v-text="title"></a>
             </div>
         </div>
         <p class="abstract" v-html="abstract"></p>
         <div class='post-info'>
-            {{ date }}
+            <div v-text="date"></div>
+            <div v-text="tag" class="tag"></div>
         </div>
     </div>
 </template>
@@ -26,6 +27,9 @@ defineProps({
         type: String
     },
     date: {
+        type: String
+    },
+    tag:{
         type: String
     }
 })
@@ -58,6 +62,9 @@ defineProps({
 }
 
 .post-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 12px;
 }
 
@@ -70,6 +77,11 @@ defineProps({
     color: var(--vp-c-text-2);
     margin: 10px 0;
     line-height: 1.5rem;
+}
+
+.tag {
+    background-color: var(--vp-c-bg-alt);
+    padding: 0 8px;
 }
 
 @media screen and (max-width: 768px) {

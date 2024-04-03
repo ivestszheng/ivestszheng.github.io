@@ -4,7 +4,7 @@ import nav from './nav'
 export default {
   lang: "zh-CN",
   title: "无声2017的博客",
-  titleTemplate: "无声2017的博客",
+  titleTemplate: true,
   abstract: "菜鸡的日常分享",
   base: "/",
   head: [["link", { rel: "icon", href: "favicon.ico" }]],

@@ -1,9 +1,10 @@
 ---
 layout: doc
-title: 首页-无声2017的博客
+title: 首页
 aside: false
 lastUpdated: false
 pageClass: home-page
+doc-after: false
 ---
 
 <script setup>
@@ -24,5 +25,6 @@ const morePostLink = nav[0].link
   :title="article.title"
   :abstract="article.abstract"
   :date="article.date"
+  :tag="article.tag"
 />
 <MorePosts style="margin-top: 48px;" :url="morePostLink" />

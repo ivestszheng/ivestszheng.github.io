@@ -10,9 +10,13 @@ interface Post {
   abstract?: string;
 }
 
+interface RencentPost extends Post {
+  tag: string;
+}
+
 interface data {
   posts: Post[];
-  recentPosts: Post[];
+  recentPosts: RencentPost[];
 }
 
 declare const data: Post[];
@@ -26,12 +30,13 @@ export default createContentLoader("posts/*/*.md", {
         url,
         date: formatDate(frontmatter.date),
         abstract: frontmatter.abstract,
+        tag: url.split('/')[2]
       }))
       .sort((a, b) => b.date.time - a.date.time);
 
     const recentPosts = posts
-      .filter(({ url }) => !/posts\/(力扣|生活经验)\//.test(url))
-      .slice(0, 10);
+      .slice(0, 10)
+      .map(item => ({...item,tag:item.url.split('/')[2] }));
 
     return {
       posts,
