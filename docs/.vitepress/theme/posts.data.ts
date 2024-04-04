@@ -15,6 +15,7 @@ interface RencentPost extends Post {
 }
 
 interface data {
+  yearMap: unknown;
   posts: Post[];
   recentPosts: RencentPost[];
 }
@@ -23,22 +24,32 @@ declare const data: Post[];
 export { data };
 
 export default createContentLoader("posts/*/*.md", {
-  transform(raw): Post[] {
+  transform(raw): data {
     const posts = raw
       .map(({ url, frontmatter }) => ({
         title: frontmatter.title,
         url,
         date: formatDate(frontmatter.date),
         abstract: frontmatter.abstract,
-        tag: url.split('/')[2]
+        tag: url.split("/")[2],
       }))
       .sort((a, b) => b.date.time - a.date.time);
 
     const recentPosts = posts
       .slice(0, 10)
-      .map(item => ({...item,tag:item.url.split('/')[2] }));
+      .map((item) => ({ ...item, tag: item.url.split("/")[2] }));
+
+    const yearMap = {};
+    posts.forEach((item) => {
+      const year = new Date(item.date.string).getFullYear();
+      if (!yearMap[year]) {
+        yearMap[year] = [];
+      }
+      yearMap[year].push(item);
+    });
 
     return {
+      yearMap,
       posts,
       recentPosts,
     };
