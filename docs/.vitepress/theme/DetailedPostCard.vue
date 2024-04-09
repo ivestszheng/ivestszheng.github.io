@@ -1,20 +1,3 @@
-<template>
-    <div class="post-card">
-        <div class="post-header">
-            <div class="post-title">
-                <a class="post-title-text" :href="withBase(url)" v-text="title"></a>
-            </div>
-        </div>
-        <p class="abstract" v-html="abstract"></p>
-        <div class='post-info'>
-            <div v-text="date"></div>
-            <div class="flex">
-                <a v-for="(tag,i) in tags" v-text="tag" class="tag cursor-pointer hover:text-[var(--vp-c-brand)]" :href="`/pages/tags?tag=${tag}`"></a>
-            </div>
-        </div>
-    </div>
-</template>
-
 <script setup lang="ts">
 import { withBase } from 'vitepress'
 
@@ -36,6 +19,23 @@ defineProps({
     }
 })
 </script>
+
+<template>
+    <div class="post-card">
+        <div class="post-header">
+            <div class="post-title">
+                <a class="post-title-text" :href="withBase(url)" v-text="title"></a>
+            </div>
+        </div>
+        <p class="abstract" v-html="abstract"></p>
+        <div class='post-info'>
+            <div v-text="date"></div>
+            <div class="flex">
+                <a v-for="(tag,i) in tags" v-text="tag" class="tag cursor-pointer hover:text-[var(--vp-c-brand)]" :href="`/pages/tags?tag=${tag}`"></a>
+            </div>
+        </div>
+    </div>
+</template>
 
 <style scoped>
 .post-card {

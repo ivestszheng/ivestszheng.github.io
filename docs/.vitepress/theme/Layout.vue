@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { unref, computed } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import Comment from './Comment.vue';
