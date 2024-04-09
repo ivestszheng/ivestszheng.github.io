@@ -8,7 +8,9 @@
         <p class="abstract" v-html="abstract"></p>
         <div class='post-info'>
             <div v-text="date"></div>
-            <div v-text="tag" class="tag"></div>
+            <div class="flex">
+                <div v-for="(tag,i) in tags" v-text="tag" class="tag cursor-pointer hover:text-[var(--vp-c-brand)]"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -29,8 +31,8 @@ defineProps({
     date: {
         type: String
     },
-    tag:{
-        type: String
+    tags:{
+        type: Array
     }
 })
 </script>
@@ -82,6 +84,10 @@ defineProps({
 .tag {
     background-color: var(--vp-c-bg-alt);
     padding: 0 8px;
+}
+
+.tag + .tag {
+    margin-left: 6px;
 }
 
 @media screen and (max-width: 768px) {

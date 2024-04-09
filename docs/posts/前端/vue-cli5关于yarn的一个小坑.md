@@ -1,6 +1,8 @@
 ---
 title: vue-cli5关于yarn的一个小坑
 date: 2022-05-21
+tags:
+- Vue.js
 ---
 # vue-cli5关于yarn的一个小坑
 

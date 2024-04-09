@@ -11,13 +11,15 @@ interface Post {
 }
 
 interface RencentPost extends Post {
-  tag: string;
+  tags?: string[];
 }
 
 interface data {
   yearMap: unknown;
   posts: Post[];
   recentPosts: RencentPost[];
+  postMap: unknown;
+  tagMap: unknown;
 }
 
 declare const data: Post[];
@@ -25,33 +27,50 @@ export { data };
 
 export default createContentLoader("posts/*/*.md", {
   transform(raw): data {
+    const postMap = {};
+    const yearMap = {};
+    const tagMap = {};
     const posts = raw
-      .map(({ url, frontmatter }) => ({
-        title: frontmatter.title,
-        url,
-        date: formatDate(frontmatter.date),
-        abstract: frontmatter.abstract,
-        tag: url.split("/")[2],
-      }))
+      .map(({ url, frontmatter }) => {
+        let tags = [url.split("/")[2]];
+        if (frontmatter?.tags) {
+          tags = [...tags, ...frontmatter.tags];
+        }
+        const result = {
+          title: frontmatter.title,
+          url,
+          date: formatDate(frontmatter.date),
+          abstract: frontmatter.abstract,
+          tags,
+        };
+        postMap[result.url] = result;
+        return result;
+      })
       .sort((a, b) => b.date.time - a.date.time);
 
-    const recentPosts = posts
-      .slice(0, 10)
-      .map((item) => ({ ...item, tag: item.url.split("/")[2] }));
+    const recentPosts = posts.slice(0, 10).map((item) => ({ ...item }));
 
-    const yearMap = {};
     posts.forEach((item) => {
       const year = new Date(item.date.string).getFullYear();
       if (!yearMap[year]) {
         yearMap[year] = [];
       }
-      yearMap[year].push(item);
+      yearMap[year].push(item.url);
+      
+      item.tags.forEach((tag) => {
+        if(!tagMap[tag]){
+          tagMap[tag] = []
+        }
+        tagMap[tag].push(item.url)
+      })
     });
 
     return {
       yearMap,
       posts,
       recentPosts,
+      postMap,
+      tagMap,
     };
   },
 });

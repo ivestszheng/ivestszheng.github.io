@@ -20,6 +20,6 @@ const computedRecentPosts = computed(() => data.recentPosts.map(item =>
     :title="article.title"
     :abstract="article.abstract"
     :date="article.date"
-    :tag="article.tag"
+    :tags="article.tags"
   />
 </div>
