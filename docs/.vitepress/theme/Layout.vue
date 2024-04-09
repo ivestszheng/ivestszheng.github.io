@@ -2,7 +2,7 @@
 import { unref, computed } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import Comment from './components/Comment.vue';
+import Comment from './Comment.vue';
 
 const { page } = useData()
 const { Layout } = DefaultTheme

@@ -7,7 +7,7 @@ sidebar: false
 <script setup>
 import { computed } from 'vue'
 import  { data }  from '../.vitepress/theme/posts.data'
-import PostEntry from '../.vitepress/theme/components/PostEntry.vue'
+import PostEntry from '../.vitepress/theme/PostEntry.vue'
 
 const { yearMap,postMap } = data
 const yearList = Object.keys(yearMap).sort((a, b) => b - a); // 按年份降序排序

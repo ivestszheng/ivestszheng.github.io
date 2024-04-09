@@ -3,10 +3,11 @@ layout: page
 title: 标签
 sidebar: false
 ---
+
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, unref, computed, onMounted } from 'vue'
 import  { data }  from '../.vitepress/theme/posts.data'
-import PostEntry from '../.vitepress/theme/components/PostEntry.vue'
+import PostEntry from '../.vitepress/theme/PostEntry.vue'
 
 const { tagMap,postMap } = data
 const tags = Object.keys(tagMap)
@@ -17,11 +18,17 @@ const computedTagMap = computed(()=> {
   }
   return result
 })
-console.log(computedTagMap)
+
 const currentTag = ref(null)
 function onTagClick(newTag){
     currentTag.value = newTag
 }
+const postList = computed(()=> (unref(computedTagMap)[unref(currentTag)]))
+onMounted(()=>{
+  const searchParams = new URLSearchParams(window.location.search)
+  if(searchParams.get('tag')) currentTag.value = searchParams.get('tag')
+})
+
 </script>
 <div class="max-w-screen-lg w-full px-6 py-8 my-0 mx-auto">
     <div class="flex flex-wrap gap-4">
@@ -31,7 +38,7 @@ function onTagClick(newTag){
         </div>
     </div>
     <p v-text="currentTag" class="py-4 text-2xl"></p>
-    <PostEntry  v-for="(article, index2) in computedTagMap[currentTag]" :key="index" :url="article.url">
+    <PostEntry  v-for="(article, index) in postList" :key="index" :url="article.url">
       {{ article.title }}
       <template #date>
         {{ article.date.string }}

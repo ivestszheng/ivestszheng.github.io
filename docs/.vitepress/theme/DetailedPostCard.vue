@@ -9,7 +9,7 @@
         <div class='post-info'>
             <div v-text="date"></div>
             <div class="flex">
-                <div v-for="(tag,i) in tags" v-text="tag" class="tag cursor-pointer hover:text-[var(--vp-c-brand)]"></div>
+                <a v-for="(tag,i) in tags" v-text="tag" class="tag cursor-pointer hover:text-[var(--vp-c-brand)]" :href="`/pages/tags?tag=${tag}`"></a>
             </div>
         </div>
     </div>

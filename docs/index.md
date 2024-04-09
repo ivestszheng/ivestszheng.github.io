@@ -6,7 +6,7 @@ title: 首页
 <script setup>
 import { computed } from 'vue'
 import  { data }  from './.vitepress/theme/posts.data'
-import DetailedPostCard from './.vitepress/theme/components/DetailedPostCard.vue'
+import DetailedPostCard from './.vitepress/theme/DetailedPostCard.vue'
 import nav from './.vitepress/nav'
 
 const computedRecentPosts = computed(() => data.recentPosts.map(item => 
