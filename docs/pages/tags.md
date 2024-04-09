@@ -7,7 +7,6 @@ sidebar: false
 <script setup>
 import { ref, unref, computed, onMounted } from 'vue'
 import  { data }  from '../.vitepress/theme/posts.data'
-import PostEntry from '../.vitepress/theme/PostEntry.vue'
 
 const { tagMap,postMap } = data
 const tags = Object.keys(tagMap)
@@ -38,10 +37,10 @@ onMounted(()=>{
         </div>
     </div>
     <p v-text="currentTag" class="py-4 text-2xl"></p>
-    <PostEntry  v-for="(article, index) in postList" :key="index" :url="article.url">
-      {{ article.title }}
-      <template #date>
-        {{ article.date.string }}
-      </template>
-    </PostEntry>
+    <div v-for="(article, index) in postList" :key="index" class="flex justify-between items-center py-1 pl-6">
+      <a v-text="article.title" :href="article.url" class="post-dot overflow-hidden whitespace-nowrap text-ellipsis">
+      </a>
+      <div v-text="article.date.string" class="pl-4 font-serif whitespace-nowrap" >
+      </div>
+    </div>
 </div>
