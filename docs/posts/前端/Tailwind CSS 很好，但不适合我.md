@@ -2,6 +2,8 @@
 title: Tailwind CSS 很好，但不适合我
 date: 2023-10-02
 abstract: 在一个月前，我选择了 Tailwind CSS 用于一个企业官网的开发。一个月后，项目经过了几次小版本迭代，我对 Tailwind CSS 的使用小有心得。本文将阐述我在企业开发中使用 Tailwind CSS 后对它的看法。
+tags:
+- CSS
 ---
 
 # Tailwind CSS 很好，但不适合我

@@ -1,10 +1,12 @@
 ---
-title: 使用 Utterances 给 Vitepress 添加评论功能
+title: 使用 Utterances 给 VitePress 添加评论功能
 date: 2024-03-31
-abstract: 本文简单介绍了 Utterances 并说明如何在 Vitepress 中集成 Utterances。
+abstract: 本文简单介绍了 Utterances 并说明如何在 VitePress 中集成 Utterances。
+tags:
+- VitePress
 ---
 
-# 使用 Utterances 给 Vitepress 添加评论功能
+# 使用 Utterances 给 VitePress 添加评论功能
 
 ## 什么是 Utterances
 
@@ -30,7 +32,7 @@ Utterances 加载时会使用 Github [issue search API](https://docs.github.com/
 
 3. 如果您的存储库是 fork 的，请在 settings 选项卡中确认 issues 功能已打开。
 
-### 在 Vitepress 中创建评论组件
+### 在 VitePress 中创建评论组件
 
 ```vue
 // docs\.vitepress\theme\components\Comment.vue
