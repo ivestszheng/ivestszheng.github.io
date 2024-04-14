@@ -16,7 +16,6 @@ interface RencentPost extends Post {
 
 interface data {
   yearMap: unknown;
-  posts: Post[];
   recentPosts: RencentPost[];
   postMap: unknown;
   tagMap: unknown;
@@ -67,7 +66,6 @@ export default createContentLoader("posts/*/*.md", {
 
     return {
       yearMap,
-      posts,
       recentPosts,
       postMap,
       tagMap,
