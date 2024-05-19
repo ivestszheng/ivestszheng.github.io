@@ -41,13 +41,14 @@ function gotoPost(url) {
     ></p>
     <div class="flex justify-between items-center text-xs">
       <div v-text="date"></div>
-      <div class="flex">
-        <div
+      <div class="flex space-x-1">
+        <a
           v-for="(tag, i) in tags"
           v-text="tag"
-          class="bg-[var(--vp-c-bg-alt)] px-2 py-1"
-          :class="{ 'ml-2': i !== 0 }"
-        ></div>
+          :href="`/pages/tags?tag=${tag}`"
+          @click.stop
+          class="bg-[var(--vp-c-bg-alt)] px-2 py-1 pointer-events-none md:pointer-events-auto md:hover:text-[var(--vp-c-brand)]"
+        ></a>
       </div>
     </div>
   </div>
