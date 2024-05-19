@@ -1,8 +1,9 @@
 ---
 title: xlsx库实现纯前端导入导出Excel
 date: 2022-05-14
+abstract: 最近做了前端导入、导出 Excel 的需求，用到了 js-xlsx 这个库，该库文档提供的用例很少，并不是很友好。本文总结一下我是如何实现需求的。
 tags:
-- Vue.js
+  - Vue.js
 ---
 
 # xlsx 库实现纯前端导入导出 Excel
