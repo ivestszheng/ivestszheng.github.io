@@ -36,7 +36,7 @@ function gotoPost(url) {
       </div>
     </div>
     <p
-      class="text-sm leading-relaxed text-[var(--vp-c-text-2)] overflow-hidden line-clamp-2 my-4"
+      class="text-sm h-12 leading-relaxed text-[var(--vp-c-text-2)] overflow-hidden line-clamp-2 my-4"
       v-html="abstract"
     ></p>
     <div class="flex justify-between items-center text-xs">
