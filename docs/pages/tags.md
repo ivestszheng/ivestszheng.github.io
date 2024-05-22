@@ -33,7 +33,7 @@ onMounted(()=>{
 <div class="max-w-screen-lg w-full md:px-6 md:py-8 mx-auto pt-1">
     <div class="flex md:flex-wrap gap-1 md:gap-4 overflow-x-auto py-2">
         <div v-for="(tag,i) in tags" :key="i"
-            class="block py-1 px-2 md:px-4 md:bg-[var(--vp-c-bg-alt)] text-[var(--vp-c-text-1)] cursor-pointer hover:text-[var(--vp-c-brand)] whitespace-nowrap"
+            class="block py-1 px-2 md:px-4 md:bg-[var(--vp-c-bg-alt)] text-[var(--vp-c-text-1)] cursor-pointer md:hover:text-[var(--vp-c-brand)] whitespace-nowrap"
             @click="onTagClick(tag)">
             <span :class="{'text-[var(--vp-c-brand)]': tag === currentTag}">{{ tag }}</span>
             <span class="hidden md:inline-block pl-1 text-[var(--vp-c-brand)]"> {{ computedTagMap[tag].length

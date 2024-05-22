@@ -27,7 +27,7 @@ function gotoPost(url) {
 
 <template>
   <div
-    class="py-2 px-2 bg-white cursor-pointer hover:bg-gray-100"
+    class="py-2 px-4 bg-white cursor-pointer md:hover:bg-gray-100"
     @click="gotoPost(url)"
   >
     <div class="flex items-center justify-between">
