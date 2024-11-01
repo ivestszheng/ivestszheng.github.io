@@ -1,7 +1,8 @@
-import AutoSidebar from "vite-plugin-vitepress-auto-sidebar";
+import { defineConfig } from 'vitepress';
+import { withSidebar } from 'vitepress-sidebar';
 import nav from './nav'
 
-export default {
+const vitePressOptions = {
   lang: "zh-CN",
   title: "无声2017的博客",
   titleTemplate: true,
@@ -30,13 +31,6 @@ export default {
     },
   },
   lastUpdated: true,
-  vite: {
-    plugins: [
-      AutoSidebar({
-        ignoreIndexItem: true,
-      }),
-    ],
-  },
   markdown: {
     image: {
       lazyLoading: true,
@@ -45,3 +39,12 @@ export default {
   },
   cleanUrls: true,
 };
+
+const vitePressSidebarOptions = {
+  documentRootPath: '/docs',
+  scanStartPath: '/posts',
+  collapsed: false,
+  capitalizeFirst: true
+};
+
+export default defineConfig(withSidebar(vitePressOptions, vitePressSidebarOptions));
