@@ -8,7 +8,10 @@ const vitePressOptions = {
   titleTemplate: true,
   abstract: "菜鸡的日常分享",
   base: "/",
-  head: [["link", { rel: "icon", href: "favicon.ico" }]],
+  head: [
+    ["link", { rel: "icon", href: "favicon.ico" }],
+    ['meta', { name: 'msvalidate.01', content: '5506BDC904D39E46A4E200E74C68FBE1' }]
+  ],
   themeConfig: {
     nav,
     footer: {
