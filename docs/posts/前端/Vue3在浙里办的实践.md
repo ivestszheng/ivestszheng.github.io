@@ -1052,15 +1052,3 @@ export default function useOss() {
     });
   };
 ```
-
-## 一些开发文档
-
-[zwjsbridge-docs](https://github.com/ivestszheng/zwjsbridge-docs)
-
-## 一些可能需要用到的能力实现
-
-[zlb-vue3-demo](https://github.com/ivestszheng/zlb-vue3-demo)
-
-## 线上应用
-
-浙里办搜索 **【青科汇】**，另外同事用 Vue2 开发的应用可查看 **【浙里科普】**。
