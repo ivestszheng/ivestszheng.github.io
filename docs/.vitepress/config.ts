@@ -51,11 +51,13 @@ const vitePressOptions = {
   }
 };
 
-const vitePressSidebarOptions = {
-  documentRootPath: '/docs',
-  scanStartPath: '/posts',
-  collapsed: false,
-  capitalizeFirst: true
-};
+const vitePressSidebarOptions = [
+  {
+    documentRootPath: '/docs',
+    scanStartPath: '/posts',
+    collapsed: false,
+    capitalizeFirst: true
+  }
+];
 
 export default withMermaid(withSidebar(vitePressOptions, vitePressSidebarOptions));
