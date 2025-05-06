@@ -7,7 +7,7 @@ sidebar: false
 <script setup>
 import { ref, unref, computed, onMounted } from 'vue'
 import  { data }  from '../.vitepress/theme/posts.data'
-
+console.log(data)
 const { tagMap,postMap } = data
 const tags = Object.keys(tagMap)
 const computedTagMap = computed(()=> {

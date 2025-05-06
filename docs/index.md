@@ -10,7 +10,7 @@ import  { data }  from './.vitepress/theme/posts.data'
 import DetailedPostCard from './.vitepress/theme/DetailedPostCard.vue'
 import nav from './.vitepress/nav'
 
-const computedRecentPosts = computed(() => data.recentPosts.map(item => 
+const computedRecentPosts = computed(() => data.posts.splice(0,10).map(item => 
     ({...item, date: item.date.string})))
 </script>
 

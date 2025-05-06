@@ -34,8 +34,8 @@ importers:
         specifier: ^2.0.17
         version: 2.0.17(mermaid@11.6.0)(vitepress@1.0.1(@algolia/client-search@4.23.3)(postcss@8.4.38)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(search-insights@2.13.0)(typescript@5.4.5))
       vitepress-sidebar:
-        specifier: ^1.29.0
-        version: 1.29.0
+        specifier: ^1.31.1
+        version: 1.31.1
       vitepress-theme-demoblock:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)
@@ -2037,6 +2037,10 @@ packages:
     resolution: {integrity: sha512-99cKy4s+VZoXnPxaoM23e5ABcP851nC2y2GROkkjS8eJaJtlciGavd7iYAw2V84WeBqggZ12l8ef44G99HmTaw==}
     hasBin: true
 
+  qsu@1.10.0:
+    resolution: {integrity: sha512-60UGE7IEYXX/xy/n1w7vDm+is43pmePajAdXAnFOczvVDJKbVqZ5/RvRy+yobjA4iQitr4H/4zojVFtAkNWW9g==}
+    engines: {node: '>=18.0.0'}
+
   quansync@0.2.10:
     resolution: {integrity: sha512-t41VRkMYbkHyCYmOvx/6URnN80H7k4X0lLdBMGsz+maAwrJQYB1djpV6vHrQIBE0WBSGqhtEHrK9U3DWWH8v7A==}
 
@@ -2357,8 +2361,8 @@ packages:
       mermaid: 10 || 11
       vitepress: ^1.0.0 || ^1.0.0-alpha
 
-  vitepress-sidebar@1.29.0:
-    resolution: {integrity: sha512-DKsNYBtqKa9WWaGu+l5iuZjx7dXXmiTjhaK1tnOqsb5CXMySXVUwNSAnG/JhiNH55+UDvwzGxbCPLL+3XNmtog==}
+  vitepress-sidebar@1.31.1:
+    resolution: {integrity: sha512-Hx10z5le87jIIXVfKq4AtRrVqVJJ/1cQsZhmwT+ghVR/j4Yor9FjNMszyigJ54ktrEtoxSLO6C9tvuLauT4lZA==}
     engines: {node: '>=18.0.0'}
 
   vitepress-theme-demoblock@1.4.2:
@@ -4479,6 +4483,8 @@ snapshots:
       postcss: 8.4.38
       postcss-selector-parser: 6.0.16
 
+  qsu@1.10.0: {}
+
   quansync@0.2.10: {}
 
   queue-microtask@1.2.3: {}
@@ -4786,10 +4792,11 @@ snapshots:
     optionalDependencies:
       '@mermaid-js/mermaid-mindmap': 9.3.0
 
-  vitepress-sidebar@1.29.0:
+  vitepress-sidebar@1.31.1:
     dependencies:
       glob: 10.4.5
       gray-matter: 4.0.3
+      qsu: 1.10.0
 
   vitepress-theme-demoblock@1.4.2(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5):
     dependencies:

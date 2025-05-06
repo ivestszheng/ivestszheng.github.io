@@ -15,8 +15,8 @@ interface RencentPost extends Post {
 }
 
 interface data {
+  posts: unknown[];
   yearMap: unknown;
-  recentPosts: RencentPost[];
   postMap: unknown;
   tagMap: unknown;
 }
@@ -25,29 +25,29 @@ declare const data: Post[];
 export { data };
 
 export default createContentLoader("posts/*/*.md", {
+  includeSrc: true,
+  excerpt: true, 
   transform(raw): data {
     const postMap = {};
     const yearMap = {};
     const tagMap = {};
+    const regex = /^\/posts\/([^\/]+)\/([^\/]+)/;
     const posts = raw
       .map(({ url, frontmatter }) => {
         let tags = [url.split("/")[2]];
-        if (frontmatter?.tags) {
-          tags = [...tags, ...frontmatter.tags];
-        }
+        
         const result = {
-          title: frontmatter.title,
+          title: url.match(regex)?.[2] ?? '暂无标题',
           url,
           date: formatDate(frontmatter.date),
           abstract: frontmatter.abstract,
-          tags,
+          tags: [...new Set(tags.concat(frontmatter.tags).filter(item => item!= null))],
         };
         postMap[result.url] = result;
         return result;
       })
       .sort((a, b) => b.date.time - a.date.time);
 
-    const recentPosts = posts.slice(0, 10).map((item) => ({ ...item }));
 
     posts.forEach((item) => {
       const year = new Date(item.date.string).getFullYear();
@@ -65,8 +65,8 @@ export default createContentLoader("posts/*/*.md", {
     });
 
     return {
+      posts,
       yearMap,
-      recentPosts,
       postMap,
       tagMap,
     };
