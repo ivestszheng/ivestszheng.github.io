@@ -1,8 +1,7 @@
 ---
-title: Vue2.x项目工程环境搭建思路
 date: 2022-04-10
 tags:
-- Vue.js
+  - Vue.js
 ---
 
 # Vue2.x 项目工程环境搭建思路

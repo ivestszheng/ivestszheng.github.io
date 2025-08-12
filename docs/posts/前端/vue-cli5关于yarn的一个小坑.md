@@ -1,14 +1,14 @@
 ---
-title: vue-cli5关于yarn的一个小坑
 date: 2022-05-21
 tags:
-- Vue.js
+  - Vue.js
 ---
-# vue-cli5关于yarn的一个小坑
+
+# vue-cli5 关于 yarn 的一个小坑
 
 ## 问题
 
-昨天有小伙伴下了我的 DEMO之后反映运行报错。
+昨天有小伙伴下了我的 DEMO 之后反映运行报错。
 
 ![小伙伴反映报错](https://raw.githubusercontent.com/ivestszheng/images-store/master/img/0.png)
 
@@ -38,33 +38,36 @@ Error: The project seems to require yarn but it's not installed.
 ```js
 exports.hasYarn = () => {
   if (process.env.VUE_CLI_TEST) {
-    return true
+    return true;
   }
   if (_hasYarn != null) {
-    return _hasYarn
+    return _hasYarn;
   }
   try {
-    execSync('yarn --version', { stdio: 'ignore' })
-    return (_hasYarn = true)
+    execSync("yarn --version", { stdio: "ignore" });
+    return (_hasYarn = true);
   } catch (e) {
-    return (_hasYarn = false)
+    return (_hasYarn = false);
   }
-}
+};
 
 exports.hasProjectYarn = (cwd) => {
   if (_yarnProjects.has(cwd)) {
-    return checkYarn(_yarnProjects.get(cwd))
+    return checkYarn(_yarnProjects.get(cwd));
   }
 
-  const lockFile = path.join(cwd, 'yarn.lock')
-  const result = fs.existsSync(lockFile)
-  _yarnProjects.set(cwd, result)
-  return checkYarn(result)
-}
+  const lockFile = path.join(cwd, "yarn.lock");
+  const result = fs.existsSync(lockFile);
+  _yarnProjects.set(cwd, result);
+  return checkYarn(result);
+};
 
-function checkYarn (result) {
-  if (result && !exports.hasYarn()) throw new Error(`The project seems to require yarn but it's not installed.`)
-  return result
+function checkYarn(result) {
+  if (result && !exports.hasYarn())
+    throw new Error(
+      `The project seems to require yarn but it's not installed.`
+    );
+  return result;
 }
 ```
 

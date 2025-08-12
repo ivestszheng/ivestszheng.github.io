@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress';
+import { withMermaid } from 'vitepress-plugin-mermaid'
 import { withSidebar } from 'vitepress-sidebar';
 import nav from './nav'
 
@@ -41,13 +41,23 @@ const vitePressOptions = {
     lineNumbers: true,
   },
   cleanUrls: true,
+  // to fix mermaid bug about dayjs
+  vite: {
+    optimizeDeps: {
+      include: [
+        'mermaid'
+      ]
+    }
+  }
 };
 
-const vitePressSidebarOptions = {
-  documentRootPath: '/docs',
-  scanStartPath: '/posts',
-  collapsed: false,
-  capitalizeFirst: true
-};
+const vitePressSidebarOptions = [
+  {
+    documentRootPath: '/docs',
+    scanStartPath: '/posts',
+    collapsed: false,
+    capitalizeFirst: true
+  }
+];
 
-export default defineConfig(withSidebar(vitePressOptions, vitePressSidebarOptions));
+export default withMermaid(withSidebar(vitePressOptions, vitePressSidebarOptions));

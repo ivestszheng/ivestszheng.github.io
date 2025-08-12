@@ -1,9 +1,8 @@
 ---
-title: 使用 Utterances 给 VitePress 添加评论功能
 date: 2024-03-31
 abstract: 本文简单介绍了 Utterances 并说明如何在 VitePress 中集成 Utterances。
 tags:
-- VitePress
+  - VitePress
 ---
 
 # 使用 Utterances 给 VitePress 添加评论功能
@@ -37,31 +36,33 @@ Utterances 加载时会使用 Github [issue search API](https://docs.github.com/
 ```vue
 // docs\.vitepress\theme\components\Comment.vue
 <script setup lang="ts">
-import { ref, Ref, onMounted } from 'vue';
+import { ref, Ref, onMounted } from "vue";
 
 const commentRef: Ref<HTMLElement | null> = ref(null);
 onMounted(() => {
-    try {
-        if (commentRef.value) {
-            const script = document.createElement('script');
-            script.src = 'https://utteranc.es/client.js';
-            script.async = true;
-            script.crossOrigin = 'anonymous';
-            script.setAttribute('repo', '[ENTER REPO HERE]');
-            script.setAttribute('issue-term', 'pathname');
-            script.setAttribute('label', 'Comment');
-            script.setAttribute('theme', 'preferred-color-scheme');
-            commentRef.value.appendChild(script);
-        } else {
-            console.warn('Comments won\'t load because the commentRef element is null.');
-        }
-    } catch (error) {
-        console.error('Comments loading failed.', error);
+  try {
+    if (commentRef.value) {
+      const script = document.createElement("script");
+      script.src = "https://utteranc.es/client.js";
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      script.setAttribute("repo", "[ENTER REPO HERE]");
+      script.setAttribute("issue-term", "pathname");
+      script.setAttribute("label", "Comment");
+      script.setAttribute("theme", "preferred-color-scheme");
+      commentRef.value.appendChild(script);
+    } else {
+      console.warn(
+        "Comments won't load because the commentRef element is null."
+      );
     }
-})
+  } catch (error) {
+    console.error("Comments loading failed.", error);
+  }
+});
 </script>
 <template>
-    <div ref="commentRef" id="comment"></div>
+  <div ref="commentRef" id="comment"></div>
 </template>
 ```
 
@@ -70,14 +71,14 @@ onMounted(() => {
 ```vue
 // docs\.vitepress\theme\Layout.vue
 <script setup lang="ts">
-import { unref, computed } from 'vue'
-import { useData } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
-import Comment from './components/Comment.vue';
+import { unref, computed } from "vue";
+import { useData } from "vitepress";
+import DefaultTheme from "vitepress/theme";
+import Comment from "./components/Comment.vue";
 
-const { page } = useData()
-const { Layout } = DefaultTheme
-const isHome = computed(() => unref(page)?.filePath === 'index.md')
+const { page } = useData();
+const { Layout } = DefaultTheme;
+const isHome = computed(() => unref(page)?.filePath === "index.md");
 </script>
 
 <template>
@@ -88,7 +89,6 @@ const isHome = computed(() => unref(page)?.filePath === 'index.md')
     </template>
   </Layout>
 </template>
-
 ```
 
 ```ts

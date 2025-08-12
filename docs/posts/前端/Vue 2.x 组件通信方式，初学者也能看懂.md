@@ -1,5 +1,4 @@
 ---
-title: Vue 2.x 组件通信方式，初学者也能看懂
 date: 2022-02-24
 tags:
 - Vue.js
