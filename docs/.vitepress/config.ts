@@ -10,7 +10,8 @@ const vitePressOptions = {
   base: "/",
   head: [
     ["link", { rel: "icon", href: "favicon.ico" }],
-    ['meta', { name: 'msvalidate.01', content: '5506BDC904D39E46A4E200E74C68FBE1' }]
+    // Bing
+    ['meta', { name: 'msvalidate.01', content: 'B511F19067A0023694512C749145D325' }],
   ],
   themeConfig: {
     nav,
