@@ -6,29 +6,45 @@ import './style.css'
 const theme: Theme = {
   ...DefaultTheme,
   Layout: Layout,
-  enhanceApp({ router }) {
-    router.onAfterRouteChanged((to) => {
-      try {
-        // 确保在客户端环境执行
-        if (typeof window === 'undefined') return;
-
-        // 百度统计（需确保_hmt已全局定义）
-        if (typeof _hmt !== 'undefined') {
-          _hmt.push(['_trackPageview', to.fullPath]); // 使用fullPath包含查询参数
-        }
-
-        // Google Analytics（需确保gtag已全局定义）
-        if (typeof gtag !== 'undefined') {
-          gtag('config', 'G-GC7S2GFJS1', { 
-            page_path: to.fullPath, // 推荐使用fullPath
-            send_page_view: true // 显式声明发送页面浏览（SPA场景需开启）
-          });
-        }
-      } catch (error) {
-        console.error('[Analytics] Error tracking page view:', error);
-      }
-    });
+  enhanceApp({router}) {
+    const path = router.route.path;
+    // 在客户端环境下添加路由变化监听
+    if (typeof window !== 'undefined') {
+      // 监听浏览器前进后退事件
+      window.addEventListener('popstate', () => {
+        trackPageView(path);
+      });
+      
+      // 监听页面加载完成
+      window.addEventListener('load', () => {
+        trackPageView(path);
+      });
+      
+      // 初始页面统计
+      trackPageView();
+    }
   },
 };
+
+// 页面浏览统计函数
+function trackPageView(path?: string) {
+  try {
+    const pagePath = path || window.location.pathname + window.location.search;
+    // 百度统计（需确保_hmt已全局定义）
+    if (typeof window._hmt !== 'undefined') {
+      window._hmt.push(['_trackPageview', pagePath]);
+    }
+
+    // Google Analytics（需确保gtag已全局定义）
+    if (typeof window.gtag !== 'undefined') {
+      window.gtag('config', 'G-GC7S2GFJS1', { 
+        page_path: pagePath,
+        send_page_view: true
+      });
+    }
+  } catch (error) {
+    console.error('[Analytics] Error tracking page view:', error);
+  }
+}
 
 export default theme;
