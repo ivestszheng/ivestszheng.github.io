@@ -10,8 +10,26 @@ const vitePressOptions = {
   base: "/",
   head: [
     ["link", { rel: "icon", href: "favicon.ico" }],
-    // Bing
+    // Bing 统计
     ['meta', { name: 'msvalidate.01', content: 'B511F19067A0023694512C749145D325' }],
+    // 注入百度统计脚本
+    ['script', {},
+      `var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?51e0af7131ea21f4ae21f50c94769d35";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+      })();`,
+    ],
+    // 注入谷歌分析脚本（GA4）
+    ['script', {}, `
+      // 谷歌分析4代基础脚本
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GC7S2GFJS1');
+    `]
   ],
   themeConfig: {
     nav,
