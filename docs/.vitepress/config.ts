@@ -75,7 +75,10 @@ const vitePressSidebarOptions = [
     documentRootPath: '/docs',
     scanStartPath: '/posts',
     collapsed: false,
-    capitalizeFirst: true
+    capitalizeFirst: true,
+    useTitleFromFileHeading: true,
+    sortMenusByFrontmatterDate: true,
+    sortMenusOrderByDescending: true,
   }
 ];
 
