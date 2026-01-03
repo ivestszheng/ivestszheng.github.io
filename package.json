@@ -1,13 +1,13 @@
 {
   "name": "ivestszheng.github.io",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "type": "module",
   "repository": "git@github.com:ivestszheng/ivestszheng.github.io.git",
   "author": "无声 <ivestszheng@qq.com>",
   "scripts": {
-    "docs:dev": "vitepress dev docs --host",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "dev": "vitepress dev docs --host",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@tailwindcss/postcss7-compat": "^2.2.17",
