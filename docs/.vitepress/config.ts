@@ -34,7 +34,7 @@ const vitePressOptions = {
   themeConfig: {
     nav,
     footer: {
-      copyright: "© 2022-现在 无声2017 版权所有",
+      copyright: "Copyright © 2022 - Present 无声2017 (ivestszheng)",
     },
     logo: 'logo.svg',
     socialLinks: [
