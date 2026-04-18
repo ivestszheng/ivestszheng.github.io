@@ -6,8 +6,6 @@ tags:
   - CSS
 ---
 
-在一个月前，我选择了 Tailwind CSS 用于一个企业官网的开发。一个月后，项目经过了几次小版本迭代，我对 Tailwind CSS 的使用小有心得。本文将阐述我在企业开发中使用 Tailwind CSS 后对它的看法。
-
 ## 什么是 Tailwind CSS？
 
 Tailwind CSS 是一个高度可定制的 CSS 框架，它旨在帮助开发人员快速构建现代化、响应式的网页界面。与其他框架如 Bootstrap 不同，Tailwind CSS 不依赖于预定义的样式类，而是提供一组原子级的样式类，开发人员可以根据需要自由组合这些类来构建页面。

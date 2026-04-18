@@ -58,7 +58,7 @@ const vitePressOptions = {
       provider: "local",
     },
   },
-  lastUpdated: false,
+  lastUpdated: true,
   markdown: {
     image: {
       lazyLoading: true,
