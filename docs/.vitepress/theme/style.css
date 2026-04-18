@@ -11,6 +11,10 @@ a:hover {
     padding-top: 0;
 }
 
+.edit-info {
+    display: none !important;
+}
+
 .post-dot::before {
     display: inline-block;
     content: '';
