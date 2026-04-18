@@ -1,6 +1,7 @@
 import { withMermaid } from 'vitepress-plugin-mermaid'
 import { withSidebar } from 'vitepress-sidebar';
 import nav from './nav'
+import tailwindcss from '@tailwindcss/vite'
 
 const vitePressOptions = {
   lang: "zh-CN",
@@ -57,7 +58,7 @@ const vitePressOptions = {
       provider: "local",
     },
   },
-  lastUpdated: true,
+  lastUpdated: false,
   markdown: {
     image: {
       lazyLoading: true,
@@ -67,6 +68,7 @@ const vitePressOptions = {
   cleanUrls: true,
   // to fix mermaid bug about dayjs
   vite: {
+    plugins: [tailwindcss()],
     optimizeDeps: {
       include: [
         'mermaid'

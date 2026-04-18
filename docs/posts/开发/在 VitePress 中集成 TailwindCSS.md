@@ -1,11 +1,10 @@
 ---
+title: 在 VitePress 中集成 TailwindCSS
 date: 2024-04-05
 abstract: 手把手教你如何在 VitePress 中集成 TailwindCSS。
 tags:
   - VitePress
 ---
-
-# 在 VitePress 中集成 TailwindCSS
 
 ## 添加依赖
 

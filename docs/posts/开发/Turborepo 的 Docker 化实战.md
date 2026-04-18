@@ -1,12 +1,11 @@
 ---
+title: Turborepo 的 Docker 化实战
 date: 2026-01-03
 abstract: 本文将先简单回顾传统 Vue 项目 Docker 打包部署的方式与 Turborepo 的项目结构。说明如何在 Turborepo 架构的项目中通过 Docker 打包部署 Vue 项目。
 tags:
   - Turborepo
   - Docker
 ---
-
-# Turborepo 的 Docker 化实战
 
 ## 引言
 
@@ -23,25 +22,23 @@ tags:
 分为 Node 镜像构建以及 Nginx 部署两个阶段，Dockerfile 内容如下：
 
 ```dockerfile
-# 第一阶段：node镜像打包
+
 FROM node:latest AS frontend-builder
 WORKDIR /build-app
 COPY . .
 RUN npm install
 RUN npm run build
 
-# 第二阶段：nginx打包
 FROM nginx:latest
 EXPOSE 80
 WORKDIR /app
-# 替换nginx配置
+
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-# 将第一阶段的静态文件复制到nginx中
+
 RUN rm -rf /usr/share/nginx/html
 RUN mkdir /usr/share/nginx/html
 COPY --from=frontend-builder /build-app/dist /usr/share/nginx/html
 
-# 运行
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
@@ -89,18 +86,16 @@ Turborepo 的核心特点与 Docker 相关性如下：
 首先展示我最终的 `Dockerfile.dev`（prod、test 中会使用到公司的镜像源），代码如下：
 
 ```dockerfile
-# 第一阶段：构建
+
 FROM node:22-alpine AS frontend-builder
 
 WORKDIR /build-app
 
-# 启用 pnpm（通过 Corepack）
 ENV COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
 RUN corepack enable
 RUN echo "Corepack registry: $COREPACK_NPM_REGISTRY" && \
     corepack prepare pnpm@10.24.0 --activate
 
-# 复制所有配置文件
 COPY .npmrc ./
 COPY pnpm-workspace.yaml ./
 COPY turbo.json ./
@@ -108,13 +103,10 @@ COPY package.json pnpm-lock.yaml ./
 COPY apps/ apps/
 COPY packages/ packages/
 
-# 安装所有依赖（含 devDependencies）
 RUN pnpm install
 
-# 构建 icic（在原始位置）
 RUN pnpm turbo build --filter icic -- --mode production
 
-# 第二阶段：Nginx
 FROM nginx:alpine
 EXPOSE 80
 COPY apps/icic/nginx.conf /etc/nginx/conf.d/default.conf
@@ -188,13 +180,11 @@ packages:
 `.npmrc`
 
 ```ini
-# China mirror of npm
+
 registry = https://registry.npmmirror.com
 
-# 安装依赖时锁定版本号
 save-exact = true
 
-# 启用 hoist，让 bin 文件提升到根目录
 shamefully-hoist = true
 hoist=true
 public-hoist-pattern=*

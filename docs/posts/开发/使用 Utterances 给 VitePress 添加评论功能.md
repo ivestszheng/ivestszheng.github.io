@@ -1,11 +1,10 @@
 ---
+title: 使用 Utterances 给 VitePress 添加评论功能
 date: 2024-03-31
 abstract: 本文简单介绍了 Utterances 并说明如何在 VitePress 中集成 Utterances。
 tags:
   - VitePress
 ---
-
-# 使用 Utterances 给 VitePress 添加评论功能
 
 ## 什么是 Utterances
 

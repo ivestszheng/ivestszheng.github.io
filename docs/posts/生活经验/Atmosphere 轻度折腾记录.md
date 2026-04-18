@@ -1,9 +1,8 @@
 ---
+title: Atmosphere 轻度折腾记录
 date: 2024-04-14
 abstract: 记录 Atomosphere 折腾中碰到的一些问题。
 ---
-
-# Atmosphere 轻度折腾记录
 
 > Switch 操作系统：18.0.0
 

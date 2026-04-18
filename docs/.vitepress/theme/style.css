@@ -1,9 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 a:hover {
     color: var(--vp-c-brand-1);
+}
+
+/* 移除 vp-doc h2 的 border-top */
+.vp-doc h2 {
+    border-top: none !important;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .post-dot::before {

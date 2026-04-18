@@ -9,7 +9,6 @@ import { computed } from 'vue'
 import  { data }  from '../.vitepress/theme/posts.data'
 
 const { yearMap,postMap } = data
-console.log(data)
 const yearList = Object.keys(yearMap).sort((a, b) => b - a); // 按年份降序排序
 const computedYearMap = computed(()=> {
   let result = {}
@@ -19,7 +18,7 @@ const computedYearMap = computed(()=> {
   return result
 })
 </script>
-<div class="max-w-screen-lg w-full px-6 py-8 my-0 mx-auto">
+<div class="max-w-5xl w-full px-6 py-8 my-0 mx-auto">
   <div v-for="year in yearList" :key="year">
     <div v-text="year" class="pt-3 pb-2 text-xl font-serif"></div>
     <div v-for="(article, index2) in computedYearMap[year]" :key="index2" class="flex justify-between items-center py-1 pl-6">
