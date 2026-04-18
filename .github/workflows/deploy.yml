@@ -1,6 +1,5 @@
 name: Deploy VitePress
 
-# 👇 触发条件：既响应 push，也允许手动触发
 on:
   push:
     branches: [main]
@@ -24,27 +23,39 @@ jobs:
         with:
           fetch-depth: 0
 
+      # 1. 安装 Node.js (注意：这里不要加 cache，否则会因为找不到 pnpm 报错)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
 
-      # 👇 新增：专门安装 pnpm 的步骤，解决报错
+      # 2. 安装 pnpm 工具 (必须在缓存之前)
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 9
 
+      # 3. 配置 pnpm 缓存 (独立步骤，解决报错的核心)
+      - name: Setup pnpm Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      # 4. 安装依赖
       - name: Install dependencies
         run: pnpm install
 
+      # 5. 构建项目 (请确保你的 package.json 里有 "build": "vitepress build docs" 这样的脚本)
       - name: Build
         run: pnpm run build
 
+      # 6. 上传产物
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
