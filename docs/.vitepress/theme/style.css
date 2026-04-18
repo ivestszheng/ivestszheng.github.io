@@ -26,3 +26,12 @@ a:hover {
     background-color: var(--vp-c-brand-1);
     vertical-align: middle;
 }
+
+/* 图标颜色适应主题 */
+.post-info-icon {
+    filter: brightness(0) saturate(100%) invert(0.6);
+}
+
+.dark .post-info-icon {
+    filter: brightness(0) saturate(100%) invert(0.8);
+}
