@@ -35,3 +35,7 @@ a:hover {
 .dark .post-info-icon {
     filter: brightness(0) saturate(100%) invert(0.8);
 }
+
+.vp-nolebase-git-changelog {
+    margin-bottom: 20px;
+}

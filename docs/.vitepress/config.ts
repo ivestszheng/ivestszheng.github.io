@@ -2,6 +2,10 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 import { withSidebar } from 'vitepress-sidebar';
 import nav from './nav'
 import tailwindcss from '@tailwindcss/vite'
+import {
+  GitChangelog,
+  GitChangelogMarkdownSection,
+} from '@nolebase/vitepress-plugin-git-changelog/vite'
 
 const vitePressOptions = {
   lang: "zh-CN",
@@ -66,9 +70,16 @@ const vitePressOptions = {
     lineNumbers: true,
   },
   cleanUrls: true,
-  // to fix mermaid bug about dayjs
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), GitChangelog({
+      repoURL: () => 'https://github.com/ivestszheng/ivestszheng.github.io',
+    }),
+    GitChangelogMarkdownSection({
+      sections: {
+        disableContributors: true
+      }
+    }),],
+    // to fix mermaid bug about dayjs
     optimizeDeps: {
       include: [
         'mermaid'

@@ -2,11 +2,16 @@ import type { Theme } from "vitepress";
 import DefaultTheme from "vitepress/theme";
 import Layout from "./Layout.vue";
 import './style.css'
+import { 
+  NolebaseGitChangelogPlugin 
+} from '@nolebase/vitepress-plugin-git-changelog/client'
+import '@nolebase/vitepress-plugin-git-changelog/client/style.css'
 
 const theme: Theme = {
   ...DefaultTheme,
   Layout: Layout,
-  enhanceApp({router}) {
+  enhanceApp({app,router}) {
+    app.use(NolebaseGitChangelogPlugin)  
     const path = router.route.path;
     // 在客户端环境下添加路由变化监听
     if (typeof window !== 'undefined') {
