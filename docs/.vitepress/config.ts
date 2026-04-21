@@ -6,6 +6,7 @@ import {
   GitChangelog,
   GitChangelogMarkdownSection,
 } from '@nolebase/vitepress-plugin-git-changelog/vite'
+import mdItCustomAttrs from 'markdown-it-custom-attrs'
 
 const vitePressOptions = {
   lang: "zh-CN",
@@ -34,7 +35,15 @@ const vitePressOptions = {
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-GC7S2GFJS1');
-    `]
+    `],
+    // 注入 fancyancybox
+    ['link', { rel: 'stylesheet', href: '/fancybox.css' }],
+    [
+      'script',
+      {
+        src: '/fancybox.umd.js'
+      }
+    ]
   ],
   themeConfig: {
     nav,
@@ -68,6 +77,13 @@ const vitePressOptions = {
       lazyLoading: true,
     },
     lineNumbers: true,
+    config: (md: any) => {
+      md.use(mdItCustomAttrs, 'image', {
+        'data-fancybox': 'gallery',
+        // 可选：添加自定义类名，方便后续写 CSS
+        'class': 'fancybox-img'
+      })
+    }
   },
   cleanUrls: true,
   vite: {
