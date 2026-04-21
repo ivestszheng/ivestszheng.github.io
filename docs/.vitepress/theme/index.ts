@@ -1,17 +1,18 @@
-import type { Theme } from "vitepress";
+import { type Theme, inBrowser, EnhanceAppContext } from "vitepress";
 import DefaultTheme from "vitepress/theme";
 import Layout from "./Layout.vue";
 import './style.css'
-import { 
-  NolebaseGitChangelogPlugin 
+import {
+  NolebaseGitChangelogPlugin
 } from '@nolebase/vitepress-plugin-git-changelog/client'
 import '@nolebase/vitepress-plugin-git-changelog/client/style.css'
+import { loadVercountScript, sendBaiduAnalyticsPageView, sendGoogleAnalyticsPageView } from './hooks/useVisitData'
 
 const theme: Theme = {
   ...DefaultTheme,
   Layout: Layout,
-  enhanceApp({app,router}) {
-    app.use(NolebaseGitChangelogPlugin)  
+  enhanceApp({ app, router }: EnhanceAppContext) {
+    app.use(NolebaseGitChangelogPlugin)
     const path = router.route.path;
     // 在客户端环境下添加路由变化监听
     if (typeof window !== 'undefined') {
@@ -19,14 +20,22 @@ const theme: Theme = {
       window.addEventListener('popstate', () => {
         trackPageView(path);
       });
-      
+
       // 监听页面加载完成
       window.addEventListener('load', () => {
         trackPageView(path);
       });
-      
+
       // 初始页面统计
       trackPageView();
+    }
+    if (inBrowser) {
+      // 网站访问量统计，路由加载完成，在加载页面组件后（在更新页面组件之前）调用。
+      router.onAfterPageLoad = (to) => {
+        loadVercountScript()
+        sendBaiduAnalyticsPageView(to)
+        sendGoogleAnalyticsPageView(to)
+      }
     }
   },
 };
@@ -42,7 +51,7 @@ function trackPageView(path?: string) {
 
     // Google Analytics（需确保gtag已全局定义）
     if (typeof window.gtag !== 'undefined') {
-      window.gtag('config', 'G-GC7S2GFJS1', { 
+      window.gtag('config', 'G-GC7S2GFJS1', {
         page_path: pagePath,
         send_page_view: true
       });
