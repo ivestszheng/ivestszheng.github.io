@@ -1,5 +1,24 @@
 # 更新记录 
 
+
+### [1.7.1](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.7.0...v1.7.1) (2026-04-21)
+
+
+### 🐛 Bug Fixes | Bug 修复
+
+* 修复了因使用countTransK导致readingTime为 NaN 的问题 ([963593e](https://github.com/ivestszheng/ivestszheng.github.io/commit/963593e1f0f107c9d9cb9dbe86857251291ace9d))
+
+
+### 👷 Continuous Integration | CI/CD 配置
+
+* **workflows:** 防止github-actions[bot]触发构建并添加推送步骤 ([7ee058b](https://github.com/ivestszheng/ivestszheng.github.io/commit/7ee058b796c04c39f97f1030968b576cab2f95e9))
+
+
+### 🚀 Chore | 部署相关
+
+* **release:** 1.8.0 ([2f57fd9](https://github.com/ivestszheng/ivestszheng.github.io/commit/2f57fd9fbf6655999df52361d875832160b0e449))
+* **release:** 回滚版本至1.7.0并更新release工作流 ([0119db0](https://github.com/ivestszheng/ivestszheng.github.io/commit/0119db0b96517bebbe37723e3f801295fb7216cf))
+
 ## [1.7.0](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.6.0...v1.7.0) (2026-04-21)
 
 
