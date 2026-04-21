@@ -1,6 +1,13 @@
 # 更新记录 
 
 
+### [1.7.2](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.7.1...v1.7.2) (2026-04-21)
+
+
+### ♻️ Code Refactoring | 代码重构
+
+* **docs:** 优化文档配置和移除调试代码 ([1afc8d6](https://github.com/ivestszheng/ivestszheng.github.io/commit/1afc8d6b6d1e50d1796b7e85fb845c9e7ebf55da))
+
 ### [1.7.1](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.7.0...v1.7.1) (2026-04-21)
 
 
