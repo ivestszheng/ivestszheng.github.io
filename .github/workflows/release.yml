@@ -9,7 +9,6 @@ jobs:
   release:
     # 防止死循环：如果是机器人自己推的，就跳过
     if: ${{ github.actor != 'github-actions[bot]' }}
-    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,20 +30,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Generate Changelog
-        # 关键参数：
-        # --no-commit: 不生成新的 Git Commit
-        # --no-tag: 不打 Tag，不升级 package.json 版本
-        # 它只会把最新的变更追加到 CHANGELOG.md 的 "Unreleased" 区域
-        run: npx standard-version --no-commit --no-tag
-
-      - name: Push Changelog
-        # 只有 CHANGELOG.md 文件有变化时才推送
-        if: ${{ success() }}
+      # --- 新增步骤：提前配置 Git 身份 ---
+      - name: Configure Git Identity
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          # 只有 CHANGELOG.md 变了才会提交
-          git add CHANGELOG.md
-          git commit -m "docs: update changelog [skip ci]" || exit 0
-          git push origin main
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      # -----------------------------------
+
+      - name: Generate Changelog
+        # 现在 standard-version 执行 commit 时，已经有了身份信息
+        run: npx standard-version --no-tag
