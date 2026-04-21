@@ -17,9 +17,6 @@ importers:
       dayjs:
         specifier: ^1.11.20
         version: 1.11.20
-      human-number:
-        specifier: ^3.0.0
-        version: 3.0.0
       tailwindcss:
         specifier: ^4.2.2
         version: 4.2.2
@@ -1994,10 +1991,6 @@ packages:
 
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
-
-  human-number@3.0.0:
-    resolution: {integrity: sha512-2NZF6+oyQyaUtsxtsjKx7jEia9jp6bMrAkH+W7BxSFMu94piF+Fh5reAu1JNKRXzwu+y+a8BE9AOGPzlh8Gf0g==}
-    engines: {node: '>= 12'}
 
   human-signals@8.0.1:
     resolution: {integrity: sha512-eKCa6bwnJhvxj14kZk5NCPc6Hb6BdsU9DZcOnmQKSnO1VKrfV0zCvtttPZUsBvjmNDn8rpcJfpwSYnHBjc95MQ==}
@@ -5416,8 +5409,6 @@ snapshots:
   html-tags@3.3.1: {}
 
   html-void-elements@3.0.0: {}
-
-  human-number@3.0.0: {}
 
   human-signals@8.0.1: {}
 

@@ -30,7 +30,6 @@
     "@tailwindcss/vite": "^4.2.2",
     "blueimp-md5": "^2.19.0",
     "dayjs": "^1.11.20",
-    "human-number": "^3.0.0",
     "tailwindcss": "^4.2.2"
   },
   "volta": {

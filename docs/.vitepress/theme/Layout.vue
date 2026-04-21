@@ -14,7 +14,7 @@ const wordCount = ref('')
 const updateWordCount = () => {
   const docDomContainer = document.querySelector('#VPContent')
   const content = docDomContainer?.querySelector('.content-container .main')?.textContent || ''
-  wordCount.value = countTransK(countWord(content))
+  wordCount.value = countWord(content)
 }
 const readingTime = computed(() => {
   // 如果字数为0，则阅读时长为0
@@ -26,6 +26,10 @@ const readingTime = computed(() => {
   // 计算分钟数，并向上取整 (Math.ceil)，确保不足1分钟也按1分钟算
   return Math.ceil(wordCount.value / wordsPerMinute)
 })
+setTimeout(() => {
+  console.log('wordCount.value', wordCount.value)
+  console.log('readingTime.value', readingTime.value)
+}, 2000);
 // 阅读量 (使用 MutationObserver 替代轮询)
 const pv = ref('♾️')
 let observer: MutationObserver | null = null
@@ -61,7 +65,6 @@ const initPVObserver = () => {
 
   observer.observe(pvEl, { childList: true, characterData: true, subtree: true })
 }
-
 
 onMounted(() => {
   nextTick(() => {
@@ -106,7 +109,7 @@ watch(
             </span>
             <span class="flex items-center">
               <img src="/clock.svg" alt="阅读时长" class="w-4 h-4 mr-2">
-              <span class="ml-1">阅读{{ readingTime }}分钟</span>
+              <span class="ml-1">阅读<span class="mx-1">{{ readingTime }}</span>分钟</span>
             </span>
           </div>
           <div v-if="$frontmatter.abstract"
