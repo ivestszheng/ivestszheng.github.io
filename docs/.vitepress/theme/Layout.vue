@@ -26,10 +26,7 @@ const readingTime = computed(() => {
   // 计算分钟数，并向上取整 (Math.ceil)，确保不足1分钟也按1分钟算
   return Math.ceil(wordCount.value / wordsPerMinute)
 })
-setTimeout(() => {
-  console.log('wordCount.value', wordCount.value)
-  console.log('readingTime.value', readingTime.value)
-}, 2000);
+
 // 阅读量 (使用 MutationObserver 替代轮询)
 const pv = ref('♾️')
 let observer: MutationObserver | null = null
