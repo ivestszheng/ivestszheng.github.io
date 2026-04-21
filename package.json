@@ -7,7 +7,10 @@
   "scripts": {
     "dev": "vitepress dev docs --host",
     "build": "vitepress build docs",
-    "preview": "vitepress preview docs"
+    "preview": "vitepress preview docs",
+    "release": "standard-version",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch"
   },
   "devDependencies": {
     "@nolebase/vitepress-plugin-git-changelog": "^2.18.2",
@@ -16,6 +19,7 @@
     "autoprefixer": "^10.5.0",
     "mermaid": "^11.12.2",
     "postcss": "^8.5.10",
+    "standard-version": "^9.5.0",
     "vitepress": "1.6.4",
     "vitepress-plugin-mermaid": "^2.0.17",
     "vitepress-sidebar": "^1.33.1",
