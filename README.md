@@ -1,7 +1,7 @@
 [ivestszheng.github.io](https://ivestszheng.github.io/)
 
-my blog
+我的博客
 
 
-code is licensed under MIT,
-words and images are licensed under CC BY-NC-SA 4.0.
+代码遵循[MIT](LICENSE)协议,
+文字和图片遵循[CC BY-NC-SA 4.0](CC-BY-NC-SA-4.0)协议。
