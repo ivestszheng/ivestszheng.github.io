@@ -12,7 +12,8 @@
     { "type": "revert", "section": "⏪ Revert | 回退", "hidden": true },
     { "type": "build", "section": "📦‍ Build System | 打包构建" },
     { "type": "chore", "section": "🚀 Chore | 部署相关" },
-    { "type": "ci", "section": "👷 Continuous Integration | CI/CD 配置" }
+    { "type": "ci", "section": "👷 Continuous Integration | CI/CD 配置" },
+    { "type": "changelog", "section": "📝 Changelog Update | 更新记录更新", "hidden": true }
   ],
   "tagPrefix": "v"
 }
