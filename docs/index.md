@@ -99,13 +99,13 @@ const handleScroll = () => {
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
   checkHasMore()
-  initSiteStats()
+  // initSiteStats()
 })
 
 // 组件卸载时移除滚动监听
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
-  disconnectAll()
+  // disconnectAll()
 })
 </script>
 
