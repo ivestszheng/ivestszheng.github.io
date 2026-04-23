@@ -4,15 +4,61 @@ title: 首页
 sidebar: false
 ---
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { data } from './.vitepress/theme/posts.data'
 import DetailedPostCard from './.vitepress/theme/DetailedPostCard.vue'
+import { countTransK } from './.vitepress/utils/tools'
 
 // 当前显示的文章数量
 const displayedCount = ref(10)
 // 是否已加载完所有文章
 const hasMore = ref(true)
+
+// 网站统计
+const sitePv = ref('♾️')
+const siteUv = ref('♾️')
+const observers: MutationObserver[] = []
+
+const createCountObserver = (
+  elementId: string,
+  targetRef: ReturnType<typeof ref<string>>
+): MutationObserver | null => {
+  const el = document.getElementById(elementId)
+  if (!el) return null
+
+  const update = () => {
+    const text = el.textContent?.trim()
+    if (text) {
+      const val = parseInt(text)
+      if (!isNaN(val)) {
+        targetRef.value = countTransK(val)
+        const container = el.parentElement
+        if (container) {
+          container.innerHTML = container.innerHTML.replace(text, targetRef.value)
+        }
+        return true
+      }
+    }
+    return false
+  }
+
+  if (update()) return null
+
+  const observer = new MutationObserver(() => update())
+  observer.observe(el, { childList: true, characterData: true, subtree: true })
+  return observer
+}
+
+const initSiteStats = () => {
+  observers.push(createCountObserver('vercount_value_site_pv', sitePv)!)
+  observers.push(createCountObserver('vercount_value_site_uv', siteUv)!)
+}
+
+const disconnectAll = () => {
+  observers.forEach(o => o?.disconnect())
+  observers.length = 0
+}
 
 // 当前显示的文章列表
 const displayedPosts = computed(() => 
@@ -53,15 +99,17 @@ const handleScroll = () => {
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
   checkHasMore()
+  initSiteStats()
 })
 
 // 组件卸载时移除滚动监听
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  disconnectAll()
 })
 </script>
 
-<div class="max-w-screen-lg w-full px-6 py-8 my-0 mx-auto">
+<div class="max-w-5xl w-full px-6 py-8 my-0 mx-auto">
   <DetailedPostCard
     v-for="(article, index) in displayedPosts"
     :key="article.url"

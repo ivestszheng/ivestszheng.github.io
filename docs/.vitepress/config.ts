@@ -48,7 +48,8 @@ const vitePressOptions = {
   themeConfig: {
     nav,
     footer: {
-      copyright: "Copyright © 2022 - Present 无声2017 (ivestszheng)",
+      message: "<div class='flex justify-center gap-4'><div>本站总访问量<span id='vercount_value_site_pv' class='mx-2'>♾️</span>次</div><div>本站总访客数<span id='vercount_value_site_uv' class='mx-2'>♾️</span>人</div></div >",
+      copyright: "Copyright © 2022-present <a href='https://github.com/ivestszheng'>无声2017</a>",
     },
     logo: 'logo.svg',
     socialLinks: [
