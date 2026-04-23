@@ -1,6 +1,14 @@
 # 更新记录 
 
 
+### [1.8.1](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.8.0...v1.8.1) (2026-04-23)
+
+
+### 🐛 Bug Fixes | Bug 修复
+
+* 修复 release.yml 中的格式问题并移除多余空格 ([a341bcf](https://github.com/ivestszheng/ivestszheng.github.io/commit/a341bcf22843744cc245cabc136e7f2ab62cb808))
+* **docs:** 恢复站点统计功能并调整页脚布局 ([5631a80](https://github.com/ivestszheng/ivestszheng.github.io/commit/5631a80dbf4c5e8f769eb80abe4c59c497408a12))
+
 ## [1.8.0](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.7.2...v1.8.0) (2026-04-23)
 
 
