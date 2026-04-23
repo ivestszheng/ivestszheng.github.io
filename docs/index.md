@@ -32,11 +32,10 @@ const createCountObserver = (
     if (text) {
       const val = parseInt(text)
       if (!isNaN(val)) {
-        targetRef.value = countTransK(val)
-        const container = el.parentElement
-        if (container) {
-          container.innerHTML = container.innerHTML.replace(text, targetRef.value)
-        }
+        const formatted = countTransK(val)
+        targetRef.value = formatted
+        el.textContent = formatted
+        observer.disconnect()
         return true
       }
     }
