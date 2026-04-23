@@ -1,6 +1,13 @@
 # 更新记录 
 
 
+## [1.8.0](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.7.2...v1.8.0) (2026-04-23)
+
+
+### ✨ Features | 新功能
+
+* **docs:** 添加网站访问统计功能并优化布局 ([a10dcad](https://github.com/ivestszheng/ivestszheng.github.io/commit/a10dcad204abc583b03f0363dbd98078332a4485))
+
 ### [1.7.2](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.7.1...v1.7.2) (2026-04-21)
 
 
