@@ -44,4 +44,4 @@ jobs:
           npx standard-version --message "chore(release): %s (skip ci)"
 
       - name: Push changes
-        run: git push origin main
+        run: git push --follow-tags origin main
