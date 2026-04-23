@@ -40,7 +40,8 @@ jobs:
 
       - name: Generate Changelog
         # 现在 standard-version 执行 commit 时，已经有了身份信息
-        run: npx standard-version --no-tag --message "chore(release): %s (skip ci)"
+        run: |
+          npx standard-version --no-tag --message "chore(release): %s (skip ci)"
 
       - name: Push changes
         run: git push origin main
