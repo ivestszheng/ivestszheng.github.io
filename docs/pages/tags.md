@@ -3,12 +3,12 @@ layout: page
 title: 标签
 sidebar: false
 gitChangelog: false
+name: TagsPage
 ---
 
 <script setup>
 import { ref, unref, computed, onMounted } from 'vue'
 import  { data }  from '../.vitepress/theme/posts.data'
-console.log(data)
 const { tagMap,postMap } = data
 const tags = Object.keys(tagMap)
 const computedTagMap = computed(()=> {
@@ -30,11 +30,11 @@ onMounted(()=>{
 })
 
 </script>
-<div class="max-w-screen-lg w-full px-6 py-8 my-0 mx-auto">
+<div class="max-w-5xl w-full px-6 py-8 my-0 mx-auto">
     <div class="flex flex-wrap gap-4">
-        <div v-for="(tag,i) in tags" :key="i" class="block py-1 px-4 bg-[var(--vp-c-bg-alt)] text-[var(--vp-c-text-1)] cursor-pointer hover:text-[var(--vp-c-brand)]" @click="onTagClick(tag)">
+        <div v-for="(tag,i) in tags" :key="i" class="block py-1 px-4 bg-(--vp-c-bg-alt) text-(--vp-c-text-1) cursor-pointer hover:text-(--vp-c-brand)" @click="onTagClick(tag)">
             <span>{{ tag }}</span>
-            <span class="pl-1 text-[var(--vp-c-brand)]"> {{ computedTagMap[tag].length }}</span>
+            <span class="pl-1 text-(--vp-c-brand)"> {{ computedTagMap[tag].length }}</span>
         </div>
     </div>
     <p v-text="currentTag" class="py-4 text-2xl"></p>

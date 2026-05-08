@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useData } from 'vitepress'
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch, KeepAlive } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import Comment from './Comment.vue';
 import dayjs from 'dayjs'
@@ -9,25 +9,23 @@ import { countWord, countTransK } from '../utils/tools'
 const { page } = useData()
 const { Layout } = DefaultTheme
 
+// 需要 keepalive 的组件名
+const keepAliveComponents = ['HomePage', 'ArchivesPage', 'TagsPage']
+
 // 字数统计
-const wordCount = ref('')
+const wordCount = ref<number>(0)
 const updateWordCount = () => {
   const docDomContainer = document.querySelector('#VPContent')
   const content = docDomContainer?.querySelector('.content-container .main')?.textContent || ''
   wordCount.value = countWord(content)
 }
 const readingTime = computed(() => {
-  // 如果字数为0，则阅读时长为0
   if (wordCount.value === 0) return 0
-
-  // 假设平均阅读速度为每分钟 300 字
   const wordsPerMinute = 300
-
-  // 计算分钟数，并向上取整 (Math.ceil)，确保不足1分钟也按1分钟算
   return Math.ceil(wordCount.value / wordsPerMinute)
 })
 
-// 阅读量 (使用 MutationObserver 替代轮询)
+// 阅读量
 const pv = ref('♾️')
 let observer: MutationObserver | null = null
 
@@ -35,7 +33,6 @@ const initPVObserver = () => {
   const pvEl = document.getElementById('vercount_value_page_pv')
   if (!pvEl) return
 
-  // 如果已有内容，直接读取
   if (pvEl.textContent && pvEl.textContent.trim()) {
     const val = parseInt(pvEl.textContent.trim())
     if (!isNaN(val)) {
@@ -44,7 +41,6 @@ const initPVObserver = () => {
     }
   }
 
-  // 监听变化
   observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       if (mutation.type === 'childList' || mutation.type === 'characterData') {
@@ -53,7 +49,7 @@ const initPVObserver = () => {
           const val = parseInt(text)
           if (!isNaN(val)) {
             pv.value = countTransK(val)
-            observer?.disconnect() // 获取到值后停止监听
+            observer?.disconnect()
           }
         }
       }
@@ -74,7 +70,6 @@ onUnmounted(() => {
   observer?.disconnect()
 })
 
-// 监听路由变化重新计算
 watch(
   () => page.value.relativePath,
   () => {
@@ -90,9 +85,14 @@ watch(
 
 <template>
   <Layout>
+    <template #default>
+      <KeepAlive :include="keepAliveComponents">
+        <slot />
+      </KeepAlive>
+    </template>
     <template #doc-before>
       <div class="mb-8">
-        <div v-if="$frontmatter.title" class="text-3xl font-bold leading-tight mb-4 text-[var(--vp-c-text-1)]">{{
+        <div v-if="$frontmatter.title" class="text-3xl font-bold leading-tight mb-4 text-(--vp-c-text-1)">{{
           $frontmatter.title }}</div>
         <div class="space-y-3">
           <div v-if="$frontmatter.date || page.lastUpdated"

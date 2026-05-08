@@ -1,5 +1,4 @@
 import { withMermaid } from 'vitepress-plugin-mermaid'
-import { withSidebar } from 'vitepress-sidebar';
 import nav from './nav'
 import tailwindcss from '@tailwindcss/vite'
 import {
@@ -12,7 +11,6 @@ const vitePressOptions = {
   lang: "zh-CN",
   title: "无声2017的博客",
   titleTemplate: true,
-  abstract: "菜鸡的日常分享",
   base: "/",
   head: [
     ["link", { rel: "icon", href: "favicon.ico" }],
@@ -72,6 +70,27 @@ const vitePressOptions = {
       provider: "local",
     },
   },
+  vite: {
+    plugins: [
+      tailwindcss(),
+      GitChangelog({
+        repoURL: () => 'https://github.com/ivestszheng/ivestszheng.github.io',
+      }),
+      GitChangelogMarkdownSection({
+        sections: {
+          disableContributors: true
+        }
+      }),
+    ],
+    optimizeDeps: {
+      include: [
+        'mermaid'
+      ]
+    },
+    checker: {
+      enabled: true,
+    },
+  },
   lastUpdated: true,
   markdown: {
     image: {
@@ -87,32 +106,6 @@ const vitePressOptions = {
     }
   },
   cleanUrls: true,
-  vite: {
-    plugins: [tailwindcss(), GitChangelog({
-      repoURL: () => 'https://github.com/ivestszheng/ivestszheng.github.io',
-    }),
-    GitChangelogMarkdownSection({
-      sections: {
-        disableContributors: true
-      }
-    }),],
-    // to fix mermaid bug about dayjs
-    optimizeDeps: {
-      include: [
-        'mermaid'
-      ]
-    }
-  }
 };
 
-const vitePressSidebarOptions = [
-  {
-    documentRootPath: '/docs',
-    scanStartPath: '/posts',
-    collapsed: false,
-    sortMenusOrderByDescending: true,
-    sortMenusByFrontmatterDate: true,
-  }
-];
-
-export default withMermaid(withSidebar(vitePressOptions, vitePressSidebarOptions));
+export default withMermaid(vitePressOptions as any);
