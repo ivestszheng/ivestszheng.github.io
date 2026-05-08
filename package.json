@@ -3,42 +3,39 @@
   "version": "1.9.7",
   "type": "module",
   "repository": "git@github.com:ivestszheng/ivestszheng.github.io.git",
+  "description": "无声2017的博客",
   "author": "无声 <ivestszheng@qq.com>",
   "scripts": {
     "dev": "vitepress dev docs --host",
-    "build": "vitepress build docs",
+    "build": "tsc --noEmit --skipLibCheck && vitepress build docs",
     "preview": "vitepress preview docs",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
-    "release:patch": "standard-version --release-as patch"
+    "release:patch": "standard-version --release-as patch",
+    "type-check": "tsc --noEmit --skipLibCheck",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@nolebase/vitepress-plugin-git-changelog": "^2.18.2",
-    "@tailwindcss/postcss": "^4.2.2",
-    "@tailwindcss/postcss7-compat": "^2.2.17",
-    "autoprefixer": "^10.5.0",
+    "husky": "^9.1.7",
     "markdown-it-custom-attrs": "^1.0.2",
     "mermaid": "^11.12.2",
-    "postcss": "^8.5.10",
     "standard-version": "^9.5.0",
+    "tailwindcss": "^4.2.2",
+    "typescript": "6.0.3",
+    "vite-plugin-checker": "^0.13.0",
     "vitepress": "1.6.4",
     "vitepress-plugin-mermaid": "^2.0.17",
-    "vitepress-sidebar": "^1.33.1",
-    "vitepress-theme-demoblock": "^1.4.2"
+    "vitepress-theme-demoblock": "^1.4.2",
+    "vue": "^3.5.34"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/vite": "4",
     "blueimp-md5": "^2.19.0",
-    "dayjs": "^1.11.20",
-    "tailwindcss": "^4.2.2"
+    "dayjs": "^1.11.20"
   },
   "volta": {
     "node": "22.21.1",
     "pnpm": "9.12.2"
-  },
-  "standard-version": {
-    "skip": {
-      "changelog": true
-    }
   }
 }

@@ -10,38 +10,35 @@ interface Post {
   abstract?: string;
 }
 
-interface RencentPost extends Post {
+interface RecentPost extends Post {
   tags?: string[];
 }
 
-interface data {
-  posts: unknown[];
-  yearMap: unknown;
-  postMap: unknown;
-  tagMap: unknown;
+interface Data {
+  posts: RecentPost[];
+  yearMap: Record<number, string[]>;
+  postMap: Record<string, RecentPost>;
+  tagMap: Record<string, string[]>;
 }
 
-declare const data: Post[];
+declare const data: Data;
 export { data };
 
-export default createContentLoader("posts/*/*.md", {
+export default createContentLoader("posts/*.md", {
   includeSrc: true,
   excerpt: true, 
-  transform(raw): data {
-    const postMap = {};
-    const yearMap = {};
-    const tagMap = {};
-    const regex = /^\/posts\/([^\/]+)\/([^\/]+)/;
+  transform(raw): Data {
+    const postMap: Record<string, RecentPost> = {};
+    const yearMap: Record<number, string[]> = {};
+    const tagMap: Record<string, string[]> = {};
     const posts = raw
       .map(({ url, frontmatter }) => {
-        let tags = [url.split("/")[2]];
-        
-        const result = {
-          title: url.match(regex)?.[2] ?? '暂无标题',
+        const result: RecentPost = {
+          title: frontmatter.title ?? '暂无标题',
           url,
           date: formatDate(frontmatter.date),
           abstract: frontmatter.abstract,
-          tags: [...new Set(tags.concat(frontmatter.tags).filter(item => item!= null))],
+          tags: frontmatter.tags ?? [],
         };
         postMap[result.url] = result;
         return result;
@@ -56,8 +53,8 @@ export default createContentLoader("posts/*/*.md", {
       }
       yearMap[year].push(item.url);
       
-      item.tags.forEach((tag) => {
-        if(!tagMap[tag]){
+      item.tags?.forEach((tag) => {
+        if (!tagMap[tag]) {
           tagMap[tag] = []
         }
         tagMap[tag].push(item.url)
@@ -76,7 +73,7 @@ export default createContentLoader("posts/*/*.md", {
 function formatDate(raw: string): Post["date"] {
   const date = new Date(raw);
   const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 月份从 0 开始，需要加 1
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   return {
     time: +date,

@@ -5,21 +5,23 @@
     >
         <div class="post-header">
             <div class="post-title">
-                <h3 class="post-title-text group-hover:text-[var(--vp-c-brand-1)]" v-text="title"></h3>
+                <h3 class="post-title-text group-hover:text-(--vp-c-brand-1)" v-text="title"></h3>
             </div>
         </div>
-        <p class="abstract group-hover:text-[var(--vp-c-text-1)]" v-html="abstract"></p>
+        <p class="abstract group-hover:text-(--vp-c-text-1)" v-html="abstract"></p>
         <div class='post-info'>
-            <div v-text="date" class="group-hover:text-[var(--vp-c-text-1)]"></div>
+            <div v-text="date" class="group-hover:text-(--vp-c-text-1)"></div>
             <div class="flex">
-                <span v-for="(tag,i) in tags" v-text="tag" class="tag group-hover:bg-[var(--vp-c-brand-soft)] group-hover:text-[var(--vp-c-brand)]"></span>
+                <span v-for="(tag,i) in tags" v-text="tag" class="tag group-hover:bg-(--vp-c-brand-soft) group-hover:text-(--vp-c-brand)"></span>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { withBase } from 'vitepress'
+import { useRouter } from 'vitepress'
+
+const router = useRouter()
 
 const props = defineProps({
     url: {
@@ -41,7 +43,7 @@ const props = defineProps({
 
 const navigateToArticle = () => {
     if (props.url) {
-        window.location.href = withBase(props.url)
+        router.go(props.url)
     }
 }
 </script>
