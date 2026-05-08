@@ -1,5 +1,18 @@
 # 更新记录 
 
+
+### [1.9.8](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.9.7...v1.9.8) (2026-05-08)
+
+
+### 🚀 Chore | 部署相关
+
+* 重构项目配置并优化类型定义 ([a833220](https://github.com/ivestszheng/ivestszheng.github.io/commit/a8332206a741f4e9537740ce3a58423c2d2914e6))
+
+
+### 🐛 Bug Fixes | Bug 修复
+
+* 修复语法问题导致的浏览器后退时无法记住之前的页面高度 ([3780aff](https://github.com/ivestszheng/ivestszheng.github.io/commit/3780affc555c7aff4a5a72727156c39d8ec93540))
+
 ### [1.8.2](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.8.1...v1.8.2) (2026-04-23)
 
 
