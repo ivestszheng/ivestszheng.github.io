@@ -24,24 +24,21 @@ interface Data {
 declare const data: Data;
 export { data };
 
-export default createContentLoader("posts/*/*.md", {
+export default createContentLoader("posts/*.md", {
   includeSrc: true,
   excerpt: true, 
   transform(raw): Data {
     const postMap: Record<string, RecentPost> = {};
     const yearMap: Record<number, string[]> = {};
     const tagMap: Record<string, string[]> = {};
-    const regex = /^\/posts\/([^\/]+)\/([^\/]+)/;
     const posts = raw
       .map(({ url, frontmatter }) => {
-        let tags = [url.split("/")[2]];
-        
         const result: RecentPost = {
-          title: url.match(regex)?.[2] ?? '暂无标题',
+          title: frontmatter.title ?? '暂无标题',
           url,
           date: formatDate(frontmatter.date),
           abstract: frontmatter.abstract,
-          tags: [...new Set(tags.concat(frontmatter.tags).filter(item => item != null))],
+          tags: frontmatter.tags ?? [],
         };
         postMap[result.url] = result;
         return result;
