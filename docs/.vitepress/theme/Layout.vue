@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useData } from 'vitepress'
-import { ref, computed, onMounted, onUnmounted, nextTick, watch, KeepAlive } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import Comment from './Comment.vue';
 import dayjs from 'dayjs'
@@ -8,9 +8,6 @@ import { countWord, countTransK } from '../utils/tools'
 
 const { page } = useData()
 const { Layout } = DefaultTheme
-
-// 需要 keepalive 的组件名
-const keepAliveComponents = ['HomePage', 'ArchivesPage', 'TagsPage']
 
 // 字数统计
 const wordCount = ref<number>(0)
@@ -85,11 +82,6 @@ watch(
 
 <template>
   <Layout>
-    <template #default>
-      <KeepAlive :include="keepAliveComponents">
-        <slot />
-      </KeepAlive>
-    </template>
     <template #doc-before>
       <div class="mb-8">
         <div v-if="$frontmatter.title" class="text-3xl font-bold leading-tight mb-4 text-(--vp-c-text-1)">{{

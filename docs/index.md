@@ -20,34 +20,52 @@ const createCountObserver = (
   elementId: string,
   targetRef: ReturnType<typeof ref<string>>
 ): MutationObserver | null => {
-  const el = document.getElementById(elementId)
-  if (!el) return null
+  try {
+    const el = document.getElementById(elementId)
+    if (!el) return null
 
-  const update = () => {
-    const text = el.textContent?.trim()
-    if (text) {
-      const val = parseInt(text)
-      if (!isNaN(val)) {
-        const formatted = countTransK(val)
-        targetRef.value = formatted
-        el.textContent = formatted
-        observer.disconnect()
-        return true
+    let observer: MutationObserver | null = null
+
+    const update = () => {
+      try {
+        const text = el.textContent?.trim()
+        if (text) {
+          const val = parseInt(text)
+          if (!isNaN(val)) {
+            const formatted = countTransK(val)
+            targetRef.value = formatted
+            el.textContent = formatted
+            observer?.disconnect()
+            return true
+          }
+        }
+      } catch (e) {
+        console.error('createCountObserver update error:', e)
       }
+      return false
     }
-    return false
+
+    if (update()) return null
+
+    observer = new MutationObserver(() => update())
+    observer.observe(el, { childList: true, characterData: true, subtree: true })
+    return observer
+  } catch (e) {
+    console.error('createCountObserver error:', e)
+    return null
   }
-
-  if (update()) return null
-
-  const observer = new MutationObserver(() => update())
-  observer.observe(el, { childList: true, characterData: true, subtree: true })
-  return observer
 }
 
 const initSiteStats = () => {
-  observers.push(createCountObserver('vercount_value_site_pv', sitePv)!)
-  observers.push(createCountObserver('vercount_value_site_uv', siteUv)!)
+  try {
+    const pvObserver = createCountObserver('vercount_value_site_pv', sitePv)
+    if (pvObserver) observers.push(pvObserver)
+    
+    const uvObserver = createCountObserver('vercount_value_site_uv', siteUv)
+    if (uvObserver) observers.push(uvObserver)
+  } catch (e) {
+    console.error('initSiteStats error:', e)
+  }
 }
 
 const disconnectAll = () => {

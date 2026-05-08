@@ -19,7 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { withBase } from 'vitepress'
+import { useRouter } from 'vitepress'
+
+const router = useRouter()
 
 const props = defineProps({
     url: {
@@ -41,7 +43,7 @@ const props = defineProps({
 
 const navigateToArticle = () => {
     if (props.url) {
-        window.location.href = withBase(props.url)
+        router.go(props.url)
     }
 }
 </script>

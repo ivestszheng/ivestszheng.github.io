@@ -9,6 +9,10 @@ name: TagsPage
 <script setup>
 import { ref, unref, computed, onMounted } from 'vue'
 import  { data }  from '../.vitepress/theme/posts.data'
+
+defineOptions({
+  name: 'TagsPage'
+})
 const { tagMap,postMap } = data
 const tags = Object.keys(tagMap)
 const computedTagMap = computed(()=> {
@@ -22,6 +26,10 @@ const computedTagMap = computed(()=> {
 const currentTag = ref(null)
 function onTagClick(newTag){
     currentTag.value = newTag
+    // 更新 URL 参数以保持状态
+    const url = new URL(window.location.href)
+    url.searchParams.set('tag', newTag)
+    window.history.replaceState({}, '', url)
 }
 const postList = computed(()=> (unref(computedTagMap)[unref(currentTag)]))
 onMounted(()=>{
