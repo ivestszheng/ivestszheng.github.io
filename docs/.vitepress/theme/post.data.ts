@@ -24,7 +24,7 @@ interface Data {
 declare const data: Data;
 export { data };
 
-export default createContentLoader("posts/*.md", {
+export default createContentLoader("post/*.md", {
   includeSrc: true,
   excerpt: true, 
   transform(raw): Data {

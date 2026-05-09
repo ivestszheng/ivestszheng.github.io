@@ -9,10 +9,10 @@
             </div>
         </div>
         <p class="abstract group-hover:text-(--vp-c-text-1)" v-html="abstract"></p>
-        <div class='post-info'>
+        <div class='flex justify-between items-center text-xs'>
             <div v-text="date" class="group-hover:text-(--vp-c-text-1)"></div>
             <div class="flex">
-                <span v-for="(tag,i) in tags" v-text="tag" class="tag group-hover:bg-(--vp-c-brand-soft) group-hover:text-(--vp-c-brand)"></span>
+                <span @click.stop="onTagClick(tag)" v-for="(tag, index) in tags" v-text="tag" class="bg-(--vp-c-bg-soft) px-2 rounded group-hover:bg-(--vp-c-bg-alt) group-hover:text-(--vp-c-brand) max-md:text-[11px] hover:text-(--vp-c-brand) max-md:px-[6px] py-0.5" :class="index !== 0 ? 'ml-1.5' : ''"></span>
             </div>
         </div>
     </div>
@@ -45,6 +45,10 @@ const navigateToArticle = () => {
     if (props.url) {
         router.go(props.url)
     }
+}
+
+const onTagClick = (tag: string) => {
+    router.go(`/tag?tag=${tag}`)
 }
 </script>
 
@@ -84,12 +88,7 @@ const navigateToArticle = () => {
     color: var(--vp-c-brand-1);
 }
 
-.post-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-}
+
 
 .abstract {
     font-size: 0.9375rem;
@@ -100,16 +99,6 @@ const navigateToArticle = () => {
     color: var(--vp-c-text-2);
     margin: 10px 0;
     line-height: 1.5rem;
-}
-
-.tag {
-    background-color: var(--vp-c-bg-alt);
-    padding: 0 8px;
-    border-radius: 4px;
-}
-
-.tag + .tag {
-    margin-left: 6px;
 }
 
 @media screen and (max-width: 768px) {
@@ -142,17 +131,6 @@ const navigateToArticle = () => {
         overflow: hidden;
         margin: 8px 0 12px;
         line-height: 1.4rem;
-    }
-
-    .post-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .tag {
-        font-size: 11px;
-        padding: 2px 6px;
     }
 }
 </style>

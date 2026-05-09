@@ -3,12 +3,12 @@ layout: page
 title: 归档
 sidebar: false
 gitChangelog: false
-name: ArchivesPage
+name: ArchivePage
 ---
 
 <script setup>
 import { computed } from 'vue'
-import  { data }  from '../.vitepress/theme/posts.data'
+import  { data }  from './.vitepress/theme/post.data'
 
 const { yearMap,postMap } = data
 const yearList = Object.keys(yearMap).sort((a, b) => b - a); // 按年份降序排序
