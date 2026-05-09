@@ -105,7 +105,7 @@ const vitePressOptions = {
       })
     }
   },
-  cleanUrls: true,
+  cleanUrls: true
 };
 
 export default withMermaid(vitePressOptions as any);

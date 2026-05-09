@@ -7,7 +7,7 @@ name: HomePage
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { data } from './.vitepress/theme/posts.data'
+import { data } from './.vitepress/theme/post.data'
 import DetailedPostCard from './.vitepress/theme/DetailedPostCard.vue'
 import { countTransK } from './.vitepress/utils/tools'
 
