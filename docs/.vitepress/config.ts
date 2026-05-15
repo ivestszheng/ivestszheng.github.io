@@ -8,10 +8,11 @@ import {
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
 import type { HeadConfig, TransformContext } from 'vitepress'
 
+const description = 'don\'t worry, be happy.'
 const vitePressOptions = {
   lang: "zh-CN",
   title: "无声2017的博客",
-  description: 'don\'t worry, be happy.',
+  description,
   titleTemplate: true,
   base: "/",
   head: [
@@ -46,13 +47,12 @@ const vitePressOptions = {
     ]
   ],
   // 动态生成每页的 meta 标签
-  transformHead: (ctx: TransformContext) => {
+  transformHead: (context: TransformContext) => {
     const head: HeadConfig[] = []
-    const { frontmatter, title, relativePath } = ctx.pageData
-    
+    const { frontmatter, title, relativePath, description } = context.pageData
     // 生成页面标题和描述
     const pageTitle = frontmatter?.title || title
-    const pageDescription = frontmatter?.description || frontmatter?.abstract || 'don\'t worry, be happy.'
+    const pageDescription = frontmatter?.description || frontmatter?.abstract || description
     
     // 处理图片 URL：必须是绝对路径，微信才能抓取
     let pageImage = frontmatter?.image
@@ -67,11 +67,11 @@ const vitePressOptions = {
       pageImage = 'https://ivestszheng.github.io/share.png'
     }
     
-    const pageUrl = `https://ivestszheng.github.io/${relativePath || ''}`
+    const pageUrl = `https://ivestszheng.github.io/${relativePath?.replace(/\.md$/, '') || ''}`
     
     // ===== Open Graph (微信、QQ、Facebook 等使用) =====
     head.push(['meta', { property: 'og:type', content: 'website' }])
-    head.push(['meta', { property: 'og:site_name', content: '无声 2017 的博客' }])
+    head.push(['meta', { property: 'og:site_name', content: '无声2017的博客' }])
     head.push(['meta', { property: 'og:title', content: pageTitle }])
     head.push(['meta', { property: 'og:description', content: pageDescription }])
     head.push(['meta', { property: 'og:url', content: pageUrl }])
