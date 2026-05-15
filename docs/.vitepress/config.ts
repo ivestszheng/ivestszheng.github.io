@@ -11,6 +11,7 @@ import type { HeadConfig, TransformContext } from 'vitepress'
 const vitePressOptions = {
   lang: "zh-CN",
   title: "无声2017的博客",
+  description: 'don\'t worry, be happy.',
   titleTemplate: true,
   base: "/",
   head: [
