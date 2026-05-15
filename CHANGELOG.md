@@ -1,5 +1,25 @@
 # 更新记录 
 
+
+### [1.9.9](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.9.8...v1.9.9) (2026-05-09)
+
+
+### ♻️ Code Refactoring | 代码重构
+
+* 重新组织文件，简化与规范路由;首页列表组件样式重构，增加标签页跳转功能;黑暗模式颜色统一。 ([584d0ac](https://github.com/ivestszheng/ivestszheng.github.io/commit/584d0ac4e997e534af2300f5ef1e4893ab42b618))
+
+### [1.9.8](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.9.7...v1.9.8) (2026-05-08)
+
+
+### 🚀 Chore | 部署相关
+
+* 重构项目配置并优化类型定义 ([a833220](https://github.com/ivestszheng/ivestszheng.github.io/commit/a8332206a741f4e9537740ce3a58423c2d2914e6))
+
+
+### 🐛 Bug Fixes | Bug 修复
+
+* 修复语法问题导致的浏览器后退时无法记住之前的页面高度 ([3780aff](https://github.com/ivestszheng/ivestszheng.github.io/commit/3780affc555c7aff4a5a72727156c39d8ec93540))
+
 ### [1.8.2](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.8.1...v1.8.2) (2026-04-23)
 
 
