@@ -6,6 +6,7 @@ import {
   GitChangelogMarkdownSection,
 } from '@nolebase/vitepress-plugin-git-changelog/vite'
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
+import type { HeadConfig, TransformContext } from 'vitepress'
 
 const vitePressOptions = {
   lang: "zh-CN",
@@ -28,7 +29,7 @@ const vitePressOptions = {
     ],
     // 注入谷歌分析脚本（GA4）
     ['script', {}, `
-      // 谷歌分析4代基础脚本
+      // 谷歌分析 4 代基础脚本
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -43,6 +44,49 @@ const vitePressOptions = {
       }
     ]
   ],
+  // 动态生成每页的 meta 标签
+  transformHead: (ctx: TransformContext) => {
+    const head: HeadConfig[] = []
+    const { frontmatter, title, description, relativePath } = ctx.pageData
+    
+    // 生成页面标题和描述
+    const pageTitle = frontmatter?.title || title || '无声 2017 的博客'
+    const pageDescription = frontmatter?.description || frontmatter?.abstract || description || '无声 2017 的博客 - 分享前端开发、技术思考与生活记录'
+    
+    // 处理图片 URL：必须是绝对路径，微信才能抓取
+    let pageImage = frontmatter?.image
+    if (pageImage) {
+      // 如果已经是 http/https 开头，直接使用
+      if (!pageImage.startsWith('http')) {
+        // 否则拼接域名
+        pageImage = `https://ivestszheng.github.io${pageImage}`
+      }
+    } else {
+      // 默认分享图片
+      pageImage = 'https://ivestszheng.github.io/logo.svg'
+    }
+    
+    const pageUrl = `https://ivestszheng.github.io/${relativePath?.replace(/\.md$/, '.html') || ''}`
+    
+    // ===== Open Graph (微信、QQ、Facebook 等使用) =====
+    head.push(['meta', { property: 'og:type', content: 'website' }])
+    head.push(['meta', { property: 'og:site_name', content: '无声2017的博客' }])
+    head.push(['meta', { property: 'og:title', content: pageTitle }])
+    head.push(['meta', { property: 'og:description', content: pageDescription }])
+    head.push(['meta', { property: 'og:url', content: pageUrl }])
+    head.push(['meta', { property: 'og:image', content: pageImage }])
+    head.push(['meta', { property: 'og:image:width', content: '1200' }])
+    head.push(['meta', { property: 'og:image:height', content: '630' }])
+    
+    // ===== Twitter Card =====
+    head.push(['meta', { name: 'twitter:card', content: 'summary_large_image' }])
+    head.push(['meta', { name: 'twitter:title', content: pageTitle }])
+    head.push(['meta', { name: 'twitter:description', content: pageDescription }])
+    head.push(['meta', { name: 'twitter:image', content: pageImage }])
+    head.push(['meta', { name: 'twitter:site', content: '@ivestszheng' }])
+    
+    return head
+  },
   themeConfig: {
     nav,
     footer: {
