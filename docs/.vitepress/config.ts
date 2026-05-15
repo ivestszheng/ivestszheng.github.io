@@ -63,10 +63,7 @@ const vitePressOptions = {
       }
     } else {
       // 默认分享图片：使用 PNG 格式（微信不支持 SVG）
-      // 建议：在 docs/public/ 目录下准备一张 1200x630 的 PNG 图片
-      pageImage = 'https://ivestszheng.github.io/favicon.ico'
-      // 或者使用外部图床：
-      // pageImage = 'https://your-cdn.com/share-card.png'
+      pageImage = 'https://ivestszheng.github.io/share.png'
     }
     
     const pageUrl = `https://ivestszheng.github.io/${relativePath?.replace(/\.md$/, '.html') || ''}`
@@ -95,7 +92,7 @@ const vitePressOptions = {
       message: "本站总访问量<span id='vercount_value_site_pv' class='mx-2'>♾️</span>次<span class='mx-2'></span>本站总访客数<span id='vercount_value_site_uv' class='mx-2'>♾️</span>人",
       copyright: "Copyright © 2022-present <a href='https://github.com/ivestszheng'>无声2017</a>",
     },
-    logo: 'logo.png',
+    logo: 'logo.svg',
     socialLinks: [
       { icon: "github", link: "https://github.com/ivestszheng" },
       { icon: "twitter", link: "https://twitter.com/ivestszheng" },
