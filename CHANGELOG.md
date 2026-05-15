@@ -1,6 +1,13 @@
 # 更新记录 
 
 
+### [1.9.10](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.9.9...v1.9.10) (2026-05-15)
+
+
+### ♻️ Code Refactoring | 代码重构
+
+* **config:** 实现动态生成每页的Open Graph和Twitter卡片元标签，优化社交媒体分享效果，自动处理页面标题、描述和分享图片，统一补全绝对路径确保微信等平台可以正确抓取展示 ([5182152](https://github.com/ivestszheng/ivestszheng.github.io/commit/5182152f43c9f05dd862d89ea64dee4acd9f3f26))
+
 ### [1.9.9](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.9.8...v1.9.9) (2026-05-09)
 
 
