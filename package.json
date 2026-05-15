@@ -2,9 +2,10 @@
   "name": "ivestszheng.github.io",
   "version": "1.9.10",
   "type": "module",
+  "private": true,
   "repository": "git@github.com:ivestszheng/ivestszheng.github.io.git",
   "description": "无声2017的博客",
-  "author": "无声 <ivestszheng@qq.com>",
+  "author": "无声2017 <ivestszheng@qq.com>",
   "scripts": {
     "dev": "vitepress dev docs --host",
     "build": "tsc --noEmit --skipLibCheck && vitepress build docs",

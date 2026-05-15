@@ -50,8 +50,8 @@ const vitePressOptions = {
     const { frontmatter, title, description, relativePath } = ctx.pageData
     
     // 生成页面标题和描述
-    const pageTitle = frontmatter?.title || title || '无声 2017 的博客'
-    const pageDescription = frontmatter?.description || frontmatter?.abstract || description || '无声 2017 的博客 - 分享前端开发、技术思考与生活记录'
+    const pageTitle = frontmatter?.title || title || '无声2017的博客'
+    const pageDescription = frontmatter?.description || frontmatter?.abstract || description || '无声2017的博客 - don\'t worry, be happy.'
     
     // 处理图片 URL：必须是绝对路径，微信才能抓取
     let pageImage = frontmatter?.image
@@ -62,21 +62,23 @@ const vitePressOptions = {
         pageImage = `https://ivestszheng.github.io${pageImage}`
       }
     } else {
-      // 默认分享图片
-      pageImage = 'https://ivestszheng.github.io/logo.svg'
+      // 默认分享图片：使用 PNG 格式（微信不支持 SVG）
+      // 建议：在 docs/public/ 目录下准备一张 1200x630 的 PNG 图片
+      pageImage = 'https://ivestszheng.github.io/favicon.ico'
+      // 或者使用外部图床：
+      // pageImage = 'https://your-cdn.com/share-card.png'
     }
     
     const pageUrl = `https://ivestszheng.github.io/${relativePath?.replace(/\.md$/, '.html') || ''}`
     
     // ===== Open Graph (微信、QQ、Facebook 等使用) =====
     head.push(['meta', { property: 'og:type', content: 'website' }])
-    head.push(['meta', { property: 'og:site_name', content: '无声2017的博客' }])
+    head.push(['meta', { property: 'og:site_name', content: '无声 2017 的博客' }])
     head.push(['meta', { property: 'og:title', content: pageTitle }])
     head.push(['meta', { property: 'og:description', content: pageDescription }])
     head.push(['meta', { property: 'og:url', content: pageUrl }])
     head.push(['meta', { property: 'og:image', content: pageImage }])
-    head.push(['meta', { property: 'og:image:width', content: '1200' }])
-    head.push(['meta', { property: 'og:image:height', content: '630' }])
+    // 注意：微信不支持 og:image:width 和 og:image:height，已移除
     
     // ===== Twitter Card =====
     head.push(['meta', { name: 'twitter:card', content: 'summary_large_image' }])
@@ -93,7 +95,7 @@ const vitePressOptions = {
       message: "本站总访问量<span id='vercount_value_site_pv' class='mx-2'>♾️</span>次<span class='mx-2'></span>本站总访客数<span id='vercount_value_site_uv' class='mx-2'>♾️</span>人",
       copyright: "Copyright © 2022-present <a href='https://github.com/ivestszheng'>无声2017</a>",
     },
-    logo: 'logo.svg',
+    logo: 'logo.png',
     socialLinks: [
       { icon: "github", link: "https://github.com/ivestszheng" },
       { icon: "twitter", link: "https://twitter.com/ivestszheng" },
