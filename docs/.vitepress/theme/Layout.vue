@@ -101,9 +101,9 @@ watch(
               <span class="ml-1">阅读<span class="mx-1">{{ readingTime }}</span>分钟</span>
             </span>
           </div>
-          <div v-if="$frontmatter.abstract"
+          <div v-if="$frontmatter.description"
             class="flex items-center p-3 rounded-lg text-sm font-medium bg-(--vp-c-bg-soft) text-(--vp-c-text-2)">
-            <span>{{ $frontmatter.abstract }}</span>
+            <span>{{ $frontmatter.description }}</span>
           </div>
         </div>
       </div>

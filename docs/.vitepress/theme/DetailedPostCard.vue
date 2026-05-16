@@ -8,7 +8,7 @@
                 <h3 class="post-title-text group-hover:text-(--vp-c-brand-1)" v-text="title"></h3>
             </div>
         </div>
-        <p class="abstract group-hover:text-(--vp-c-text-1)" v-html="abstract"></p>
+        <p class="description group-hover:text-(--vp-c-text-1)" v-html="description"></p>
         <div class='flex justify-between items-center text-xs'>
             <div v-text="date" class="group-hover:text-(--vp-c-text-1)"></div>
             <div class="flex">
@@ -30,7 +30,7 @@ const props = defineProps({
     title: {
         type: String
     },
-    abstract:{
+    description:{
         type: String
     },
     date: {
@@ -90,7 +90,7 @@ const onTagClick = (tag: string) => {
 
 
 
-.abstract {
+.description {
     font-size: 0.9375rem;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -123,7 +123,7 @@ const onTagClick = (tag: string) => {
         margin-bottom: 8px;
     }
 
-    .abstract {
+    .description {
         font-size: 0.9375rem;
         display: -webkit-box;
         -webkit-box-orient: vertical;

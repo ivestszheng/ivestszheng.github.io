@@ -99,7 +99,7 @@ onUnmounted(() => {
     :key="article.url"
     :url="article.url"
     :title="article.title"
-    :abstract="article.abstract"
+    :description="article.description"
     :date="article.date"
     :tags="article.tags"
   />

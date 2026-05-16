@@ -1,7 +1,7 @@
 ---
 title: VitePress 实现归档与标签分类
 date: 2024-04-14
-abstract: 使用 VitePress 的 createContentLoader 函数以及 frontmatter 配置实现归档与标签分类功能。
+description: 使用 VitePress 的 createContentLoader 函数以及 frontmatter 配置实现归档与标签分类功能。
 tags: 
   - 技术
   - VitePress  
@@ -49,7 +49,7 @@ VitePress 支持在所有 Markdown 文件中使用 YAML frontmatter，并使用 
 ```markdown
 title: VitePress 实现归档与标签分类
 date: 2024-04-14
-abstract: 使用 VitePress 的 createContentLoader 函数以及 frontmatter 配置实现归档与标签分类功能。
+description: 使用 VitePress 的 createContentLoader 函数以及 frontmatter 配置实现归档与标签分类功能。
 tags:
   - VitePress
 ```
@@ -58,7 +58,7 @@ tags:
 
 - title：标题
 - date：创建日期
-- abstract：文章摘要
+- description：文章摘要
 - tags：自定义的标签
 
 ## 生成需要的数据
@@ -81,7 +81,7 @@ export default createContentLoader("posts/*/*.md", {
           title: frontmatter.title,
           url,
           date: formatDate(frontmatter.date),
-          abstract: frontmatter.abstract,
+          description: frontmatter.description,
           tags,
         };
         postMap[result.url] = result;
@@ -123,7 +123,7 @@ export default createContentLoader("posts/*/*.md", {
         "time": 1713052800000,
         "string": "2024-04-14"
     },
-    "abstract": "使用 VitePress 的 createContentLoader 函数以及 frontmatter 配置实现归档与标签分类功能。",
+    "description": "使用 VitePress 的 createContentLoader 函数以及 frontmatter 配置实现归档与标签分类功能。",
     "tags": [
         "前端",
         "VitePress"

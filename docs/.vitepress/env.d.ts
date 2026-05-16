@@ -18,7 +18,7 @@ declare module '@vue/runtime-core' {
     $frontmatter: PageFrontmatter & {
       title?: string;
       date?: string;
-      abstract?: string;
+      description?: string;
       [key: string]: any;
     };
   }
@@ -29,7 +29,7 @@ declare module '@vue/runtime-dom' {
     $frontmatter: PageFrontmatter & {
       title?: string;
       date?: string;
-      abstract?: string;
+      description?: string;
       [key: string]: any;
     };
   }
