@@ -52,7 +52,7 @@ const vitePressOptions = {
     
     // 生成页面标题和描述
     const pageTitle = frontmatter?.title || title
-    const pageDescription = frontmatter?.description || frontmatter?.description || 'don\'t worry, be happy.'
+    const pageDescription = frontmatter?.description || 'don\'t worry, be happy.'
     
     // 处理图片 URL：必须是绝对路径，微信才能抓取
     let pageImage = frontmatter?.image
