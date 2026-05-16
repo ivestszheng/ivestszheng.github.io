@@ -2,6 +2,7 @@
 layout: page
 sidebar: false
 name: HomePage
+description: don't worry, be happy.
 ---
 
 <script setup lang="ts">
