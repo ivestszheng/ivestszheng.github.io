@@ -7,7 +7,7 @@ interface Post {
     time: number;
     string: string;
   };
-  abstract?: string;
+  description?: string;
 }
 
 interface RecentPost extends Post {
@@ -37,7 +37,7 @@ export default createContentLoader("post/*.md", {
           title: frontmatter.title ?? '暂无标题',
           url,
           date: formatDate(frontmatter.date),
-          abstract: frontmatter.abstract,
+          description: frontmatter.description,
           tags: frontmatter.tags ?? [],
         };
         postMap[result.url] = result;

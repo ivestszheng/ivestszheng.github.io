@@ -19,7 +19,7 @@ declare module '@vue/runtime-core' {
     $frontmatter: PageFrontmatter & {
       title?: string;
       date?: string;
-      abstract?: string;
+      description?: string;
       name?: string;
       [key: string]: any;
     };

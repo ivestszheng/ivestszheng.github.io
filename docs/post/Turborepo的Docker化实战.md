@@ -1,7 +1,7 @@
 ---
 title: Turborepo 的 Docker 化实战
 date: 2026-01-03
-abstract: 本文将先简单回顾传统 Vue 项目 Docker 打包部署的方式与 Turborepo 的项目结构。说明如何在 Turborepo 架构的项目中通过 Docker 打包部署 Vue 项目。
+description: 本文将先简单回顾传统 Vue 项目 Docker 打包部署的方式与 Turborepo 的项目结构。说明如何在 Turborepo 架构的项目中通过 Docker 打包部署 Vue 项目。
 tags: 
   - 技术
   - Turborepo
