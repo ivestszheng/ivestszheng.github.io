@@ -103,7 +103,7 @@ watch(
           </div>
           <div v-if="$frontmatter.description"
             class="flex items-center p-3 rounded-lg text-sm font-medium bg-(--vp-c-bg-soft) text-(--vp-c-text-2)">
-            <span>{{ $frontmatter.description }}</span>
+            <span id="description">{{ $frontmatter.description }}</span>
           </div>
         </div>
       </div>
