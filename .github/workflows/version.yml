@@ -1,4 +1,4 @@
-name: Update Changelog
+name: Update Version
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  release:
+  version:
     # 防止死循环：如果是机器人自己推的，就跳过
     if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
@@ -38,10 +38,10 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
       # -----------------------------------
 
-      - name: Generate Changelog
+      - name: Generate Changelog and Update Version
         # 现在 standard-version 执行 commit 时，已经有了身份信息
         run: |
-          npx standard-version --message "chore(release): %s [skip ci]"
+          npx standard-version --message "chore(version): %s [skip ci]"
 
       - name: Push changes
-        run: git push --follow-tags origin main
+        run: git push origin main
