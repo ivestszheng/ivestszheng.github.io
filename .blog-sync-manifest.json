@@ -1,6 +1,19 @@
 {
-  "generatedAt": "2026-08-20T05:58:24.901Z",
-  "articleCount": 0,
-  "articles": [],
+  "generatedAt": "2026-08-20T06:03:45.820Z",
+  "articleCount": 1,
+  "articles": [
+    {
+      "source": "docs/dev-notes/Vue3中hooks实践后的个人偏见.md",
+      "target": "post/Vue3中hooks实践后的个人偏见.md",
+      "title": "Vue3 hooks 实践后的个人偏见",
+      "date": "2023-04-16",
+      "description": "着重介绍 hooks 在一个难度适中的示例中是如何使用的。",
+      "tags": [
+        "技术",
+        "Vue.js"
+      ],
+      "hash": "c7fed76c83a9"
+    }
+  ],
   "images": []
 }

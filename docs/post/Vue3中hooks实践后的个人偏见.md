@@ -2,9 +2,10 @@
 title: Vue3 hooks 实践后的个人偏见
 date: 2023-04-16
 description: 着重介绍 hooks 在一个难度适中的示例中是如何使用的。
-tags:  
+tags:
   - 技术
-  - Vue.js  
+  - Vue.js
+publish: true
 ---
 
 ## 前言
@@ -437,7 +438,7 @@ function beforeSearch() {
 
 ### 副作用
 
-在组合式函数中的确可以执行副作用 (例如：添加 DOM 事件监听器或者请求数据)，确保及时(例如 `onMounted()`时)清理副作用。3
+在组合式函数中的确可以执行副作用 (例如：添加 DOM 事件监听器或者请求数据)，确保及时(例如 `onMounted()`时)清理副作用。
 
 ### 使用限制
 
