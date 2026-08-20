@@ -1,6 +1,13 @@
 # 更新记录 
 
 
+### [1.10.2](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.10.0...v1.10.2) (2026-08-20)
+
+
+### 🚀 部署相关
+
+* **version:** 1.10.1 [skip ci] ([9cb81a7](https://github.com/ivestszheng/ivestszheng.github.io/commit/9cb81a7d5e7d0c380e1cf4877606c5d2e5aab70f))
+
 ### [1.10.1](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.10.0...v1.10.1) (2026-08-20)
 
 ## 1.10.0 (2026-05-16)
