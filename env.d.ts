@@ -8,10 +8,6 @@ declare module '*.vue' {
   export default component;
 }
 
-declare module '@nolebase/vitepress-plugin-git-changelog/client' {
-  export const NolebaseGitChangelogPlugin: any;
-}
-
 declare module '@vue/runtime-core' {
   import type { PageFrontmatter } from 'vitepress';
   

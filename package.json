@@ -17,7 +17,6 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@nolebase/vitepress-plugin-git-changelog": "^2.18.2",
     "husky": "^9.1.7",
     "markdown-it-custom-attrs": "^1.0.2",
     "mermaid": "^11.12.2",

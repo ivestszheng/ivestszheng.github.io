@@ -2,7 +2,6 @@
 layout: page
 title: 归档
 sidebar: false
-gitChangelog: false
 name: ArchivePage
 ---
 

@@ -1,10 +1,6 @@
 import { withMermaid } from 'vitepress-plugin-mermaid'
 import nav from './nav'
 import tailwindcss from '@tailwindcss/vite'
-import {
-  GitChangelog,
-  GitChangelogMarkdownSection,
-} from '@nolebase/vitepress-plugin-git-changelog/vite'
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
 import type { HeadConfig, TransformContext } from 'vitepress'
 
@@ -117,14 +113,6 @@ const vitePressOptions = {
   vite: {
     plugins: [
       tailwindcss(),
-      GitChangelog({
-        repoURL: () => 'https://github.com/ivestszheng/ivestszheng.github.io',
-      }),
-      GitChangelogMarkdownSection({
-        sections: {
-          disableContributors: true
-        }
-      }),
     ],
     optimizeDeps: {
       include: [

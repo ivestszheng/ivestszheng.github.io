@@ -1,4 +1,3 @@
-import { GitChangelogPlugin } from '@nolebase/vitepress-plugin-git-changelog/client/types';
 import { PageFrontmatter } from 'vitepress';
 
 declare global {
@@ -6,11 +5,6 @@ declare global {
     _hmt?: any[];
     gtag?: (...args: any[]) => void;
   }
-}
-
-declare module '@nolebase/vitepress-plugin-git-changelog/client' {
-  const NolebaseGitChangelogPlugin: GitChangelogPlugin;
-  export default NolebaseGitChangelogPlugin;
 }
 
 declare module '@vue/runtime-core' {

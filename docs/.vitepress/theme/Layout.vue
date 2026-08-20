@@ -98,7 +98,7 @@ watch(
             </span>
             <span class="flex items-center">
               <img src="/clock.svg" alt="阅读时长" class="w-4 h-4 mr-2">
-              <span class="ml-1">阅读<span class="mx-1">{{ readingTime }}</span>分钟</span>
+              <span>阅读<span class="mx-1">{{ readingTime }}</span>分钟</span>
             </span>
           </div>
           <div v-if="$frontmatter.description"
