@@ -1,6 +1,25 @@
 # 更新记录 
 
 
+## [1.11.0](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.10.0...v1.11.0) (2026-09-01)
+
+
+### ♻️ 代码重构
+
+* 移除git changelog相关依赖和配置 ([dbc885f](https://github.com/ivestszheng/ivestszheng.github.io/commit/dbc885f219c37255ee7efb8e4f0a58a40fd6cb7b))
+
+
+### 🚀 部署相关
+
+* **version:** 1.10.1 [skip ci] ([9cb81a7](https://github.com/ivestszheng/ivestszheng.github.io/commit/9cb81a7d5e7d0c380e1cf4877606c5d2e5aab70f))
+* **version:** 1.10.2 [skip ci] ([cdf77ef](https://github.com/ivestszheng/ivestszheng.github.io/commit/cdf77ef851ddb2cfaac4526e3a8e1d61ab635a78))
+* **version:** 1.10.3 [skip ci] ([757fa51](https://github.com/ivestszheng/ivestszheng.github.io/commit/757fa51eebc264347f284fd2370b81243215a4c8))
+
+
+### ✨ 新功能
+
+* 导航栏新增"仓库"下拉菜单，并修复分享 meta 问题 ([2cd0293](https://github.com/ivestszheng/ivestszheng.github.io/commit/2cd02932424e5f13aa22bf24b4f2cef069c9860f))
+
 ### [1.10.3](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.10.0...v1.10.3) (2026-08-20)
 
 
