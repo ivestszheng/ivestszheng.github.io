@@ -1,9 +1,20 @@
 {
-  "generatedAt": "2026-08-20T06:03:45.820Z",
-  "articleCount": 1,
+  "generatedAt": "2026-11-22T11:13:40.793Z",
+  "articleCount": 2,
   "articles": [
     {
-      "source": "docs/dev-notes/Vue3中hooks实践后的个人偏见.md",
+      "source": "docs/career/对“程序员最后一个冬天”的思考.md",
+      "target": "post/对“程序员最后一个冬天”的思考.md",
+      "title": "对“程序员最后一个冬天”的思考",
+      "date": "2026-11-22",
+      "description": "最近流传着这样一个说法：“２０２６是程序员最后一个冬天”。",
+      "tags": [
+        "职业"
+      ],
+      "hash": "9ec9998026f7"
+    },
+    {
+      "source": "docs/dev-essay/Vue3中hooks实践后的个人偏见.md",
       "target": "post/Vue3中hooks实践后的个人偏见.md",
       "title": "Vue3 hooks 实践后的个人偏见",
       "date": "2023-04-16",
