@@ -34,7 +34,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9
+          version: 11.29.0
 
       # 3. 配置 pnpm 缓存 (独立步骤，解决报错的核心)
       - name: Setup pnpm Cache
