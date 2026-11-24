@@ -1,6 +1,33 @@
 # 更新记录 
 
 
+## [1.13.0](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.10.0...v1.13.0) (2026-11-24)
+
+
+### ♻️ 代码重构
+
+* 移除git changelog相关依赖和配置 ([dbc885f](https://github.com/ivestszheng/ivestszheng.github.io/commit/dbc885f219c37255ee7efb8e4f0a58a40fd6cb7b))
+
+
+### ✨ 新功能
+
+* 导航栏新增"仓库"下拉菜单，并修复分享 meta 问题 ([2cd0293](https://github.com/ivestszheng/ivestszheng.github.io/commit/2cd02932424e5f13aa22bf24b4f2cef069c9860f))
+
+
+### 🐛 Bug 修复
+
+* 修复 h2 锚点出现在标题下方的问题 ([37244c3](https://github.com/ivestszheng/ivestszheng.github.io/commit/37244c36342764714a65aced1324427c81da5828))
+
+
+### 🚀 部署相关
+
+* **version:** 1.10.1 [skip ci] ([9cb81a7](https://github.com/ivestszheng/ivestszheng.github.io/commit/9cb81a7d5e7d0c380e1cf4877606c5d2e5aab70f))
+* **version:** 1.10.2 [skip ci] ([cdf77ef](https://github.com/ivestszheng/ivestszheng.github.io/commit/cdf77ef851ddb2cfaac4526e3a8e1d61ab635a78))
+* **version:** 1.10.3 [skip ci] ([757fa51](https://github.com/ivestszheng/ivestszheng.github.io/commit/757fa51eebc264347f284fd2370b81243215a4c8))
+* **version:** 1.11.0 [skip ci] ([824eb97](https://github.com/ivestszheng/ivestszheng.github.io/commit/824eb97f14a5b27daa234883bf1a8da9ff1827ca))
+* **version:** 1.12.0 [skip ci] ([67bef6d](https://github.com/ivestszheng/ivestszheng.github.io/commit/67bef6da26180d7d88911eda31d5bf01be500fe2))
+* 升级 pnpm 至 11 ([a3bc564](https://github.com/ivestszheng/ivestszheng.github.io/commit/a3bc5648c47cd09cb714bdff21cd527e5fe06815))
+
 ## [1.12.0](https://github.com/ivestszheng/ivestszheng.github.io/compare/v1.10.0...v1.12.0) (2026-11-22)
 
 
