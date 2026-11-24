@@ -11,6 +11,11 @@ a:hover {
     padding-top: 0;
 }
 
+/* padding-top 归零后，默认的 top: 24px 会把 # 锚点压到标题下方，需同步归零 */
+.vp-doc h2 .header-anchor {
+    top: 0;
+}
+
 .edit-info {
     display: none !important;
 }
